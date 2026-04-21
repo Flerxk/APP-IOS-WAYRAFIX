@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="24G624" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ServicioEntity" representedClassName="ServicioEntity" syncable="YES">
+        <attribute name="estado" attributeType="String"/>
+        <attribute name="fecha" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="titulo" attributeType="String"/>
+    </entity>
+    <entity name="VehiculoEntity" representedClassName="VehiculoEntity" syncable="YES">
+        <attribute name="anio" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="color" attributeType="String"/>
+        <attribute name="marca" attributeType="String"/>
+        <attribute name="modelo" attributeType="String"/>
+        <attribute name="placa" attributeType="String"/>
+        <attribute name="tipoCombustible" attributeType="String"/>
+        <attribute name="tipoVehiculo" attributeType="String"/>
+        <attribute name="transmision" attributeType="String"/>
+        <attribute name="vin" attributeType="String"/>
+    </entity>
+</model>
