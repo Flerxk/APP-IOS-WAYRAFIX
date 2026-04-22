@@ -20,18 +20,25 @@ class LoginViewController: UIViewController {
         VistaPassword.layer.borderColor = UIColor.lightGray.cgColor
 
         super.viewDidLoad()
-
     }
-    
-    @IBOutlet func loginTapped(_ sender: UIButton) {
+
+    @IBAction func loginTapped(_ sender: UIButton) {
         guard var email = emailTextField.text, !email.isEmpty,
               var password = passwordTextField.text, !password.isEmpty else {
             print("Por favor, llena todos los campos")
             return
         }
+        //Esto es el método de firebase para inciar session
+        Auth.Auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            if let e = error{
+                print("Error en el login: \(e.localizedDescription)")  
+                return       
+            } 
 
-                  
-              }
-    
-
+            Print("Login EXitoso")
+            //Recordar ponerle identificador al seggue
+            //En estre caso si el login es exitoso vamos al home
+            self?.performSegue(withIdentifier:"toHomeSegue", sender:nil)
+        }    
+    }
 }
