@@ -4,9 +4,17 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
 class SignUpViewController: UIViewController {
 
+    @IBOutlet weak var nombreTextField: UITextField!
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var contrasenaTextField: UITextField!
+    @IBOutlet weak var confirmarContraseniaTextFiel: UITextField!
+    @IBOutlet weak var terminosCheckbox: UIButton!
+    
     @IBOutlet private var camposConBorde: [UIView]?
 
     @IBAction func volverAtras(_ sender: Any) {
@@ -25,7 +33,18 @@ class SignUpViewController: UIViewController {
             aplicarBordeGrisAContenedoresDeCampos(en: view)
         }
     }
-
+    
+    let datadabase = Firestore.firestore()
+    
+    @IBAction func registrarTappet(_ sender: UIButton){
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = contrasenaTextField.text, !password.isEmpty,
+              let nombre = nombreTextField.text,
+              let
+        
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
