@@ -12,25 +12,26 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var VistaEmail: UIView!
     @IBOutlet weak var VistaPassword: UIView!
     
+    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    
     override func viewDidLoad() {
         VistaEmail.layer.borderColor = UIColor.lightGray.cgColor
         VistaPassword.layer.borderColor = UIColor.lightGray.cgColor
-        
-        
+
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
+    @IBOutlet func loginTapped(_ sender: UIButton) {
+        guard var email = emailTextField.text, !email.isEmpty,
+              var password = passwordTextField.text, !password.isEmpty else {
+            print("Por favor, llena todos los campos")
+            return
+        }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+                  
+              }
+    
 
 }
