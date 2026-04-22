@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A756BDD2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A756BDC2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift */; };
+		5A756BDE2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A756BDB2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift */; };
 		99D4C7202F88997E007B4181 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D4C71F2F88997E007B4181 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A756BDB2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UsuarioEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		5A756BDC2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UsuarioEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		99D4C7032F88995E007B4181 /* AppSOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D4C71F2F88997E007B4181 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -51,6 +55,8 @@
 		99D4C6FA2F88995E007B4181 = {
 			isa = PBXGroup;
 			children = (
+				5A756BDB2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift */,
+				5A756BDC2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift */,
 				99D4C7052F88995E007B4181 /* AppSOS */,
 				99D4C71E2F88997D007B4181 /* Frameworks */,
 				99D4C7042F88995E007B4181 /* Products */,
@@ -150,6 +156,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A756BDD2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift in Sources */,
+				5A756BDE2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

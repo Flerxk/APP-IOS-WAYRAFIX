@@ -43,7 +43,7 @@ class SignUpViewController: UIViewController {
           let password = contrasenaTextField.text, !password.isEmpty,
           let nombre = nombreTextField.text,
           let celular = celularTextField.text,
-          let confirmPassword = confirmarContraseniaTextFiel.text,
+          let confirmPassword = confirmarContraseniaTextField.text,
           password == confirmPassword else {
         print("Datos incompletos o las contraseñas no coinciden")
         return 
@@ -51,7 +51,6 @@ class SignUpViewController: UIViewController {
 
     // 2. Crear usuario en Auth
     Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in 
-        // Importante: Usamos [weak self] para evitar ciclos de retención de memoria
         
         if let e = error {
             print("Error en Auth: \(e.localizedDescription)")

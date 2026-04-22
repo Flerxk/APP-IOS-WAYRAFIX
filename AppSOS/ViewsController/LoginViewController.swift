@@ -37,7 +37,6 @@ class LoginViewController: UIViewController {
             } 
 
             print("Login EXitoso")
-            //Recordar ponerle identificador al seggue
             //En estre caso si el login es exitoso vamos al home
             self?.performSegue(withIdentifier:"toHomeSegue", sender:nil)
         }    
