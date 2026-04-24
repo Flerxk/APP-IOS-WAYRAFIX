@@ -18,14 +18,14 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupStyles()
+        // setupStyles() // Desactivado para priorizar Storyboard
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if let gradientLayer = view.layer.sublayers?.first(where: { $0 is CAGradientLayer }) {
-            gradientLayer.frame = view.bounds
-        }
+        // if let gradientLayer = view.layer.sublayers?.first(where: { $0 is CAGradientLayer }) {
+        //     gradientLayer.frame = view.bounds
+        // }
     }
 
     private func setupStyles() {

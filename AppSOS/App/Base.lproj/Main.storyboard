@@ -1022,7 +1022,7 @@
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9Ki-nr-R18"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="9Ki-nr-R18" firstAttribute="trailing" secondItem="Da5-Ll-YeL" secondAttribute="trailing" constant="24" id="10c-36-Npg"/>
                             <constraint firstItem="3oe-F5-anz" firstAttribute="leading" secondItem="9Ki-nr-R18" secondAttribute="leading" constant="24" id="2wr-HF-Df6"/>
@@ -1097,7 +1097,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QJX-Ov-XyB">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="QJX-Ov-XyB">
                                 <rect key="frame" x="0.0" y="172" width="393" height="960"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Ya-4o-kzH" userLabel="ContentLayout">
@@ -1499,7 +1499,7 @@
                                                 </subviews>
                                             </stackView>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="mSg-kP-7Qw" secondAttribute="bottom" constant="24" id="SU-ct-Bt"/>
                                             <constraint firstItem="mSg-kP-7Qw" firstAttribute="leading" secondItem="7Ya-4o-kzH" secondAttribute="leading" constant="24" id="SU-ct-Ld"/>
@@ -1520,7 +1520,7 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="zK9-Tt-1gE"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="QJX-Ov-XyB" firstAttribute="trailing" secondItem="zK9-Tt-1gE" secondAttribute="trailing" id="MXV-OM-3df"/>
                             <constraint firstItem="QJX-Ov-XyB" firstAttribute="leading" secondItem="zK9-Tt-1gE" secondAttribute="leading" id="Vbs-cz-LD9"/>

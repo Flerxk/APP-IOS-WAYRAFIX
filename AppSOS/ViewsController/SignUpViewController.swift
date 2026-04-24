@@ -1,24 +1,20 @@
-//
-//  SignUpViewController.swift
-//  AppSOS
-//
-
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
 class SignUpViewController: UIViewController {
 
-
     @IBOutlet weak var nombreTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var celularTextField: UITextField!
     @IBOutlet weak var contrasenaTextField: UITextField!
+    // Nota: Asegúrate de que en el Storyboard este Outlet se llame exactamente así
     @IBOutlet weak var confirmarContraseniaTextFiel: UITextField!
     @IBOutlet weak var terminosCheckbox: UIButton!
     
     @IBOutlet private var camposConBorde: [UIView]?
 
+    // MARK: - Actions
     @IBAction func volverAtras(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -27,6 +23,50 @@ class SignUpViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
+    @IBAction func registrarTappet(_ sender: UIButton) {
+        // 1. Validación de campos
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = contrasenaTextField.text, !password.isEmpty,
+              let nombre = nombreTextField.text, !nombre.isEmpty,
+              let celular = celularTextField.text, !celular.isEmpty,
+              let confirmPassword = confirmarContraseniaTextFiel.text,
+              password == confirmPassword else {
+            print("Datos incompletos o las contraseñas no coinciden")
+            return 
+        }
+
+        // 2. Crear usuario en Auth
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in 
+            if let e = error {
+                print("Error en Auth: \(e.localizedDescription)")
+                return
+            }
+
+            // 3. Guardar en Firestore y Core Data usando ControladorPersistencia
+            if let userId = authResult?.user.uid {
+                ControladorPersistencia.compartido.sincronizarUsuario(
+                    id: userId,
+                    nombre: nombre,
+                    email: email,
+                    celular: celular,
+                    pais: "+51",
+                    rol: "cliente"
+                ) { exito, errorDeSincronizacion in
+                    DispatchQueue.main.async {
+                        if let e = errorDeSincronizacion {
+                            print("Error al sincronizar datos: \(e.localizedDescription)")
+                        } else if exito {
+                            print("Registro y guardado sincronizado exitoso (Nube y Local)")
+                            // 4. Volver al inicio o pantalla principal
+                            self?.navigationController?.popToRootViewController(animated: true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configurarEstilos()
@@ -37,6 +77,17 @@ class SignUpViewController: UIViewController {
         view.ajustarMarcoDeFondoRadial()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    // MARK: - UI Helpers
     private func configurarEstilos() {
         view.aplicarFondoRosadoRadial()
         
@@ -48,60 +99,6 @@ class SignUpViewController: UIViewController {
         
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
-    
-    lazy var datadabase = Firestore.firestore()
-
-    @IBAction func registrarTappet(_ sender: UIButton) {
-    // 1. Validación de campos (Asegúrate de que las contraseñas coincidan aquí)
-    guard let email = emailTextField.text, !email.isEmpty,
-          let password = contrasenaTextField.text, !password.isEmpty,
-          let nombre = nombreTextField.text,
-          let celular = celularTextField.text,
-          let confirmPassword = confirmarContraseniaTextFiel.text,
-          password == confirmPassword else {
-        print("Datos incompletos o las contraseñas no coinciden")
-        return 
-    }
-
-    // 2. Crear usuario en Auth
-    Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in 
-        
-        if let e = error {
-            print("Error en Auth: \(e.localizedDescription)")
-            return
-        }
-
-        // 3. Guardar en Firestore y Core Data usando ControladorPersistencia
-        if let userId = authResult?.user.uid {
-            ControladorPersistencia.compartido.sincronizarUsuario(
-                id: userId,
-                nombre: nombre,
-                email: email,
-                celular: celular,
-                pais: "+51",
-                rol: "cliente"
-            ) { exito, errorDeSincronizacion in
-                if let e = errorDeSincronizacion {
-                    print("Error al sincronizar datos: \(e.localizedDescription)")
-                } else if exito {
-                    print("Registro y guardado sincronizado exitoso")
-                    // 4. Volver al inicio
-                    self?.navigationController?.popToRootViewController(animated: true)
-                }
-            }
-        }
-    }
-}
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
-    }
 
     private func aplicarBordeGrisAContenedoresDeCampos(en root: UIView) {
         for sub in root.subviews {
@@ -110,6 +107,21 @@ class SignUpViewController: UIViewController {
                 sub.layer.borderColor = UIColor.lightGray.cgColor
             }
             aplicarBordeGrisAContenedoresDeCampos(en: sub)
+        }
+    }
+}
+
+// MARK: - Extensions
+extension UIView {
+    @IBInspectable var borderColor: UIColor? {
+        get {
+            if let color = layer.borderColor {
+                return UIColor(cgColor: color)
+            }
+            return nil
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
         }
     }
 }
