@@ -9,6 +9,7 @@ import FirebaseFirestore
 
 class SignUpViewController: UIViewController {
 
+
     @IBOutlet weak var nombreTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var celularTextField: UITextField!
@@ -35,15 +36,15 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    let datadabase = Firestore.firestore()
-    
+    lazy var datadabase = Firestore.firestore()
+
     @IBAction func registrarTappet(_ sender: UIButton) {
     // 1. Validación de campos (Asegúrate de que las contraseñas coincidan aquí)
     guard let email = emailTextField.text, !email.isEmpty,
           let password = contrasenaTextField.text, !password.isEmpty,
           let nombre = nombreTextField.text,
           let celular = celularTextField.text,
-          let confirmPassword = confirmarContraseniaTextField.text,
+          let confirmPassword = confirmarContraseniaTextFiel.text,
           password == confirmPassword else {
         print("Datos incompletos o las contraseñas no coinciden")
         return 
