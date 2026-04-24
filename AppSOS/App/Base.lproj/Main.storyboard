@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3LV-Kz-ODJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tab-root-vc">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -9,6 +9,98 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="tab-root-scene">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="tab-root-vc" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tab-bar">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="nav-home" kind="relationship" relationship="viewControllers" id="seg-home"/>
+                        <segue destination="nav-garage" kind="relationship" relationship="viewControllers" id="seg-garage"/>
+                        <segue destination="nav-historial" kind="relationship" relationship="viewControllers" id="seg-historial"/>
+                        <segue destination="nav-perfil" kind="relationship" relationship="viewControllers" id="seg-perfil"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tab-responder" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-600" y="130"/>
+        </scene>
+        <!--Navigation Controller - Home Tab-->
+        <scene sceneID="nav-home-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-home" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-home-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="rel-home"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-home-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250" y="130"/>
+        </scene>
+        <!--Navigation Controller - Garage Tab-->
+        <scene sceneID="nav-garage-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-garage" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-garage-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="KLk-XU-WBa" kind="relationship" relationship="rootViewController" id="rel-garage"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-garage-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250" y="835"/>
+        </scene>
+        <!--Navigation Controller - Historial Tab-->
+        <scene sceneID="nav-historial-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-historial" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-historial-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="DZE-ri-rHw" kind="relationship" relationship="rootViewController" id="rel-historial"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-historial-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250" y="1638"/>
+        </scene>
+        <!--Navigation Controller - Perfil Tab-->
+        <scene sceneID="nav-perfil-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-perfil" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-perfil-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BAe-h9-eOO" kind="relationship" relationship="rootViewController" id="rel-perfil"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-perfil-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250" y="3254"/>
+        </scene>
         <!--CarLinkSOS-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -1775,30 +1867,331 @@
             </objects>
             <point key="canvasLocation" x="122.90076335877862" y="-568.30985915492965"/>
         </scene>
+        <!--Mi vehículo / Garage-->
+        <scene sceneID="npI-QI-C6s">
+            <objects>
+                <viewController id="KLk-XU-WBa" customClass="GarageViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zxN-Od-XeE">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U3n-EF-t9c">
+                                <rect key="frame" x="24" y="701" width="345" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="4gT-0d-Q9r"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" image="plus" catalog="system" title="Añadir nuevo Vehículo"/>
+                                <connections>
+                                    <segue destination="kOk-89-ohh" kind="show" identifier="mostrarAgregarVehiculo" id="Dyl-TR-26s"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-scan-vin">
+                                <rect key="frame" x="24" y="643" width="345" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="h-scan-vin"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" image="barcode.viewfinder" catalog="system" title="Escanear VIN"/>
+                                <connections>
+                                    <segue destination="nav-vin" kind="presentation" identifier="mostrarScanVIN" id="seg-garage-scan"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jzo-VL-ceJ">
+                                <rect key="frame" x="0.0" y="70" width="393" height="557"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="3Vi-TA-Jc2">
+                                        <rect key="frame" x="116.66666666666669" y="134.66666666666666" width="160" height="118.66666666666669"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="160" id="4ue-eG-0e4"/>
+                                            <constraint firstAttribute="height" constant="120" id="vP1-nv-jW9"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ningún vehículo añadido" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gto-dy-qQD">
+                                        <rect key="frame" x="24" y="278" width="345" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Empieza a construir tu garage" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B0d-lf-s43">
+                                        <rect key="frame" x="48" y="315" width="297" height="55"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Añade tu primer vehículo para solicitar asistencia en carretera más rápidamente cuando la necesites." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RcU-xZ-jcO">
+                                        <rect key="frame" x="32" y="390" width="329" height="61"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="3Vi-TA-Jc2" firstAttribute="centerX" secondItem="Jzo-VL-ceJ" secondAttribute="centerX" id="1yd-v8-VX5"/>
+                                    <constraint firstItem="3Vi-TA-Jc2" firstAttribute="top" secondItem="Jzo-VL-ceJ" secondAttribute="top" constant="134" id="4yj-za-bVi"/>
+                                    <constraint firstItem="Gto-dy-qQD" firstAttribute="top" secondItem="3Vi-TA-Jc2" secondAttribute="bottom" constant="24" id="8dz-h3-zwL"/>
+                                    <constraint firstItem="B0d-lf-s43" firstAttribute="top" secondItem="Gto-dy-qQD" secondAttribute="bottom" constant="16" id="Cs7-m4-S1k"/>
+                                    <constraint firstItem="B0d-lf-s43" firstAttribute="leading" secondItem="Jzo-VL-ceJ" secondAttribute="leading" constant="48" id="K6Y-fU-JLa"/>
+                                    <constraint firstAttribute="trailing" secondItem="B0d-lf-s43" secondAttribute="trailing" constant="48" id="MxY-6i-e2M"/>
+                                    <constraint firstItem="RcU-xZ-jcO" firstAttribute="top" secondItem="B0d-lf-s43" secondAttribute="bottom" constant="20" id="WkV-Z8-rTH"/>
+                                    <constraint firstItem="RcU-xZ-jcO" firstAttribute="leading" secondItem="Jzo-VL-ceJ" secondAttribute="leading" constant="32" id="dMm-sq-O2U"/>
+                                    <constraint firstAttribute="trailing" secondItem="RcU-xZ-jcO" secondAttribute="trailing" constant="32" id="eMU-yv-b8r"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="iCq-bp-jFf">
+                                <rect key="frame" x="0.0" y="70" width="393" height="699"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="vehiculoCell" textLabel="VeJ-X8-RI4" detailTextLabel="UeA-Vx-LES" style="IBUITableViewCellStyleSubtitle" id="gNf-n0-Owp">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="51"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gNf-n0-Owp" id="PUm-dp-FXr">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="51"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VeJ-X8-RI4">
+                                                    <rect key="frame" x="20" y="8" width="25" height="14.333333333333334"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UeA-Vx-LES">
+                                                    <rect key="frame" x="19.999999999999996" y="24.333333333333336" width="52.666666666666664" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="F3g-8S-vFh"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Jzo-VL-ceJ" firstAttribute="trailing" secondItem="F3g-8S-vFh" secondAttribute="trailing" id="0Kk-JK-e05"/>
+                            <constraint firstItem="U3n-EF-t9c" firstAttribute="leading" secondItem="F3g-8S-vFh" secondAttribute="leading" constant="24" id="31L-cK-W9L"/>
+                            <constraint firstItem="Jzo-VL-ceJ" firstAttribute="leading" secondItem="F3g-8S-vFh" secondAttribute="leading" id="4qH-yb-WwN"/>
+                            <constraint firstItem="iCq-bp-jFf" firstAttribute="trailing" secondItem="F3g-8S-vFh" secondAttribute="trailing" id="4ys-Pr-Xe0"/>
+                            <constraint firstItem="btn-scan-vin" firstAttribute="top" secondItem="Jzo-VL-ceJ" secondAttribute="bottom" constant="16" id="garage-scan-top-123"/>
+                            <constraint firstItem="U3n-EF-t9c" firstAttribute="top" secondItem="btn-scan-vin" secondAttribute="bottom" constant="10" id="scan-to-add"/>
+                            <constraint firstItem="iCq-bp-jFf" firstAttribute="top" secondItem="F3g-8S-vFh" secondAttribute="top" id="L9r-Lj-uIj"/>
+                            <constraint firstItem="F3g-8S-vFh" firstAttribute="trailing" secondItem="U3n-EF-t9c" secondAttribute="trailing" constant="24" id="QwH-dP-7fU"/>
+                            <constraint firstItem="F3g-8S-vFh" firstAttribute="trailing" secondItem="btn-scan-vin" secondAttribute="trailing" constant="24" id="trail-scan"/>
+                            <constraint firstItem="btn-scan-vin" firstAttribute="leading" secondItem="F3g-8S-vFh" secondAttribute="leading" constant="24" id="lead-scan"/>
+                            <constraint firstItem="Jzo-VL-ceJ" firstAttribute="top" secondItem="F3g-8S-vFh" secondAttribute="top" id="Rgv-wH-MWK"/>
+                            <constraint firstItem="F3g-8S-vFh" firstAttribute="bottom" secondItem="U3n-EF-t9c" secondAttribute="bottom" constant="20" id="cHL-0e-C7L"/>
+                            <constraint firstItem="F3g-8S-vFh" firstAttribute="bottom" secondItem="iCq-bp-jFf" secondAttribute="bottom" id="iT8-0C-IZK"/>
+                            <constraint firstItem="Jzo-VL-ceJ" firstAttribute="bottom" secondItem="btn-scan-vin" secondAttribute="top" constant="-16" id="garage-scan-bot-456"/>
+                            <constraint firstItem="iCq-bp-jFf" firstAttribute="leading" secondItem="F3g-8S-vFh" secondAttribute="leading" id="sML-cc-e3Q"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Garage" image="car.fill" catalog="system" id="tab-item-garage"/>
+                    <navigationItem key="navigationItem" title="Mi vehículo" id="g7x-1b-ufd"/>
+                    <connections>
+                        <outlet property="btnScanVIN" destination="btn-scan-vin" id="out-scan-vin"/>
+                        <outlet property="tblVehiculos" destination="iCq-bp-jFf" id="9cL-oB-c0E"/>
+                        <outlet property="viewVacía" destination="Jzo-VL-ceJ" id="v6K-X7-L0p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6on-Wk-9xU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1066" y="834"/>
+        </scene>
+        <!--Navigation Controller - VIN Scanner-->
+        <scene sceneID="nav-vin-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-vin" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-vin-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vin-vc" kind="relationship" relationship="rootViewController" id="rel-vin"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-vin-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1068" y="2392"/>
+        </scene>
+        <!--VIN Scanner-->
+        <scene sceneID="vin-scene">
+            <objects>
+                <viewController id="vin-vc" customClass="VinScannerViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vin-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vista-camara">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="recuadro-escaneo">
+                                <rect key="frame" x="46.5" y="276" width="300" height="200"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="rec-w"/>
+                                    <constraint firstAttribute="height" constant="200" id="rec-h"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
+                                        <color red="0.77" green="0.60" blue="0.24" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="12"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="linea-escaneo">
+                                <rect key="frame" x="46.5" y="375" width="300" height="2"/>
+                                <color key="backgroundColor" red="0.77" green="0.60" blue="0.24" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="linea-h"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-cerrar">
+                                <rect key="frame" x="16" y="60" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="cerrar-w"/>
+                                    <constraint firstAttribute="height" constant="44" id="cerrar-h"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-flash">
+                                <rect key="frame" x="333" y="60" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="flash-w"/>
+                                    <constraint firstAttribute="height" constant="44" id="flash-h"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="bolt.fill" catalog="system"/>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="card-info">
+                                <rect key="frame" x="0.0" y="580" width="393" height="272"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="barcode.viewfinder" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="img-icono">
+                                        <rect key="frame" x="24" y="24" width="48" height="48"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="48" id="icono-w"/>
+                                            <constraint firstAttribute="height" constant="48" id="icono-h"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Escanear BIM o VIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-titulo">
+                                        <rect key="frame" x="88" y="24" width="281" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alinee el código de barras dentro del recuadro dorado para leerlo automáticamente." textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-descripcion">
+                                        <rect key="frame" x="88" y="56" width="281" height="60"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-manual">
+                                        <rect key="frame" x="88" y="132" width="281" height="44"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Ingresar manualmente"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="img-icono" firstAttribute="top" secondItem="card-info" secondAttribute="top" constant="24" id="icono-top"/>
+                                    <constraint firstItem="img-icono" firstAttribute="leading" secondItem="card-info" secondAttribute="leading" constant="24" id="icono-lead"/>
+                                    <constraint firstItem="lbl-titulo" firstAttribute="leading" secondItem="img-icono" secondAttribute="trailing" constant="16" id="titulo-lead"/>
+                                    <constraint firstItem="lbl-titulo" firstAttribute="top" secondItem="card-info" secondAttribute="top" constant="24" id="titulo-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="lbl-titulo" secondAttribute="trailing" constant="24" id="titulo-trail"/>
+                                    <constraint firstItem="lbl-descripcion" firstAttribute="leading" secondItem="lbl-titulo" secondAttribute="leading" id="desc-lead"/>
+                                    <constraint firstItem="lbl-descripcion" firstAttribute="top" secondItem="lbl-titulo" secondAttribute="bottom" constant="8" id="desc-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="lbl-descripcion" secondAttribute="trailing" constant="24" id="desc-trail"/>
+                                    <constraint firstItem="btn-manual" firstAttribute="leading" secondItem="lbl-titulo" secondAttribute="leading" id="manual-lead"/>
+                                    <constraint firstItem="btn-manual" firstAttribute="top" secondItem="lbl-descripcion" secondAttribute="bottom" constant="16" id="manual-top"/>
+                                    <constraint firstAttribute="trailing" secondItem="btn-manual" secondAttribute="trailing" constant="24" id="manual-trail"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="safe-vin"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="vista-camara" secondAttribute="bottom" id="cam-bot"/>
+                            <constraint firstItem="vista-camara" firstAttribute="leading" secondItem="vin-view" secondAttribute="leading" id="cam-lead"/>
+                            <constraint firstItem="vista-camara" firstAttribute="top" secondItem="vin-view" secondAttribute="top" id="cam-top"/>
+                            <constraint firstAttribute="trailing" secondItem="vista-camara" secondAttribute="trailing" id="cam-trail"/>
+                            <constraint firstAttribute="bottom" secondItem="card-info" secondAttribute="bottom" id="card-bot"/>
+                            <constraint firstItem="card-info" firstAttribute="leading" secondItem="vin-view" secondAttribute="leading" id="card-lead"/>
+                            <constraint firstAttribute="trailing" secondItem="card-info" secondAttribute="trailing" id="card-trail"/>
+                            <constraint firstItem="btn-cerrar" firstAttribute="leading" secondItem="safe-vin" secondAttribute="leading" constant="16" id="cerrar-lead"/>
+                            <constraint firstItem="btn-cerrar" firstAttribute="top" secondItem="safe-vin" secondAttribute="top" id="cerrar-top"/>
+                            <constraint firstItem="btn-flash" firstAttribute="top" secondItem="safe-vin" secondAttribute="top" id="flash-top"/>
+                            <constraint firstAttribute="trailing" secondItem="btn-flash" secondAttribute="trailing" constant="16" id="flash-trail"/>
+                            <constraint firstItem="linea-escaneo" firstAttribute="centerY" secondItem="recuadro-escaneo" secondAttribute="centerY" id="linea-cy"/>
+                            <constraint firstItem="linea-escaneo" firstAttribute="leading" secondItem="recuadro-escaneo" secondAttribute="leading" id="linea-lead"/>
+                            <constraint firstItem="linea-escaneo" firstAttribute="trailing" secondItem="recuadro-escaneo" secondAttribute="trailing" id="linea-trail"/>
+                            <constraint firstItem="recuadro-escaneo" firstAttribute="centerX" secondItem="vin-view" secondAttribute="centerX" id="recuadro-cx"/>
+                            <constraint firstItem="recuadro-escaneo" firstAttribute="centerY" secondItem="vin-view" secondAttribute="centerY" id="recuadro-cy"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnCerrar" destination="btn-cerrar" id="out-cerrar"/>
+                        <outlet property="btnFlash" destination="btn-flash" id="out-flash"/>
+                        <outlet property="btnManual" destination="btn-manual" id="out-manual"/>
+                        <outlet property="cardInfo" destination="card-info" id="out-card"/>
+                        <outlet property="imgIcono" destination="img-icono" id="out-icono"/>
+                        <outlet property="lblDescripcion" destination="lbl-descripcion" id="out-desc"/>
+                        <outlet property="lblTitulo" destination="lbl-titulo" id="out-titulo"/>
+                        <outlet property="vistaCamara" destination="vista-camara" id="out-camara"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vin-responder" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1068" y="3300"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="Dyl-TR-26s"/>
         <segue reference="3er-Ap-GoI"/>
+        <segue reference="rel-garage"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Image" width="24" height="24"/>
         <image name="Image 1" width="24" height="24"/>
+        <image name="barcode.viewfinder" catalog="system" width="128" height="115"/>
         <image name="bolt.car.fill" catalog="system" width="128" height="95"/>
+        <image name="bolt.fill" catalog="system" width="100" height="128"/>
         <image name="car" catalog="system" width="128" height="95"/>
         <image name="car.circle.fill" catalog="system" width="128" height="123"/>
         <image name="car.fill" catalog="system" width="128" height="95"/>
         <image name="chevron.backward.circle.fill" catalog="system" width="128" height="123"/>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
+        <image name="clock.fill" catalog="system" width="128" height="123"/>
         <image name="exclamationmark.triangle.fill" catalog="system" width="128" height="109"/>
         <image name="eye.slash.fill" catalog="system" width="128" height="96"/>
+        <image name="house.fill" catalog="system" width="128" height="104"/>
         <image name="leaf.fill" catalog="system" width="128" height="109"/>
         <image name="lock.circle.fill" catalog="system" width="128" height="123"/>
         <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="slider.horizontal.3" catalog="system" width="128" height="99"/>
         <image name="square" catalog="system" width="128" height="114"/>
         <image name="tire" catalog="system" width="128" height="123"/>
         <image name="wrench.and.screwdriver.fill" catalog="system" width="128" height="119"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
