@@ -26,7 +26,7 @@ extension UIView {
     
     func aplicarBordeContenedor() {
         layer.cornerRadius = 16
-        layer.borderColor = UIColor(white: 0.9, alpha: 1).cgColor
+        layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
         layer.borderWidth = 1
     }
 }

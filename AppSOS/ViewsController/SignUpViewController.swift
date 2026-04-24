@@ -104,7 +104,8 @@ class SignUpViewController: UIViewController {
         for sub in root.subviews {
             if sub.layer.cornerRadius >= 12, sub.layer.borderWidth >= 1,
                sub.subviews.contains(where: { $0 is UIStackView }) {
-                sub.layer.borderColor = UIColor.lightGray.cgColor
+                // Usamos el mismo color para que sea consistente con aplicarBordeContenedor
+                sub.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
             }
             aplicarBordeGrisAContenedoresDeCampos(en: sub)
         }
