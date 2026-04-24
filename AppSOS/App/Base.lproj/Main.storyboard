@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3LV-Kz-ODJ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tab-root-vc">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -9,6 +9,179 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Tab Bar Controller-->
+        <scene sceneID="tab-root-scene">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="tab-root-vc" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tab-bar-main">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="GhX-Fz-zly" kind="relationship" relationship="viewControllers" id="seg-tab-home"/>
+                        <segue destination="ueU-0x-xmy" kind="relationship" relationship="viewControllers" id="seg-tab-garage"/>
+                        <segue destination="dgA-RE-NhH" kind="relationship" relationship="viewControllers" id="seg-tab-historial"/>
+                        <segue destination="Eud-Vy-YMX" kind="relationship" relationship="viewControllers" id="seg-tab-perfil"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tab-root-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-600" y="130"/>
+        </scene>
+        <!--Navigation Controller VIN Scanner-->
+        <scene sceneID="nav-vin-scene">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nav-vin-ctrl" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nav-vin-bar">
+                        <rect key="frame" x="0.0" y="16" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vin-vc-id" kind="relationship" relationship="rootViewController" id="rel-vin-root"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nav-vin-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1068" y="2800"/>
+        </scene>
+        <!--VIN Scanner-->
+        <scene sceneID="vin-scanner-scene">
+            <objects>
+                <viewController id="vin-vc-id" customClass="ScanVINViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vin-view-id">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vista-camara-id">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="recuadro-escaneo-id">
+                                <rect key="frame" x="46.5" y="276" width="300" height="200"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="rec-w-id"/>
+                                    <constraint firstAttribute="height" constant="200" id="rec-h-id"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="12"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="linea-escaneo-id">
+                                <rect key="frame" x="46.5" y="375" width="300" height="2"/>
+                                <color key="backgroundColor" red="0.77" green="0.60" blue="0.24" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="linea-h-id"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-cerrar-id">
+                                <rect key="frame" x="16" y="60" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="cerrar-w-id"/>
+                                    <constraint firstAttribute="height" constant="44" id="cerrar-h-id"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-flash-id">
+                                <rect key="frame" x="333" y="60" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="flash-w-id"/>
+                                    <constraint firstAttribute="height" constant="44" id="flash-h-id"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="bolt.fill" catalog="system"/>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="card-info-id">
+                                <rect key="frame" x="0.0" y="580" width="393" height="272"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="barcode.viewfinder" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="img-icono-id">
+                                        <rect key="frame" x="24" y="24" width="48" height="48"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="48" id="icono-w-id"/>
+                                            <constraint firstAttribute="height" constant="48" id="icono-h-id"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Escanear BIM o VIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-titulo-id">
+                                        <rect key="frame" x="88" y="24" width="281" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alinee el código de barras dentro del recuadro dorado para leerlo automáticamente." textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-desc-id">
+                                        <rect key="frame" x="88" y="56" width="281" height="60"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-manual-id">
+                                        <rect key="frame" x="88" y="132" width="281" height="44"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Ingresar manualmente"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="img-icono-id" firstAttribute="top" secondItem="card-info-id" secondAttribute="top" constant="24" id="icono-top-id"/>
+                                    <constraint firstItem="img-icono-id" firstAttribute="leading" secondItem="card-info-id" secondAttribute="leading" constant="24" id="icono-lead-id"/>
+                                    <constraint firstItem="lbl-titulo-id" firstAttribute="leading" secondItem="img-icono-id" secondAttribute="trailing" constant="16" id="titulo-lead-id"/>
+                                    <constraint firstItem="lbl-titulo-id" firstAttribute="top" secondItem="card-info-id" secondAttribute="top" constant="24" id="titulo-top-id"/>
+                                    <constraint firstAttribute="trailing" secondItem="lbl-titulo-id" secondAttribute="trailing" constant="24" id="titulo-trail-id"/>
+                                    <constraint firstItem="lbl-desc-id" firstAttribute="leading" secondItem="lbl-titulo-id" secondAttribute="leading" id="desc-lead-id"/>
+                                    <constraint firstItem="lbl-desc-id" firstAttribute="top" secondItem="lbl-titulo-id" secondAttribute="bottom" constant="8" id="desc-top-id"/>
+                                    <constraint firstAttribute="trailing" secondItem="lbl-desc-id" secondAttribute="trailing" constant="24" id="desc-trail-id"/>
+                                    <constraint firstItem="btn-manual-id" firstAttribute="leading" secondItem="lbl-titulo-id" secondAttribute="leading" id="manual-lead-id"/>
+                                    <constraint firstItem="btn-manual-id" firstAttribute="top" secondItem="lbl-desc-id" secondAttribute="bottom" constant="16" id="manual-top-id"/>
+                                    <constraint firstAttribute="trailing" secondItem="btn-manual-id" secondAttribute="trailing" constant="24" id="manual-trail-id"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="safe-vin-id"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="vista-camara-id" secondAttribute="bottom" id="cam-bot-id"/>
+                            <constraint firstItem="vista-camara-id" firstAttribute="leading" secondItem="vin-view-id" secondAttribute="leading" id="cam-lead-id"/>
+                            <constraint firstItem="vista-camara-id" firstAttribute="top" secondItem="vin-view-id" secondAttribute="top" id="cam-top-id"/>
+                            <constraint firstAttribute="trailing" secondItem="vista-camara-id" secondAttribute="trailing" id="cam-trail-id"/>
+                            <constraint firstAttribute="bottom" secondItem="card-info-id" secondAttribute="bottom" id="card-bot-id"/>
+                            <constraint firstItem="card-info-id" firstAttribute="leading" secondItem="vin-view-id" secondAttribute="leading" id="card-lead-id"/>
+                            <constraint firstAttribute="trailing" secondItem="card-info-id" secondAttribute="trailing" id="card-trail-id"/>
+                            <constraint firstItem="btn-cerrar-id" firstAttribute="leading" secondItem="safe-vin-id" secondAttribute="leading" constant="16" id="cerrar-lead-id"/>
+                            <constraint firstItem="btn-cerrar-id" firstAttribute="top" secondItem="safe-vin-id" secondAttribute="top" id="cerrar-top-id"/>
+                            <constraint firstItem="btn-flash-id" firstAttribute="top" secondItem="safe-vin-id" secondAttribute="top" id="flash-top-id"/>
+                            <constraint firstAttribute="trailing" secondItem="btn-flash-id" secondAttribute="trailing" constant="16" id="flash-trail-id"/>
+                            <constraint firstItem="linea-escaneo-id" firstAttribute="centerY" secondItem="recuadro-escaneo-id" secondAttribute="centerY" id="linea-cy-id"/>
+                            <constraint firstItem="linea-escaneo-id" firstAttribute="leading" secondItem="recuadro-escaneo-id" secondAttribute="leading" id="linea-lead-id"/>
+                            <constraint firstItem="linea-escaneo-id" firstAttribute="trailing" secondItem="recuadro-escaneo-id" secondAttribute="trailing" id="linea-trail-id"/>
+                            <constraint firstItem="recuadro-escaneo-id" firstAttribute="centerX" secondItem="vin-view-id" secondAttribute="centerX" id="recuadro-cx-id"/>
+                            <constraint firstItem="recuadro-escaneo-id" firstAttribute="centerY" secondItem="vin-view-id" secondAttribute="centerY" id="recuadro-cy-id"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnCerrar" destination="btn-cerrar-id" id="out-cerrar-id"/>
+                        <outlet property="btnFlash" destination="btn-flash-id" id="out-flash-id"/>
+                        <outlet property="btnManual" destination="btn-manual-id" id="out-manual-id"/>
+                        <outlet property="cardInfo" destination="card-info-id" id="out-card-id"/>
+                        <outlet property="vistaCamara" destination="vista-camara-id" id="out-camara-id"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vin-resp-id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1068" y="3400"/>
+        </scene>
         <!--CarLinkSOS-->
         <scene sceneID="tne-QT-ifu">
             <objects>
