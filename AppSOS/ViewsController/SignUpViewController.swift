@@ -57,8 +57,16 @@ class SignUpViewController: UIViewController {
                             print("Error al sincronizar datos: \(e.localizedDescription)")
                         } else if exito {
                             print("Registro y guardado sincronizado exitoso (Nube y Local)")
-                            // 4. Volver al inicio o pantalla principal
-                            self?.navigationController?.popToRootViewController(animated: true)
+                            // 4. Mostrar modal de éxito y luego ir a Home
+                            let alerta = UIAlertController(title: "¡Registro Exitoso!", message: "Tu cuenta ha sido creada correctamente.", preferredStyle: .alert)
+                            let accionContinuar = UIAlertAction(title: "Continuar", style: .default) { _ in
+                                // Intenta ir al Home usando el segue si existe (como en el Login)
+                                // Si no tienes un segue llamado "toHomeSegue" desde SignUp, 
+                                // puedes instanciar el HomeViewController directamente aquí.
+                                self?.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+                            }
+                            alerta.addAction(accionContinuar)
+                            self?.present(alerta, animated: true)
                         }
                     }
                 }

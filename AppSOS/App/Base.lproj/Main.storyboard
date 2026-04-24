@@ -1449,22 +1449,6 @@
                                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-St">
                                                                 <rect key="frame" x="0.0" y="0.0" width="345" height="58"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-Cd">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="108" height="58"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="108" id="SU-ph-Cw"/>
-                                                                        </constraints>
-                                                                        <color key="tintColor" red="0.24313725490196078" green="0.15294117647058825" blue="0.12156862745098039" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                        <state key="normal" title="Button"/>
-                                                                        <buttonConfiguration key="configuration" style="plain" image="chevron.down" catalog="system" imagePlacement="trailing" title="🇵🇪  +51  " imagePadding="4"/>
-                                                                    </button>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-Dv">
-                                                                        <rect key="frame" x="108" y="0.0" width="1" height="58"/>
-                                                                        <color key="backgroundColor" systemColor="systemGray4Color"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="1" id="SU-ph-Dw"/>
-                                                                        </constraints>
-                                                                    </view>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-Rt">
                                                                         <rect key="frame" x="109" y="0.0" width="236" height="58"/>
                                                                         <subviews>
@@ -1512,7 +1496,7 @@
                                                                     <constraint firstAttribute="height" constant="25" id="SU-pw-Eh"/>
                                                                 </constraints>
                                                                 <color key="tintColor" systemColor="systemGray2Color"/>
-                                                                <state key="normal" title="Button"/>
+                                                                <state key="normal" title=""/>
                                                                 <buttonConfiguration key="configuration" style="plain" image="eye.slash.fill" catalog="system"/>
                                                             </button>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SU-pw-St">
@@ -1561,7 +1545,7 @@
                                                                     <constraint firstAttribute="height" constant="25" id="SU-cf-Eh"/>
                                                                 </constraints>
                                                                 <color key="tintColor" systemColor="systemGray2Color"/>
-                                                                <state key="normal" title="Button"/>
+                                                                <state key="normal" title=""/>
                                                                 <buttonConfiguration key="configuration" style="plain" image="eye.slash.fill" catalog="system"/>
                                                             </button>
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SU-cf-St">
@@ -1600,7 +1584,7 @@
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SU-tr-Stk">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="SU-tr-Stk">
                                                         <rect key="frame" x="0.0" y="609" width="345" height="28.666666666666629"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU-tr-Chk">
@@ -1610,7 +1594,7 @@
                                                                     <constraint firstAttribute="width" constant="24" id="SU-tr-Cw"/>
                                                                 </constraints>
                                                                 <color key="tintColor" systemColor="systemGrayColor"/>
-                                                                <state key="normal" title="Button"/>
+                                                                <state key="normal" title=""/>
                                                                 <buttonConfiguration key="configuration" style="plain" image="square" catalog="system"/>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Acepto los Términos y Condiciones y la Política de Privacidad" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SU-tr-Lb">
@@ -1639,32 +1623,40 @@
                                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </buttonConfiguration>
                                                     </button>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Stk">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Wrapper">
                                                         <rect key="frame" x="0.0" y="719.66666666666663" width="345" height="32"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¿Ya tienes una cuenta?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-L1">
-                                                                <rect key="frame" x="0.0" y="7" width="157" height="18"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                                <color key="textColor" systemColor="systemGrayColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Lg">
-                                                                <rect key="frame" x="229" y="0.0" width="116" height="32"/>
-                                                                <color key="tintColor" red="0.77254901960784317" green="0.57647058823529407" blue="0.29803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="plain" title="Inicia Sesión">
-                                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="15"/>
-                                                                </buttonConfiguration>
-                                                                <connections>
-                                                                    <action selector="irIniciarSesion:" destination="G9M-of-vl0" eventType="touchUpInside" id="SU-Ft-Act"/>
-                                                                </connections>
-                                                            </button>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Stk">
+                                                                <rect key="frame" x="34" y="0.0" width="277" height="32"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¿Ya tienes una cuenta?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-L1">
+                                                                        <rect key="frame" x="0.0" y="7" width="157" height="18"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Lg">
+                                                                        <rect key="frame" x="161" y="0.0" width="116" height="32"/>
+                                                                        <color key="tintColor" red="0.77254901960784317" green="0.57647058823529407" blue="0.29803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        <state key="normal" title=""/>
+                                                                        <buttonConfiguration key="configuration" style="plain" title="Inicia Sesión">
+                                                                            <fontDescription key="titleFontDescription" type="boldSystem" pointSize="15"/>
+                                                                        </buttonConfiguration>
+                                                                        <connections>
+                                                                            <action selector="irIniciarSesion:" destination="G9M-of-vl0" eventType="touchUpInside" id="SU-Ft-Act"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
                                                         </subviews>
-                                                    </stackView>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="SU-Ft-Stk" firstAttribute="centerX" secondItem="SU-Ft-Wrapper" secondAttribute="centerX" id="SU-Ft-Wrapper-CX"/>
+                                                            <constraint firstItem="SU-Ft-Stk" firstAttribute="top" secondItem="SU-Ft-Wrapper" secondAttribute="top" id="SU-Ft-Wrapper-Top"/>
+                                                            <constraint firstAttribute="bottom" secondItem="SU-Ft-Stk" secondAttribute="bottom" id="SU-Ft-Wrapper-Bot"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
-                                                <constraints>
-                                                    <constraint firstItem="SU-Ft-Stk" firstAttribute="centerX" secondItem="mSg-kP-7Qw" secondAttribute="centerX" id="BhL-td-KT2"/>
-                                                </constraints>
                                             </stackView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
