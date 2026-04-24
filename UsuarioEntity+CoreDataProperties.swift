@@ -24,6 +24,7 @@ extension UsuarioEntity {
     @NSManaged public var email: String?
     @NSManaged public var nombre: String?
     @NSManaged public var rol: String?
+    @NSManaged public var is_active: Bool
     @NSManaged public var vehiculos: NSSet?
 
 }

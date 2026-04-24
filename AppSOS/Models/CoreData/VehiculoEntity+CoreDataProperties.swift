@@ -20,6 +20,8 @@ extension VehiculoEntity {
 
     @NSManaged public var anio: Int64
     @NSManaged public var color: String?
+    @NSManaged public var idFirebase: String?
+    @NSManaged public var is_active: Bool
     @NSManaged public var marca: String?
     @NSManaged public var modelo: String?
     @NSManaged public var placa: String?
@@ -27,6 +29,7 @@ extension VehiculoEntity {
     @NSManaged public var tipoVehiculo: String?
     @NSManaged public var transmision: String?
     @NSManaged public var vin: String?
+    @NSManaged public var propietario: UsuarioEntity?
 
 }
 

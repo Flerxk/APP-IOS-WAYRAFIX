@@ -900,7 +900,7 @@
                                                 <color key="textColor" systemColor="systemGray2Color"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ejemplo@correo.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VoJ-hR-tzZ">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="txtEmail" placeholder="ejemplo@correo.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VoJ-hR-tzZ">
                                                 <rect key="frame" x="0.0" y="16.333333333333258" width="308" height="22"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -1015,7 +1015,7 @@
                                             <fontDescription key="titleFontDescription" type="boldSystem" pointSize="15"/>
                                         </buttonConfiguration>
                                         <connections>
-                                            <segue destination="G9M-of-vl0" kind="show" identifier="toHomeSegue" id="Reg-Sg-001"/>
+                                            <segue destination="G9M-of-vl0" kind="show" id="YYO-Gg-igi"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1087,7 +1087,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wme-Py-Kgc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1049.6183206106871" y="-568.30985915492965"/>
+            <point key="canvasLocation" x="1158" y="-956"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="DSt-fQ-PYf">
@@ -1219,7 +1219,7 @@
                                                                         <color key="textColor" systemColor="systemGray2Color"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="nombreTextField" placeholder="Ej. Fernando Olivera" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-nm-Tf">
+                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="txtNombre" placeholder="Ej. Fernando Olivera" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-nm-Tf">
                                                                         <rect key="frame" x="0.0" y="18.333333333333314" width="313" height="21.666666666666671"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
@@ -1257,7 +1257,7 @@
                                                                         <color key="textColor" systemColor="systemGray2Color"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="emailTextField" placeholder="ejemplo@correo.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-em-Tf">
+                                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="txtEmail" placeholder="ejemplo@correo.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-em-Tf">
                                                                         <rect key="frame" x="0.0" y="18.333333333333371" width="313" height="22"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
@@ -1313,7 +1313,7 @@
                                                                                 <color key="textColor" systemColor="systemGray2Color"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="celularTextField" placeholder="999 999 999" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-Tf">
+                                                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="txtTelefono" placeholder="999 999 999" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SU-ph-Tf">
                                                                                 <rect key="frame" x="12" y="18.333333333333368" width="212" height="39.666666666666657"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
@@ -1528,13 +1528,14 @@
                             <constraint firstItem="QJX-Ov-XyB" firstAttribute="bottom" secondItem="zK9-Tt-1gE" secondAttribute="bottom" id="xwW-ZW-HTa"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Bj7-kb-Oed"/>
                     <size key="freeformSize" width="393" height="1200"/>
                     <connections>
                         <outlet property="confirmarContraseniaTextFiel" destination="SU-cf-Tf" id="Bsv-Xq-PgA"/>
                         <outlet property="contrasenaTextField" destination="SU-pw-Tf" id="PRt-Kr-VDZ"/>
                         <outlet property="emailTextField" destination="SU-em-Tf" id="mLg-dY-lLf"/>
                         <outlet property="nombreTextField" destination="SU-nm-Tf" id="3E1-i5-Dul"/>
-                        <outlet property="paisSelectorButton" destination="SU-ph-Tf" id="wQU-bK-4ma"/>
+                        <outlet property="celularTextField" destination="SU-ph-Tf" id="wQU-bK-4ma"/>
                         <outlet property="terminosCheckbox" destination="SU-tr-Chk" id="2Ef-lU-Xlu"/>
                         <outletCollection property="camposConBorde" destination="SU-nm-bg" collectionClass="NSMutableArray" id="SU-oc-nm"/>
                         <outletCollection property="camposConBorde" destination="SU-em-bg" collectionClass="NSMutableArray" id="SU-oc-em"/>
@@ -1545,7 +1546,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X2g-sZ-lOI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1831.2977099236641" y="-576.05633802816908"/>
+            <point key="canvasLocation" x="1926" y="-834"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bdd-fj-2IV">

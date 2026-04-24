@@ -10,6 +10,7 @@
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="nombre" optional="YES" attributeType="String"/>
+        <attribute name="is_active" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="pais" optional="YES" attributeType="String"/>
         <attribute name="rol" optional="YES" attributeType="String"/>
         <relationship name="vehiculos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="VehiculoEntity" inverseName="propietario" inverseEntity="VehiculoEntity"/>
@@ -18,6 +19,7 @@
         <attribute name="anio" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="color" attributeType="String"/>
         <attribute name="idFirebase" optional="YES" attributeType="String"/>
+        <attribute name="is_active" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="marca" attributeType="String"/>
         <attribute name="modelo" attributeType="String"/>
         <attribute name="placa" attributeType="String"/>
