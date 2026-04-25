@@ -1604,10 +1604,6 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="SU-tr-Chk" firstAttribute="centerX" secondItem="SU-tr-Stk" secondAttribute="centerX" id="CJu-L4-GT4"/>
-                                                            <constraint firstItem="SU-tr-Chk" firstAttribute="centerY" secondItem="SU-tr-Stk" secondAttribute="centerY" id="m78-mm-IKW"/>
-                                                        </constraints>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Rg-Btn">
                                                         <rect key="frame" x="0.0" y="649" width="345" height="50"/>
