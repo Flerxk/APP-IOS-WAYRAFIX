@@ -57,13 +57,16 @@ class SignUpViewController: UIViewController {
                             self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
                         } else if exito {
                             print("Registro y guardado sincronizado exitoso (Nube y Local)")
-                            // 4. Mostrar modal de éxito y luego ir a Home
-                            let alerta = UIAlertController(title: "¡Registro Exitoso!", message: "Tu cuenta ha sido creada correctamente.", preferredStyle: .alert)
-                            let accionContinuar = UIAlertAction(title: "Continuar", style: .default) { _ in
-                                // Intenta ir al Home usando el segue si existe (como en el Login)
-                                // Si no tienes un segue llamado "toHomeSegue" desde SignUp, 
-                                // puedes instanciar el HomeViewController directamente aquí.
-                                self?.performSegue(withIdentifier: "toHomeSegue", sender: nil)
+                            // 4. Cerrar sesión de Firebase y volver al Login para validación manual
+                            try? Auth.auth().signOut()
+                            let alerta = UIAlertController(
+                                title: "¡Registro Exitoso!",
+                                message: "Tu cuenta fue creada correctamente. Inicia sesión con tus nuevas credenciales para continuar.",
+                                preferredStyle: .alert
+                            )
+                            let accionContinuar = UIAlertAction(title: "Ir a Iniciar Sesión", style: .default) { _ in
+                                // Regresa al LoginViewController (validación manual de credenciales)
+                                self?.navigationController?.popViewController(animated: true)
                             }
                             alerta.addAction(accionContinuar)
                             self?.present(alerta, animated: true)
