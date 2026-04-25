@@ -21,7 +21,8 @@ class PerfilViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Perfil"
-        view.backgroundColor = WayraTheme.background
+        view.backgroundColor = .clear
+        view.aplicarFondoRosadoRadial()
         prepararVista()
         setupNavigationStyle()
         
@@ -29,6 +30,11 @@ class PerfilViewController: UIViewController {
         view.addGestureRecognizer(tap)
         
         actualizarVistaPerfil()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.ajustarMarcoDeFondoRadial()
     }
     
     func setupNavigationStyle() {

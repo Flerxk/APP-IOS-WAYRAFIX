@@ -58,8 +58,14 @@ class AgregarVehiculoViewController: UIViewController {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.ajustarMarcoDeFondoRadial()
+    }
+    
     func styleUI() {
-        view.backgroundColor = WayraTheme.background
+        view.backgroundColor = .clear
+        view.aplicarFondoRosadoRadial()
         title = "Agregar Vehículo"
         btnGuardar.applyAccentStyle(title: "Guardar Vehículo")
         btnGuardar.titleLabel?.font = .boldSystemFont(ofSize: 18)

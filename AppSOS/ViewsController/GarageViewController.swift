@@ -45,6 +45,11 @@ class GarageViewController: UIViewController {
         repositorioVehiculo.quitarObservador(self)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.ajustarMarcoDeFondoRadial()
+    }
+    
     func cargarVehiculos() {
         do {
             listaVehiculos = try repositorioVehiculo.obtenerVehiculos()
@@ -66,7 +71,8 @@ class GarageViewController: UIViewController {
     }
     
     func setupUI() {
-        view.backgroundColor = WayraTheme.background
+        view.backgroundColor = .clear
+        view.aplicarFondoRosadoRadial()
         title = "Mi Garage"
         tblVehiculos.backgroundColor = .clear
         tblVehiculos.separatorStyle = .none

@@ -36,9 +36,15 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         setupLocation()
         setupUI()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.ajustarMarcoDeFondoRadial()
+    }
 
     func setupUI() {
-        view.backgroundColor = WayraTheme.background
+        view.backgroundColor = .clear // Limpiar el color sólido previo
+        view.aplicarFondoRosadoRadial() // Fondo radial estándar
         topBarView.applyCardStyle(radius: 24)
         topBarView.layer.borderWidth = 1
         topBarView.layer.borderColor = UIColor(white: 0.94, alpha: 1).cgColor

@@ -78,6 +78,13 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurarEstilos()
+        
+        // Evitar que iOS muestre el modal de "Contraseña Fuerte"
+        contrasenaTextField.textContentType = .oneTimeCode
+        confirmarContraseniaTextFiel.textContentType = .oneTimeCode
+        
+        // Alinear verticalmente el placeholder "Celular"
+        celularTextField.contentVerticalAlignment = .center
     }
     
     override func viewDidLayoutSubviews() {

@@ -21,7 +21,14 @@ class HistorialViewController: UIViewController {
         tblHistorial.delegate = self
         tblHistorial.dataSource = self
         
+        view.backgroundColor = .clear
+        view.aplicarFondoRosadoRadial()
         cargarDatos()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.ajustarMarcoDeFondoRadial()
     }
     
     func cargarDatos() {
