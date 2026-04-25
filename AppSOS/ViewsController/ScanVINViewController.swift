@@ -97,17 +97,28 @@ class ScanVINViewController: UIViewController {
     }
     
     @objc func btnManualTapped() {
-        dismiss(animated: true) {
+        let cerrarFlujo = {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let window = windowScene.windows.first,
                let tabBarController = window.rootViewController as? UITabBarController {
                 tabBarController.selectedIndex = 1 
             }
         }
+        
+        if let nav = navigationController, nav.viewControllers.count > 1 {
+            nav.popViewController(animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: cerrarFlujo)
+        } else {
+            dismiss(animated: true, completion: cerrarFlujo)
+        }
     }
     
     @IBAction func btnCerrarTapped(_ sender: UIButton) {
-        dismiss(animated: true)
+        if let nav = navigationController, nav.viewControllers.count > 1 {
+            nav.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     @IBAction func btnFlashTapped(_ sender: UIButton) {

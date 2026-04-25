@@ -25,7 +25,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var lblDireccionActual: UILabel!
     
     let locationManager = CLLocationManager()
-    private let geocoder = CLGeocoder()
     private var vehiculoSeleccionado: VehiculoEntity?
     private var ultimaUbicacionGeocodificada: CLLocation?
     private var direccionActual: String = "Selecciona tu ubicación actual"
@@ -35,28 +34,28 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidLoad()
         setupLocation()
         setupUI()
-        // Motor global: elimina azules y aplica paleta Rojo/Dorado/Gris en toda la jerarquía
-        view.configurarIdentidadWayra()
-        // Escaner específico de botones por texto (SOS, Agregar, etc.)
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.ajustarMarcoDeFondoRadial()
-        // Re-aplicar tinte a íconos de categoría tras el layout (los bounds ya son válidos)
-        aplicarTinteCategorias()
     }
 
     func setupUI() {
-        view.backgroundColor = .clear // Limpiar el color sólido previo
-        view.aplicarFondoRosadoRadial() // Fondo radial estándar
+        view.backgroundColor = .clear
+        view.aplicarFondoRosadoRadial()
         topBarView.applyCardStyle(radius: 24)
         topBarView.layer.borderWidth = 1
         topBarView.layer.borderColor = UIColor(white: 0.94, alpha: 1).cgColor
-        // Panel inferior: esquinas redondeadas arriba (34px) + sombra superior
-        bottomPanel.applyBottomPanelStyle(radius: 34)
-
+        bottomPanel.layer.cornerRadius = 34
+        bottomPanel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        bottomPanel.backgroundColor = WayraTheme.card
+        bottomPanel.layer.shadowColor = UIColor.black.cgColor
+        bottomPanel.layer.shadowOpacity = 0.06
+        bottomPanel.layer.shadowOffset = CGSize(width: 0, height: -6)
+        bottomPanel.layer.shadowRadius = 16
+        
         // Botón SOS: estilo de marca rojo/naranja (= "Registrarme")
         btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
@@ -83,24 +82,13 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     func styleCategorias() {
         guard let stack = catScrollView.subviews.first(where: { $0 is UIStackView }) as? UIStackView else { return }
         for (indice, vista) in stack.arrangedSubviews.enumerated() {
-            // Los corner radius vienen del Storyboard (User Defined Runtime Attributes = 18)
+            vista.layer.cornerRadius = 18
             vista.layer.masksToBounds = true
-            // Primera categoría activa: fondo brandSoft; el resto blanco
+            // Primera categoría seleccionada usa el color suave de marca, el resto blanco
             vista.backgroundColor = indice == 0 ? WayraTheme.brandSoft : .white
-        }
-        // Tinte de íconos se aplica en aplicarTinteCategorias() tras el layout
-    }
-
-    /// Aplica el tinte de marca a todos los UIImageView dentro del scroll de categorías
-    func aplicarTinteCategorias() {
-        guard let stack = catScrollView.subviews.first(where: { $0 is UIStackView }) as? UIStackView else { return }
-        for vista in stack.arrangedSubviews {
-            for sub in vista.subviews {
-                if let img = sub as? UIImageView {
-                    // Íconos de categoría (llanta, batería, herramientas, advertencia)
-                    // → Rojo/Naranja de marca (mismo color que el botón SOS)
-                    img.tintColor = WayraTheme.brand
-                }
+            if let img = vista.subviews.compactMap({ $0 as? UIImageView }).first {
+                // Íconos (llanta, batería, herramientas) con el color del botón SOS
+                img.tintColor = WayraTheme.brand
             }
         }
     }
@@ -149,24 +137,28 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             return
         }
         
-        ultimaUbicacionGeocodificada = ubicacion
-        geocoder.reverseGeocodeLocation(ubicacion) { [weak self] placemarks, _ in
-            guard let self else { return }
-            guard let lugar = placemarks?.first else { return }
-            
-            let calle = lugar.thoroughfare ?? lugar.name ?? "Ubicación actual"
-            let numero = lugar.subThoroughfare ?? ""
-            let distrito = lugar.locality ?? lugar.subAdministrativeArea ?? ""
-            let direccion = [calle + (numero.isEmpty ? "" : " \(numero)"), distrito]
-                .filter { !$0.isEmpty }
-                .joined(separator: ", ")
-            
-            let texto = direccion.isEmpty ? "Ubicación actual" : direccion
-            self.direccionActual = texto
-            DispatchQueue.main.async {
-                self.lblDireccionActual.text = texto
+        self.ultimaUbicacionGeocodificada = ubicacion
+        
+        Task { [weak self] in
+                guard let self = self else { return }
+                    
+                guard let request = MKReverseGeocodingRequest(location: ubicacion) else { return }
+                    
+                do {
+                    let mapItems = try await request.mapItems
+                    guard let lugar = mapItems.first else { return }
+                        
+                    let texto = lugar.address?.shortAddress ?? lugar.name ?? "Ubicación actual"
+                        
+                    self.direccionActual = texto
+                        
+                    DispatchQueue.main.async {
+                        self.lblDireccionActual.text = texto
+                    }
+                } catch {
+                    print("Error al obtener la dirección: \(error.localizedDescription)")
+                }
             }
-        }
     }
     
     @objc func manejarPresionadoSOS(_ gesto: UILongPressGestureRecognizer) {
