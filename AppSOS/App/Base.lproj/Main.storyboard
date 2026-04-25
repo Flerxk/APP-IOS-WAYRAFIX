@@ -2207,7 +2207,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="Dyl-TR-26s"/>
         <segue reference="3er-Ap-GoI"/>
-        <segue reference="seg-login-home-id"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Image" width="24" height="24"/>
