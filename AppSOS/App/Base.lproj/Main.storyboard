@@ -1936,33 +1936,267 @@
             </objects>
             <point key="canvasLocation" x="122.90076335877862" y="-568.30985915492965"/>
         </scene>
-        <!--Pagos View Controller-->
-        <scene sceneID="pagos-scene-id">
+        <!--Información personal-->
+        <scene sceneID="info-personal-scene">
             <objects>
-                <viewController storyboardIdentifier="vc-pagos" id="pagos-vc-id" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="pagos-view-id">
+                <viewController storyboardIdentifier="vc-personal-info" id="info-personal-vc" customClass="InformacionPersonalViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="info-personal-view">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pagos y Cobros" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pagos-lbl-id">
-                                <rect key="frame" x="24" y="411.66666666666669" width="345" height="29"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Información personal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-info-titulo">
+                                <rect key="frame" x="24" y="123" width="345" height="41"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="img-perfil-id">
+                                <rect key="frame" x="146.66666666666666" y="193" width="100" height="98.666666666666686"/>
+                                <color key="tintColor" systemColor="systemGray4Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="img-w"/>
+                                    <constraint firstAttribute="height" constant="100" id="img-h"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="stack-inputs">
+                                <rect key="frame" x="24" y="325" width="345" height="196"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nombre" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="txt-nombres">
+                                        <rect key="frame" x="0.0" y="0.0" width="345" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Apellido" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="txt-apellidos">
+                                        <rect key="frame" x="0.0" y="54" width="345" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Correo electrónico" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="txt-correo">
+                                        <rect key="frame" x="0.0" y="108" width="345" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Celular" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="txt-celular">
+                                        <rect key="frame" x="0.0" y="162" width="345" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-guardar-info">
+                                <rect key="frame" x="24" y="561" width="345" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="btn-h"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Guardar cambios"/>
+                                <connections>
+                                    <action selector="btnGuardarTapped:" destination="info-personal-vc" eventType="touchUpInside" id="act-guardar"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="pagos-safe-id"/>
+                        <viewLayoutGuide key="safeArea" id="safe-info"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="pagos-lbl-id" firstAttribute="centerY" secondItem="pagos-view-id" secondAttribute="centerY" id="pagos-cy-id"/>
-                            <constraint firstItem="pagos-lbl-id" firstAttribute="leading" secondItem="pagos-safe-id" secondAttribute="leading" constant="24" id="pagos-l-id"/>
-                            <constraint firstItem="pagos-safe-id" firstAttribute="trailing" secondItem="pagos-lbl-id" secondAttribute="trailing" constant="24" id="pagos-t-id"/>
+                            <constraint firstItem="lbl-info-titulo" firstAttribute="top" secondItem="safe-info" secondAttribute="top" constant="20" id="c1"/>
+                            <constraint firstItem="lbl-info-titulo" firstAttribute="leading" secondItem="safe-info" secondAttribute="leading" constant="24" id="c2"/>
+                            <constraint firstItem="safe-info" firstAttribute="trailing" secondItem="lbl-info-titulo" secondAttribute="trailing" constant="24" id="c3"/>
+                            <constraint firstItem="img-perfil-id" firstAttribute="top" secondItem="lbl-info-titulo" secondAttribute="bottom" constant="28" id="c4"/>
+                            <constraint firstItem="img-perfil-id" firstAttribute="centerX" secondItem="info-personal-view" secondAttribute="centerX" id="c5"/>
+                            <constraint firstItem="stack-inputs" firstAttribute="top" secondItem="img-perfil-id" secondAttribute="bottom" constant="32" id="c6"/>
+                            <constraint firstItem="stack-inputs" firstAttribute="leading" secondItem="safe-info" secondAttribute="leading" constant="24" id="c7"/>
+                            <constraint firstItem="safe-info" firstAttribute="trailing" secondItem="stack-inputs" secondAttribute="trailing" constant="24" id="c8"/>
+                            <constraint firstItem="btn-guardar-info" firstAttribute="top" secondItem="stack-inputs" secondAttribute="bottom" constant="40" id="c9"/>
+                            <constraint firstItem="btn-guardar-info" firstAttribute="leading" secondItem="safe-info" secondAttribute="leading" constant="24" id="c10"/>
+                            <constraint firstItem="safe-info" firstAttribute="trailing" secondItem="btn-guardar-info" secondAttribute="trailing" constant="24" id="c11"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Información personal" id="nav-info"/>
+                    <connections>
+                        <outlet property="btnGuardar" destination="btn-guardar-info" id="out-btn-g"/>
+                        <outlet property="imgPerfil" destination="img-perfil-id" id="out-img-p"/>
+                        <outlet property="lblTitulo" destination="lbl-info-titulo" id="out-lbl-t"/>
+                        <outlet property="txtApellido" destination="txt-apellidos" id="out-txt-a"/>
+                        <outlet property="txtCelular" destination="txt-celular" id="out-txt-c"/>
+                        <outlet property="txtCorreo" destination="txt-correo" id="out-txt-e"/>
+                        <outlet property="txtNombres" destination="txt-nombres" id="out-txt-n"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pagos-resp-id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="info-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="142.74809160305344" y="2200.7323943661972"/>
+            <point key="canvasLocation" x="2800" y="130"/>
+        </scene>
+        <!--Pagos y cobros-->
+        <scene sceneID="pagos-scene">
+            <objects>
+                <viewController storyboardIdentifier="vc-pagos" id="pagos-vc" customClass="PagosCobrosViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pagos-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pagos y cobros" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-pagos-titulo">
+                                <rect key="frame" x="24" y="123" width="345" height="41"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="tbl-pagos">
+                                <rect key="frame" x="0.0" y="188" width="393" height="540"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-anadir-tarjeta">
+                                <rect key="frame" x="24" y="748" width="345" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="btn-h-p"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Añadir tarjeta"/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="safe-pagos"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="lbl-pagos-titulo" firstAttribute="top" secondItem="safe-pagos" secondAttribute="top" constant="20" id="p1"/>
+                            <constraint firstItem="lbl-pagos-titulo" firstAttribute="leading" secondItem="safe-pagos" secondAttribute="leading" constant="24" id="p2"/>
+                            <constraint firstItem="safe-pagos" firstAttribute="trailing" secondItem="lbl-pagos-titulo" secondAttribute="trailing" constant="24" id="p3"/>
+                            <constraint firstItem="tbl-pagos" firstAttribute="top" secondItem="lbl-pagos-titulo" secondAttribute="bottom" constant="24" id="p4"/>
+                            <constraint firstItem="tbl-pagos" firstAttribute="leading" secondItem="safe-pagos" secondAttribute="leading" id="p5"/>
+                            <constraint firstItem="tbl-pagos" firstAttribute="trailing" secondItem="safe-pagos" secondAttribute="trailing" id="p6"/>
+                            <constraint firstItem="btn-anadir-tarjeta" firstAttribute="top" secondItem="tbl-pagos" secondAttribute="bottom" constant="20" id="p7"/>
+                            <constraint firstItem="safe-pagos" firstAttribute="bottom" secondItem="btn-anadir-tarjeta" secondAttribute="bottom" constant="20" id="p8"/>
+                            <constraint firstItem="btn-anadir-tarjeta" firstAttribute="leading" secondItem="safe-pagos" secondAttribute="leading" constant="24" id="p9"/>
+                            <constraint firstItem="safe-pagos" firstAttribute="trailing" secondItem="btn-anadir-tarjeta" secondAttribute="trailing" constant="24" id="p10"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Pagos y cobros" id="nav-pagos"/>
+                    <connections>
+                        <outlet property="btnAnadirTarjeta" destination="btn-anadir-tarjeta" id="out-btn-p"/>
+                        <outlet property="lblTitulo" destination="lbl-pagos-titulo" id="out-lbl-p"/>
+                        <outlet property="tblMetodosPago" destination="tbl-pagos" id="out-tbl-p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pagos-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3500" y="130"/>
+        </scene>
+        <!--Centro de ayuda-->
+        <scene sceneID="ayuda-scene">
+            <objects>
+                <viewController storyboardIdentifier="vc-ayuda" id="ayuda-vc" customClass="CentroAyudaViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ayuda-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Centro de ayuda" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-ayuda-titulo">
+                                <rect key="frame" x="24" y="123" width="345" height="41"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="tbl-ayuda">
+                                <rect key="frame" x="0.0" y="188" width="393" height="630"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="safe-ayuda"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="lbl-ayuda-titulo" firstAttribute="top" secondItem="safe-ayuda" secondAttribute="top" constant="20" id="a1"/>
+                            <constraint firstItem="lbl-ayuda-titulo" firstAttribute="leading" secondItem="safe-ayuda" secondAttribute="leading" constant="24" id="a2"/>
+                            <constraint firstItem="safe-ayuda" firstAttribute="trailing" secondItem="lbl-ayuda-titulo" secondAttribute="trailing" constant="24" id="a3"/>
+                            <constraint firstItem="tbl-ayuda" firstAttribute="top" secondItem="lbl-ayuda-titulo" secondAttribute="bottom" constant="24" id="a4"/>
+                            <constraint firstItem="tbl-ayuda" firstAttribute="leading" secondItem="safe-ayuda" secondAttribute="leading" id="a5"/>
+                            <constraint firstItem="tbl-ayuda" firstAttribute="trailing" secondItem="safe-ayuda" secondAttribute="trailing" id="a6"/>
+                            <constraint firstItem="safe-ayuda" firstAttribute="bottom" secondItem="tbl-ayuda" secondAttribute="bottom" id="a7"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Centro de ayuda" id="nav-ayuda"/>
+                    <connections>
+                        <outlet property="lblTitulo" destination="lbl-ayuda-titulo" id="out-lbl-a"/>
+                        <outlet property="tblPreguntas" destination="tbl-ayuda" id="out-tbl-a"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ayuda-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4200" y="130"/>
+        </scene>
+        <!--Privacidad y seguridad-->
+        <scene sceneID="privacidad-scene">
+            <objects>
+                <viewController storyboardIdentifier="vc-privacidad" id="privacidad-vc" customClass="PrivacidadSeguridadViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="privacidad-view">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacidad y seguridad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-priv-titulo">
+                                <rect key="frame" x="24" y="123" width="345" height="41"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="stack-priv">
+                                <rect key="frame" x="24" y="196" width="345" height="142"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row1">
+                                        <rect key="frame" x="0.0" y="0.0" width="345" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compartir ubicación" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l1">
+                                                <rect key="frame" x="0.0" y="0.0" width="296" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s1">
+                                                <rect key="frame" x="296" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="switchPrivacidadCambiado:" destination="privacidad-vc" eventType="valueChanged" id="act-s1"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="row2">
+                                        <rect key="frame" x="0.0" y="63" width="345" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notificaciones de seguridad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l2">
+                                                <rect key="frame" x="0.0" y="0.0" width="296" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s2">
+                                                <rect key="frame" x="296" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tus datos están protegidos por el cifrado de extremo a extremo de WayraFix." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l-desc">
+                                        <rect key="frame" x="0.0" y="126" width="345" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="safe-priv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="lbl-priv-titulo" firstAttribute="top" secondItem="safe-priv" secondAttribute="top" constant="20" id="v1"/>
+                            <constraint firstItem="lbl-priv-titulo" firstAttribute="leading" secondItem="safe-priv" secondAttribute="leading" constant="24" id="v2"/>
+                            <constraint firstItem="safe-priv" firstAttribute="trailing" secondItem="lbl-priv-titulo" secondAttribute="trailing" constant="24" id="v3"/>
+                            <constraint firstItem="stack-priv" firstAttribute="top" secondItem="lbl-priv-titulo" secondAttribute="bottom" constant="32" id="v4"/>
+                            <constraint firstItem="stack-priv" firstAttribute="leading" secondItem="safe-priv" secondAttribute="leading" constant="24" id="v5"/>
+                            <constraint firstItem="safe-priv" firstAttribute="trailing" secondItem="stack-priv" secondAttribute="trailing" constant="24" id="v6"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Privacidad y seguridad" id="nav-priv"/>
+                    <connections>
+                        <outlet property="lblTitulo" destination="lbl-priv-titulo" id="out-lbl-pr"/>
+                        <outlet property="stackOpciones" destination="stack-priv" id="out-stk-p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="priv-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4900" y="130"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -1990,6 +2224,7 @@
         <image name="square" catalog="system" width="128" height="114"/>
         <image name="tire" catalog="system" width="128" height="123"/>
         <image name="wrench.and.screwdriver.fill" catalog="system" width="128" height="119"/>
+        <image name="creditcard.fill" catalog="system" width="128" height="88"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
