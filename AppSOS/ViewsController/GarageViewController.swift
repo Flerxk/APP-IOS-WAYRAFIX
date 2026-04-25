@@ -10,6 +10,8 @@ internal import CoreData
 
 class GarageViewController: UIViewController {
 
+    @IBOutlet weak var btnAgregarVehiculo: UIButton!
+    @IBOutlet weak var btnEscanearVIN: UIButton!
     @IBOutlet weak var viewVacía: UIView!
     @IBOutlet weak var tblVehiculos: UITableView!
     
@@ -28,9 +30,7 @@ class GarageViewController: UIViewController {
         tblVehiculos.delegate = self
         tblVehiculos.dataSource = self
         setupUI()
-        // Motor global: elimina azules, aplica paleta Rojo/Dorado/Gris
-        view.configurarIdentidadWayra()
-        // Escaner de botones por texto (Agregar, Añadir, etc.)
+        // Forzar consistencia global de estilos
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     
@@ -84,11 +84,18 @@ class GarageViewController: UIViewController {
         tblVehiculos.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 18, right: 0)
         tblVehiculos.register(GarageVehiculoCell.self, forCellReuseIdentifier: GarageVehiculoCell.reuseId)
         
-        if let addButton = view.subviews.compactMap({ $0 as? UIButton }).first {
-            botonAgregarPrincipal = addButton
-            // Mismo estilo que "Registrarme": color sólido rojo/naranja, bordes redondeados, texto blanco
-            addButton.applyBrandStyle(title: "Agregar")
-        }
+        botonAgregarPrincipal = btnAgregarVehiculo
+        btnAgregarVehiculo.applyBrandStyle(title: "Agregar")
+        btnEscanearVIN.configuration = .filled()
+        btnEscanearVIN.configuration?.image = UIImage(systemName: "barcode.viewfinder")
+        btnEscanearVIN.configuration?.title = "Escanear VIN"
+        btnEscanearVIN.configuration?.imagePadding = 8
+        btnEscanearVIN.configuration?.baseBackgroundColor = .white
+        btnEscanearVIN.configuration?.baseForegroundColor = WayraTheme.textPrimary
+        btnEscanearVIN.layer.cornerRadius = 16
+        btnEscanearVIN.layer.borderWidth = 1
+        btnEscanearVIN.layer.borderColor = WayraTheme.divider.cgColor
+        btnEscanearVIN.clipsToBounds = true
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton

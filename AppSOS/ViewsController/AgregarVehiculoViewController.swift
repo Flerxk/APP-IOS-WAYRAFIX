@@ -81,30 +81,58 @@ class AgregarVehiculoViewController: UIViewController {
         scTransmision.layer.borderColor = WayraTheme.primary.cgColor
         scTransmision.layer.masksToBounds = true
         
-        [txtPlaca, txtMarca, txtModelo, txtAnio, txtColor, txtVin].forEach {
-            $0?.backgroundColor = .white
-            $0?.layer.cornerRadius = 16
-            $0?.layer.borderWidth = 1
-            $0?.layer.borderColor = WayraTheme.divider.cgColor
-            $0?.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 10))
-            $0?.leftViewMode = .always
-            $0?.font = .systemFont(ofSize: 18, weight: .medium)
-            $0?.textColor = WayraTheme.textPrimary
-            $0?.attributedPlaceholder = NSAttributedString(
-                string: $0?.placeholder ?? "",
-                attributes: [.foregroundColor: WayraTheme.textSecondary]
-            )
+        [txtPlaca, txtMarca, txtModelo, txtAnio, txtColor, txtVin].forEach { textField in
+            guard let campo = textField else { return }
+            
+            campo.backgroundColor = .white
+            campo.layer.cornerRadius = 16
+            campo.layer.borderWidth = 1
+            campo.layer.borderColor = WayraTheme.divider.cgColor
+            
+            campo.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 10))
+            campo.leftViewMode = .always
+            
+            campo.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 10))
+            campo.rightViewMode = .unlessEditing
+            
+            campo.clearButtonMode = .whileEditing
+            
+            campo.font = .systemFont(ofSize: 18, weight: .medium)
+            campo.textColor = WayraTheme.textPrimary
+            
+            if let textoPlaceholder = campo.placeholder {
+                campo.attributedPlaceholder = NSAttributedString(
+                    string: textoPlaceholder,
+                    attributes: [.foregroundColor: WayraTheme.textSecondary]
+                )
+            }
         }
         
-        [btnTipoVehiculo, btnTipoCombustible].forEach {
-            $0?.backgroundColor = .white
-            $0?.layer.cornerRadius = 16
-            $0?.layer.borderWidth = 1
-            $0?.layer.borderColor = WayraTheme.divider.cgColor
-            $0?.setTitleColor(WayraTheme.textPrimary, for: .normal)
-            $0?.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
-            $0?.contentHorizontalAlignment = .left
-            $0?.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 14)
+        [btnTipoVehiculo, btnTipoCombustible].forEach { boton in
+            guard let boton = boton else { return }
+            let tituloPorDefecto = boton == btnTipoVehiculo ? "Seleccionar Tipo de Vehículo:" : "Seleccionar Tipo de Combustible:"
+            let tituloActual = boton.title(for: .normal) ?? ""
+            
+            var config = UIButton.Configuration.filled()
+            config.baseBackgroundColor = .white
+            config.baseForegroundColor = WayraTheme.textPrimary
+            config.title = (tituloActual.isEmpty || tituloActual == "Button") ? tituloPorDefecto : tituloActual
+            
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 14)
+            
+            config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+                var outgoing = incoming
+                outgoing.font = .systemFont(ofSize: 18, weight: .medium)
+                return outgoing
+            }
+            
+            config.background.cornerRadius = 16
+            config.background.strokeColor = WayraTheme.divider
+            config.background.strokeWidth = 1
+            
+            boton.configuration = config
+            
+            boton.contentHorizontalAlignment = .left
         }
     }
         
