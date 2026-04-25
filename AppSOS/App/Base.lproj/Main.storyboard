@@ -1525,7 +1525,7 @@
                                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="SU-pw-St" secondAttribute="bottom" constant="8" id="SU-pw-SB"/>
                                                             <constraint firstItem="SU-pw-St" firstAttribute="leading" secondItem="SU-pw-bg" secondAttribute="leading" constant="16" id="SU-pw-SL"/>
                                                             <constraint firstItem="SU-pw-St" firstAttribute="top" secondItem="SU-pw-bg" secondAttribute="top" constant="10" id="SU-pw-STp"/>
-                                                            <constraint firstItem="SU-pw-Ey" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SU-pw-St" secondAttribute="trailing" constant="8" id="SU-pw-Sg"/>
+                                                            <constraint firstItem="SU-pw-Ey" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="SU-pw-St" secondAttribute="trailing" id="SU-pw-Sg"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
