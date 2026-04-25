@@ -53,9 +53,27 @@ class LoginViewController: UIViewController {
             } 
 
             print("Login Exitoso")
-            // Navegar al TabBarController (Tab 1: CarLinkSOS / Tab 2: Mi Garage)
-            // Asegúrate de que el segue "toTabBarSegue" apunte al UITabBarController en el Storyboard
-            self?.performSegue(withIdentifier: "toTabBarSegue", sender: nil)
+            DispatchQueue.main.async {
+                self?.irAlTabBar()
+            }
         }    
+    }
+
+    private func irAlTabBar() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        // *** Asegúrate de que el TabBarController tenga Storyboard ID = "MainTabBar" ***
+        guard let tabBar = storyboard.instantiateViewController(withIdentifier: "MainTabBar") as? UITabBarController else {
+            print("Error: no se encontró el TabBarController con ID 'MainTabBar'")
+            return
+        }
+        if let escena = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let ventana = escena.windows.first {
+            ventana.rootViewController = tabBar
+            ventana.makeKeyAndVisible()
+            UIView.transition(with: ventana,
+                              duration: 0.35,
+                              options: .transitionCrossDissolve,
+                              animations: nil)
+        }
     }
 }
