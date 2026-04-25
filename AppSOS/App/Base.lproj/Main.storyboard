@@ -997,6 +997,9 @@
                                             <fontDescription key="titleFontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
                                             <color key="baseForegroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="googleSignInTapped:" destination="mwq-yB-ntE" eventType="touchUpInside" id="act-google-btn-id"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xx6-C2-uR3">
                                         <rect key="frame" x="182.66666666666663" y="0.0" width="162.33333333333337" height="60"/>
@@ -1027,6 +1030,9 @@
                                     </backgroundConfiguration>
                                     <fontDescription key="titleFontDescription" type="boldSystem" pointSize="17"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="loginTapped:" destination="mwq-yB-ntE" eventType="touchUpInside" id="act-login-btn-id"/>
+                                </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="rip-ZZ-vNz">
                                 <rect key="frame" x="24" y="475" width="345" height="20.333333333333314"/>
@@ -1257,7 +1263,6 @@
                         <outlet property="VistaPassword" destination="3oe-F5-anz" id="P09-Bv-Ojk"/>
                         <outlet property="emailTextField" destination="VoJ-hR-tzZ" id="SY5-Um-0rV"/>
                         <outlet property="passwordTextField" destination="Dou-oq-Nhb" id="lCa-WY-Xue"/>
-                        <segue destination="tab-root-vc" kind="presentation" identifier="toHomeSegue" modalPresentationStyle="fullScreen" id="seg-login-home-id"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wme-Py-Kgc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

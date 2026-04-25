@@ -1,22 +1,20 @@
 import Foundation
+import UIKit
 import CoreData
 import FirebaseFirestore
 import FirebaseAuth
 
 class ControladorPersistencia {
     static let compartido = ControladorPersistencia()
-    
+
+    /// Reutiliza el contenedor del AppDelegate para evitar doble carga de CoreData
     let contenedor: NSPersistentContainer
     let baseDeDatos = Firestore.firestore()
-    
+
     init() {
-        contenedor = NSPersistentContainer(name: "AppSOS")
-        contenedor.loadPersistentStores { (descripcionTienda, error) in
-            if let error = error as NSError? {
-                fatalError("Error no resuelto \(error), \(error.userInfo)")
-            }
-        }
-        // Configurar política de fusión para la sincronización offline
+        // Obtener el contenedor ya inicializado por AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        contenedor = appDelegate.persistentContainer
         contenedor.viewContext.automaticallyMergesChangesFromParent = true
         contenedor.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
