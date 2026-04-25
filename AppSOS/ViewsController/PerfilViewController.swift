@@ -256,7 +256,10 @@ class PerfilViewController: UIViewController {
     }
     
     @objc func irAPersonalInfo() {
-        print("Ir a Info Personal")
+        if let infoVC = storyboard?.instantiateViewController(withIdentifier: "vc-personal-info") {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+            navigationController?.pushViewController(infoVC, animated: true)
+        }
     }
     
     @objc func irAGarage() {
@@ -274,10 +277,16 @@ class PerfilViewController: UIViewController {
     }
     
     @objc func irAAyuda() {
-        print("Ir a Ayuda")
+        if let ayudaVC = storyboard?.instantiateViewController(withIdentifier: "vc-ayuda") {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+            navigationController?.pushViewController(ayudaVC, animated: true)
+        }
     }
     
     @objc func irAPrivacidad() {
-        print("Ir a Privacidad")
+        if let privVC = storyboard?.instantiateViewController(withIdentifier: "vc-privacidad") {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+            navigationController?.pushViewController(privVC, animated: true)
+        }
     }
 }
