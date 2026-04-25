@@ -28,10 +28,13 @@ class LoginViewController: UIViewController {
 
     private func configurarEstilos() {
         view.aplicarFondoRosadoRadial()
-        
+
         VistaEmail.aplicarBordeContenedor()
         VistaPassword.aplicarBordeContenedor()
-        
+
+        // Aplicar bordes y radios estándar a todos los contenedores
+        aplicarEstilosWayra(a: view)
+        // Aplicar estilos de botón por contexto (Registrarme, Iniciar Sesión, etc.)
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
 
@@ -50,8 +53,9 @@ class LoginViewController: UIViewController {
             } 
 
             print("Login Exitoso")
-            //En este caso si el login es exitoso vamos al home
-            self?.performSegue(withIdentifier:"toHomeSegue", sender:nil)
+            // Navegar al TabBarController (Tab 1: CarLinkSOS / Tab 2: Mi Garage)
+            // Asegúrate de que el segue "toTabBarSegue" apunte al UITabBarController en el Storyboard
+            self?.performSegue(withIdentifier: "toTabBarSegue", sender: nil)
         }    
     }
 }

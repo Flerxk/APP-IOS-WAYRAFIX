@@ -35,6 +35,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidLoad()
         setupLocation()
         setupUI()
+        // Forzar consistencia de fuentes y colores en toda la jerarquía
+        BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     
     override func viewDidLayoutSubviews() {
@@ -56,12 +58,12 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         bottomPanel.layer.shadowOffset = CGSize(width: 0, height: -6)
         bottomPanel.layer.shadowRadius = 16
         
-        btnSOS.applyAccentStyle(title: "SOS")
+        // Botón SOS: estilo de marca rojo/naranja (= "Registrarme")
+        btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
-        btnSOS.configuration?.cornerStyle = .capsule
         btnSOS.layer.cornerRadius = 55
         btnSOS.layer.borderWidth = 8
-        btnSOS.layer.borderColor = WayraTheme.accentSoft.cgColor
+        btnSOS.layer.borderColor = WayraTheme.brandSoft.cgColor
         btnSOS.clipsToBounds = true
         btnSOS.addTarget(self, action: #selector(btnSOSTapped(_:)), for: .touchUpInside)
         
@@ -74,7 +76,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         lblDireccionActual.text = direccionActual
         lblDireccionActual.font = .systemFont(ofSize: 15, weight: .medium)
         lblDireccionActual.textColor = WayraTheme.textSecondary
-        
+
         styleCategorias()
         styleTopActionButton()
     }
@@ -84,9 +86,11 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         for (indice, vista) in stack.arrangedSubviews.enumerated() {
             vista.layer.cornerRadius = 18
             vista.layer.masksToBounds = true
-            vista.backgroundColor = indice == 0 ? WayraTheme.accentSoft : .white
+            // Primera categoría seleccionada usa el color suave de marca; el resto blanco
+            vista.backgroundColor = indice == 0 ? WayraTheme.brandSoft : .white
             if let img = vista.subviews.compactMap({ $0 as? UIImageView }).first {
-                img.tintColor = indice == 0 ? WayraTheme.accent : WayraTheme.textSecondary
+                // Íconos (llanta, batería, herramientas) con el color del botón SOS
+                img.tintColor = WayraTheme.brand
             }
         }
     }
@@ -166,9 +170,13 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         do {
             let conteo = try context.count(for: VehiculoEntity.fetchRequest())
             if conteo == 0 {
-                let alerta = UIAlertController(title: "Your garage is empty", message: "Add at least one vehicle before requesting assistance.", preferredStyle: .alert)
-                alerta.addAction(UIAlertAction(title: "OK", style: .default))
-                present(alerta, animated: true)
+                // Sin vehículos → redirigir automáticamente a "Mi Garage" (Tab 1)
+                if let tabBarController = self.tabBarController {
+                    tabBarController.selectedIndex = 1
+                } else {
+                    // Fallback: segue directo a Agregar Vehículo
+                    performSegue(withIdentifier: "mostrarAgregarVehiculo", sender: nil)
+                }
             } else {
                 performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
             }

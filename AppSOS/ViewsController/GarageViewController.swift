@@ -28,6 +28,8 @@ class GarageViewController: UIViewController {
         tblVehiculos.delegate = self
         tblVehiculos.dataSource = self
         setupUI()
+        // Forzar consistencia global de estilos
+        BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,12 +84,14 @@ class GarageViewController: UIViewController {
         
         if let addButton = view.subviews.compactMap({ $0 as? UIButton }).first {
             botonAgregarPrincipal = addButton
-            addButton.applyAccentStyle(title: "Agregar")
+            // Mismo estilo que "Registrarme": color sólido rojo/naranja, bordes redondeados, texto blanco
+            addButton.applyBrandStyle(title: "Agregar")
         }
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton
-            boton.applyAccentStyle(title: "Agregar")
+            // Igual que el botón principal: estilo de marca
+            boton.applyBrandStyle(title: "Agregar")
             boton.addTarget(self, action: #selector(irAAgregarVehiculo), for: .touchUpInside)
         }
         
@@ -229,9 +233,10 @@ final class GarageVehiculoCell: UITableViewCell {
         
         imgVehiculo.translatesAutoresizingMaskIntoConstraints = false
         imgVehiculo.image = UIImage(systemName: "car.fill")
-        imgVehiculo.tintColor = WayraTheme.primary
+        // Ícono del auto: Gris oscuro (paleta oficial, sin azul genérico)
+        imgVehiculo.tintColor = WayraTheme.textPrimary
         imgVehiculo.contentMode = .scaleAspectFit
-        imgVehiculo.backgroundColor = UIColor(white: 0.97, alpha: 1)
+        imgVehiculo.backgroundColor = UIColor(white: 0.96, alpha: 1)
         imgVehiculo.layer.cornerRadius = 10
         imgVehiculo.clipsToBounds = true
         
