@@ -31,14 +31,14 @@ class SignUpViewController: UIViewController {
               let celular = celularTextField.text, !celular.isEmpty,
               let confirmPassword = confirmarContraseniaTextFiel.text,
               password == confirmPassword else {
-            print("Datos incompletos o las contraseñas no coinciden")
+            mostrarAlerta(titulo: "Datos Incompletos", mensaje: "Por favor completa todos los campos y asegúrate de que las contraseñas coincidan.")
             return 
         }
 
         // 2. Crear usuario en Auth
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in 
             if let e = error {
-                print("Error en Auth: \(e.localizedDescription)")
+                self?.mostrarAlerta(titulo: "Error de Registro", mensaje: e.localizedDescription)
                 return
             }
 
@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController {
                 ) { exito, errorDeSincronizacion in
                     DispatchQueue.main.async {
                         if let e = errorDeSincronizacion {
-                            print("Error al sincronizar datos: \(e.localizedDescription)")
+                            self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
                         } else if exito {
                             print("Registro y guardado sincronizado exitoso (Nube y Local)")
                             // 4. Mostrar modal de éxito y luego ir a Home
@@ -123,6 +123,15 @@ class SignUpViewController: UIViewController {
                 sub.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
             }
             aplicarBordeGrisAContenedoresDeCampos(en: sub)
+        }
+    }
+    
+    // MARK: - Alertas
+    private func mostrarAlerta(titulo: String, mensaje: String) {
+        DispatchQueue.main.async {
+            let alerta = UIAlertController(title: titulo, message: mensaje, preferredStyle: .alert)
+            alerta.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alerta, animated: true)
         }
     }
 }
