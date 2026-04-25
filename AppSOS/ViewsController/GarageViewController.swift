@@ -28,7 +28,9 @@ class GarageViewController: UIViewController {
         tblVehiculos.delegate = self
         tblVehiculos.dataSource = self
         setupUI()
-        // Forzar consistencia global de estilos
+        // Motor global: elimina azules, aplica paleta Rojo/Dorado/Gris
+        view.configurarIdentidadWayra()
+        // Escaner de botones por texto (Agregar, Añadir, etc.)
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     

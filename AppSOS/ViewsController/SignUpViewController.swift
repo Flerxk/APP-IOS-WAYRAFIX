@@ -4,15 +4,22 @@ import FirebaseFirestore
 
 class SignUpViewController: UIViewController {
 
+    // MARK: - Outlets de campos
     @IBOutlet weak var nombreTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var celularTextField: UITextField!
     @IBOutlet weak var contrasenaTextField: UITextField!
-    // Nota: Asegúrate de que en el Storyboard este Outlet se llame exactamente así
     @IBOutlet weak var confirmarContraseniaTextFiel: UITextField!
     @IBOutlet weak var terminosCheckbox: UIButton!
-    
+
     @IBOutlet private var camposConBorde: [UIView]?
+
+    // MARK: - Labels de error (creados dinámicamente)
+    private var lblErrorNombre: UILabel!
+    private var lblErrorEmail: UILabel!
+    private var lblErrorCelular: UILabel!
+    private var lblErrorContrasena: UILabel!
+    private var lblErrorConfirmar: UILabel!
 
     // MARK: - Actions
     @IBAction func volverAtras(_ sender: Any) {
@@ -24,53 +31,46 @@ class SignUpViewController: UIViewController {
     }
 
     @IBAction func registrarTappet(_ sender: UIButton) {
-        // 1. Validación de campos
-        guard let email = emailTextField.text, !email.isEmpty,
-              let password = contrasenaTextField.text, !password.isEmpty,
-              let nombre = nombreTextField.text, !nombre.isEmpty,
-              let celular = celularTextField.text, !celular.isEmpty,
-              let confirmPassword = confirmarContraseniaTextFiel.text,
-              password == confirmPassword else {
-            mostrarAlerta(titulo: "Datos Incompletos", mensaje: "Por favor completa todos los campos y asegúrate de que las contraseñas coincidan.")
-            return 
-        }
+        guard validarCampos() else { return }
 
-        // 2. Crear usuario en Auth
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in 
+        let email    = emailTextField.text!
+        let password = contrasenaTextField.text!
+        let nombre   = nombreTextField.text!
+        let celular  = celularTextField.text!
+
+        // Crear usuario en Auth
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             if let e = error {
                 self?.mostrarAlerta(titulo: "Error de Registro", mensaje: e.localizedDescription)
                 return
             }
 
-            // 3. Guardar en Firestore y Core Data usando ControladorPersistencia
-            if let userId = authResult?.user.uid {
-                ControladorPersistencia.compartido.sincronizarUsuario(
-                    id: userId,
-                    nombre: nombre,
-                    email: email,
-                    celular: celular,
-                    pais: "+51",
-                    rol: "cliente"
-                ) { exito, errorDeSincronizacion in
-                    DispatchQueue.main.async {
-                        if let e = errorDeSincronizacion {
-                            self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
-                        } else if exito {
-                            print("Registro y guardado sincronizado exitoso (Nube y Local)")
-                            // 4. Cerrar sesión de Firebase y volver al Login para validación manual
-                            try? Auth.auth().signOut()
-                            let alerta = UIAlertController(
-                                title: "¡Registro Exitoso!",
-                                message: "Tu cuenta fue creada correctamente. Inicia sesión con tus nuevas credenciales para continuar.",
-                                preferredStyle: .alert
-                            )
-                            let accionContinuar = UIAlertAction(title: "Ir a Iniciar Sesión", style: .default) { _ in
-                                // Regresa al LoginViewController (validación manual de credenciales)
-                                self?.navigationController?.popViewController(animated: true)
-                            }
-                            alerta.addAction(accionContinuar)
-                            self?.present(alerta, animated: true)
-                        }
+            guard let userId = authResult?.user.uid else { return }
+
+            // Guardar en Firestore + Core Data
+            ControladorPersistencia.compartido.sincronizarUsuario(
+                id: userId,
+                nombre: nombre,
+                email: email,
+                celular: celular,
+                pais: "+51",
+                rol: "cliente"
+            ) { exito, errorDeSincronizacion in
+                DispatchQueue.main.async {
+                    if let e = errorDeSincronizacion {
+                        self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
+                    } else if exito {
+                        print("Registro y sincronización exitosos (Firestore + Core Data)")
+                        try? Auth.auth().signOut()
+                        let alerta = UIAlertController(
+                            title: "¡Registro Exitoso! 🎉",
+                            message: "Tu cuenta fue creada correctamente.\nInicia sesión con tus nuevas credenciales para continuar.",
+                            preferredStyle: .alert
+                        )
+                        alerta.addAction(UIAlertAction(title: "Ir a Iniciar Sesión", style: .default) { _ in
+                            self?.navigationController?.popViewController(animated: true)
+                        })
+                        self?.present(alerta, animated: true)
                     }
                 }
             }
@@ -81,20 +81,27 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurarEstilos()
-        
-        // Evitar que iOS muestre el modal de "Contraseña Fuerte"
-        contrasenaTextField.textContentType = .oneTimeCode
+        configurarLabelsError()
+
+        // Evitar modal de "Contraseña Fuerte" de iOS
+        contrasenaTextField.textContentType          = .oneTimeCode
         confirmarContraseniaTextFiel.textContentType = .oneTimeCode
-        
+
         // Alinear verticalmente el placeholder "Celular"
         celularTextField.contentVerticalAlignment = .center
+
+        // Validación en tiempo real al escribir
+        [nombreTextField, emailTextField, celularTextField,
+         contrasenaTextField, confirmarContraseniaTextFiel].forEach {
+            $0?.addTarget(self, action: #selector(campoEditado(_:)), for: .editingChanged)
+        }
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.ajustarMarcoDeFondoRadial()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -104,17 +111,158 @@ class SignUpViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
+
+    // MARK: - Validación en tiempo real
+    @objc private func campoEditado(_ sender: UITextField) {
+        // Solo limpiar el error del campo que se está editando
+        switch sender {
+        case nombreTextField:         limpiarError(lblErrorNombre,    en: sender)
+        case emailTextField:          limpiarError(lblErrorEmail,     en: sender)
+        case celularTextField:        limpiarError(lblErrorCelular,   en: sender)
+        case contrasenaTextField:     limpiarError(lblErrorContrasena, en: sender)
+        case confirmarContraseniaTextFiel: limpiarError(lblErrorConfirmar, en: sender)
+        default: break
+        }
+    }
+
+    private func limpiarError(_ label: UILabel?, en campo: UITextField) {
+        label?.isHidden = true
+        // Restaurar borde normal al empezar a escribir
+        campo.superview?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        campo.superview?.layer.borderWidth = 1.0
+    }
+
+    // MARK: - Validación completa
+    /// Valida todos los campos y muestra mensajes en rojo bajo cada uno.
+    /// Devuelve true si todos son válidos.
+    @discardableResult
+    private func validarCampos() -> Bool {
+        var valido = true
+
+        let nombre    = nombreTextField.text ?? ""
+        let email     = emailTextField.text ?? ""
+        let celular   = celularTextField.text ?? ""
+        let password  = contrasenaTextField.text ?? ""
+        let confirmar = confirmarContraseniaTextFiel.text ?? ""
+
+        // Nombre
+        if nombre.trimmingCharacters(in: .whitespaces).isEmpty {
+            mostrarError(lblErrorNombre, en: nombreTextField, mensaje: "El nombre es obligatorio.")
+            valido = false
+        } else {
+            ocultarError(lblErrorNombre, en: nombreTextField)
+        }
+
+        // Email
+        if email.isEmpty {
+            mostrarError(lblErrorEmail, en: emailTextField, mensaje: "El correo no puede estar vacío.")
+            valido = false
+        } else if !esEmailValido(email) {
+            mostrarError(lblErrorEmail, en: emailTextField, mensaje: "Formato de correo inválido.")
+            valido = false
+        } else {
+            ocultarError(lblErrorEmail, en: emailTextField)
+        }
+
+        // Celular
+        if celular.trimmingCharacters(in: .whitespaces).isEmpty {
+            mostrarError(lblErrorCelular, en: celularTextField, mensaje: "El celular es obligatorio.")
+            valido = false
+        } else if celular.count < 7 {
+            mostrarError(lblErrorCelular, en: celularTextField, mensaje: "Número de celular muy corto.")
+            valido = false
+        } else {
+            ocultarError(lblErrorCelular, en: celularTextField)
+        }
+
+        // Contraseña
+        if password.count < 6 {
+            mostrarError(lblErrorContrasena, en: contrasenaTextField, mensaje: "Mínimo 6 caracteres.")
+            valido = false
+        } else {
+            ocultarError(lblErrorContrasena, en: contrasenaTextField)
+        }
+
+        // Confirmar contraseña
+        if confirmar != password {
+            mostrarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel, mensaje: "Las contraseñas no coinciden.")
+            valido = false
+        } else if confirmar.isEmpty {
+            mostrarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel, mensaje: "Confirma tu contraseña.")
+            valido = false
+        } else {
+            ocultarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel)
+        }
+
+        return valido
+    }
+
+    // MARK: - Helpers de error
+    private func esEmailValido(_ email: String) -> Bool {
+        let regex = "[A-Z0-9a-z._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}"
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: email)
+    }
+
+    private func mostrarError(_ label: UILabel?, en campo: UITextField, mensaje: String) {
+        label?.text = mensaje
+        label?.isHidden = false
+        // Borde rojo en el contenedor del campo
+        campo.superview?.layer.borderColor = WayraTheme.brand.cgColor
+        campo.superview?.layer.borderWidth = 1.5
+    }
+
+    private func ocultarError(_ label: UILabel?, en campo: UITextField) {
+        label?.isHidden = true
+        campo.superview?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        campo.superview?.layer.borderWidth = 1.0
+    }
+
+    // MARK: - Labels de error dinámicos
+    private func configurarLabelsError() {
+        let campos: [(UITextField?, inout UILabel?)] = [
+            (nombreTextField,             &lblErrorNombre),
+            (emailTextField,              &lblErrorEmail),
+            (celularTextField,            &lblErrorCelular),
+            (contrasenaTextField,         &lblErrorContrasena),
+            (confirmarContraseniaTextFiel, &lblErrorConfirmar)
+        ]
+
+        for (campo, _) in campos {
+            guard let campo = campo, let contenedor = campo.superview else { continue }
+            let lbl = UILabel()
+            lbl.translatesAutoresizingMaskIntoConstraints = false
+            lbl.font = .systemFont(ofSize: 11, weight: .medium)
+            lbl.textColor = WayraTheme.brand
+            lbl.numberOfLines = 1
+            lbl.isHidden = true
+            contenedor.addSubview(lbl)
+            NSLayoutConstraint.activate([
+                lbl.leadingAnchor.constraint(equalTo: contenedor.leadingAnchor, constant: 8),
+                lbl.trailingAnchor.constraint(equalTo: contenedor.trailingAnchor, constant: -8),
+                lbl.bottomAnchor.constraint(equalTo: contenedor.bottomAnchor, constant: -3)
+            ])
+            // Asignar al label correspondiente
+            switch campo {
+            case nombreTextField:             lblErrorNombre    = lbl
+            case emailTextField:              lblErrorEmail     = lbl
+            case celularTextField:            lblErrorCelular   = lbl
+            case contrasenaTextField:         lblErrorContrasena = lbl
+            case confirmarContraseniaTextFiel: lblErrorConfirmar = lbl
+            default: break
+            }
+        }
+    }
+
     // MARK: - UI Helpers
     private func configurarEstilos() {
         view.aplicarFondoRosadoRadial()
-        
+
         if let cajas = camposConBorde, !cajas.isEmpty {
             cajas.forEach { $0.aplicarBordeContenedor() }
         } else {
             aplicarBordeGrisAContenedoresDeCampos(en: view)
         }
-        
+
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
 
@@ -122,13 +270,12 @@ class SignUpViewController: UIViewController {
         for sub in root.subviews {
             if sub.layer.cornerRadius >= 12, sub.layer.borderWidth >= 1,
                sub.subviews.contains(where: { $0 is UIStackView }) {
-                // Usamos el mismo color para que sea consistente con aplicarBordeContenedor
                 sub.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
             }
             aplicarBordeGrisAContenedoresDeCampos(en: sub)
         }
     }
-    
+
     // MARK: - Alertas
     private func mostrarAlerta(titulo: String, mensaje: String) {
         DispatchQueue.main.async {
@@ -139,17 +286,13 @@ class SignUpViewController: UIViewController {
     }
 }
 
-// MARK: - Extensions
+// MARK: - Extension IBInspectable (borde desde Storyboard)
 extension UIView {
     @IBInspectable var borderColor: UIColor? {
         get {
-            if let color = layer.borderColor {
-                return UIColor(cgColor: color)
-            }
+            if let color = layer.borderColor { return UIColor(cgColor: color) }
             return nil
         }
-        set {
-            layer.borderColor = newValue?.cgColor
-        }
+        set { layer.borderColor = newValue?.cgColor }
     }
 }
