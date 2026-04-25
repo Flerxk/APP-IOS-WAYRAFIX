@@ -185,7 +185,7 @@
         <!--CarLinkSOS-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-home" id="BYZ-38-t0r" customClass="HomeViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -464,7 +464,7 @@
         <!--Detalle Vehiculo View Controller-->
         <scene sceneID="b0P-lC-F7k">
             <objects>
-                <viewController id="5D0-Yo-xL4" customClass="DetalleVehiculoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-detalle-vehiculo" id="5D0-Yo-xL4" customClass="DetalleVehiculoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YRz-qg-CIg">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -556,7 +556,7 @@
         <!--Mi vehículo-->
         <scene sceneID="npI-QI-C6s">
             <objects>
-                <viewController id="KLk-XU-WBa" customClass="GarageViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-garage" id="KLk-XU-WBa" customClass="GarageViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zxN-Od-XeE">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -685,7 +685,7 @@
         <!--Agregar Vehículo-->
         <scene sceneID="8wZ-Hw-ahF">
             <objects>
-                <viewController id="kOk-89-ohh" customClass="AgregarVehiculoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-agregar-vehiculo" id="kOk-89-ohh" customClass="AgregarVehiculoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="e02-V9-AXF">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -963,7 +963,7 @@
         <!--Login View Controller-->
         <scene sceneID="6jO-M8-IK3">
             <objects>
-                <viewController id="mwq-yB-ntE" customClass="LoginViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-login" id="mwq-yB-ntE" customClass="LoginViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EKw-H7-bxh">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1257,6 +1257,7 @@
                         <outlet property="VistaPassword" destination="3oe-F5-anz" id="P09-Bv-Ojk"/>
                         <outlet property="emailTextField" destination="VoJ-hR-tzZ" id="SY5-Um-0rV"/>
                         <outlet property="passwordTextField" destination="Dou-oq-Nhb" id="lCa-WY-Xue"/>
+                        <segue destination="tab-root-vc" kind="presentation" identifier="toHomeSegue" modalPresentationStyle="fullScreen" id="seg-login-home-id"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wme-Py-Kgc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1266,7 +1267,7 @@
         <!--Sign Up View Controller-->
         <scene sceneID="DSt-fQ-PYf">
             <objects>
-                <viewController id="G9M-of-vl0" customClass="SignUpViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-signup" id="G9M-of-vl0" customClass="SignUpViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rha-Jd-Wr5">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1701,6 +1702,7 @@
                         <outletCollection property="camposConBorde" destination="SU-ph-bg" collectionClass="NSMutableArray" id="SU-oc-ph"/>
                         <outletCollection property="camposConBorde" destination="SU-pw-bg" collectionClass="NSMutableArray" id="SU-oc-pw"/>
                         <outletCollection property="camposConBorde" destination="SU-cf-bg" collectionClass="NSMutableArray" id="SU-oc-cf"/>
+                        <segue destination="tab-root-vc" kind="presentation" identifier="toHomeSegue" modalPresentationStyle="fullScreen" id="seg-signup-home-id"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X2g-sZ-lOI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1747,7 +1749,7 @@
         <!--PERFIL-->
         <scene sceneID="HYv-jB-nOj">
             <objects>
-                <viewController id="BAe-h9-eOO" customClass="PerfilViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc-perfil" id="BAe-h9-eOO" customClass="PerfilViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OkE-si-VQT">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1933,6 +1935,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X7J-aq-8Ne" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="122.90076335877862" y="-568.30985915492965"/>
+        </scene>
+        <!--Pagos View Controller-->
+        <scene sceneID="pagos-scene-id">
+            <objects>
+                <viewController storyboardIdentifier="vc-pagos" id="pagos-vc-id" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pagos-view-id">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pagos y Cobros" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pagos-lbl-id">
+                                <rect key="frame" x="24" y="411.66666666666669" width="345" height="29"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="pagos-safe-id"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pagos-lbl-id" firstAttribute="centerY" secondItem="pagos-view-id" secondAttribute="centerY" id="pagos-cy-id"/>
+                            <constraint firstItem="pagos-lbl-id" firstAttribute="leading" secondItem="pagos-safe-id" secondAttribute="leading" constant="24" id="pagos-l-id"/>
+                            <constraint firstItem="pagos-safe-id" firstAttribute="trailing" secondItem="pagos-lbl-id" secondAttribute="trailing" constant="24" id="pagos-t-id"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pagos-resp-id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="142.74809160305344" y="2200.7323943661972"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PerfilViewController: UIViewController {
 
@@ -14,13 +15,12 @@ class PerfilViewController: UIViewController {
     @IBOutlet weak var txtCelular: UITextField!
     @IBOutlet weak var btnGuardar: UIButton!
     
-    private let proveedorSesion: ProveedorSesionPerfilProtocol = ProveedorSesionPerfilLocal()
     private weak var summaryStack: UIStackView?
     private weak var stackOpcionesCuenta: UIStackView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Perfil"
+        self.title = "" 
         view.backgroundColor = .clear
         view.aplicarFondoRosadoRadial()
         prepararVista()
@@ -43,9 +43,15 @@ class PerfilViewController: UIViewController {
         btnCerrar.tintColor = WayraTheme.textPrimary
         btnCerrar.backgroundColor = .clear
         btnCerrar.addAction(UIAction { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+            if let nav = self?.navigationController, nav.viewControllers.count > 1 {
+                nav.popViewController(animated: true)
+            } else {
+                self?.dismiss(animated: true)
+            }
         }, for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: btnCerrar)
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     @objc func ocultarTeclado() {
@@ -67,96 +73,124 @@ class PerfilViewController: UIViewController {
     }
     
     func actualizarVistaPerfil() {
-        let perfil = proveedorSesion.obtenerPerfilActual()
-        construirResumen(perfil: perfil)
+        let user = Auth.auth().currentUser
+        construirResumen(nombre: user?.displayName ?? "Carlos Mendoza", correo: user?.email ?? "carlos.mendoza@gmail.com")
         construirOpcionesPerfil()
     }
     
-    func construirResumen(perfil: PerfilSesion) {
+    func construirResumen(nombre: String, correo: String) {
         summaryStack?.removeFromSuperview()
         
-        let stackVertical = UIStackView()
-        stackVertical.translatesAutoresizingMaskIntoConstraints = false
-        stackVertical.axis = .vertical
-        stackVertical.spacing = 6
+        let btnCerrar = UIButton(type: .system)
+        btnCerrar.translatesAutoresizingMaskIntoConstraints = false
+        btnCerrar.setImage(UIImage(systemName: "xmark"), for: .normal)
+        btnCerrar.tintColor = .black
+        btnCerrar.addAction(UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        }, for: .touchUpInside)
+        view.addSubview(btnCerrar)
+
+        let lblTituloPerfil = UILabel()
+        lblTituloPerfil.translatesAutoresizingMaskIntoConstraints = false
+        lblTituloPerfil.text = "Perfil"
+        lblTituloPerfil.font = .boldSystemFont(ofSize: 34)
+        view.addSubview(lblTituloPerfil)
+        
+        let stackVerticalInfo = UIStackView()
+        stackVerticalInfo.translatesAutoresizingMaskIntoConstraints = false
+        stackVerticalInfo.axis = .vertical
+        stackVerticalInfo.spacing = 4
         
         let lblNombre = UILabel()
-        lblNombre.text = perfil.nombreCompleto
-        lblNombre.font = .boldSystemFont(ofSize: 34)
+        lblNombre.text = nombre
+        lblNombre.font = .boldSystemFont(ofSize: 22)
         
         let lblCorreo = UILabel()
-        lblCorreo.text = perfil.estaLogueado ? perfil.correo : ""
-        lblCorreo.font = .systemFont(ofSize: 16, weight: .medium)
-        lblCorreo.textColor = WayraTheme.textSecondary
-        lblCorreo.isHidden = !perfil.estaLogueado
+        lblCorreo.text = correo
+        lblCorreo.font = .systemFont(ofSize: 16)
+        lblCorreo.textColor = .systemGray
+        
+        stackVerticalInfo.addArrangedSubview(lblNombre)
+        stackVerticalInfo.addArrangedSubview(lblCorreo)
         
         let imgPerfil = UIImageView(image: UIImage(systemName: "person.crop.circle.fill"))
         imgPerfil.translatesAutoresizingMaskIntoConstraints = false
         imgPerfil.tintColor = .lightGray
         imgPerfil.contentMode = .scaleAspectFill
+        imgPerfil.layer.cornerRadius = 36
+        imgPerfil.clipsToBounds = true
         
-        stackVertical.addArrangedSubview(lblNombre)
-        stackVertical.addArrangedSubview(lblCorreo)
-        view.addSubview(stackVertical)
+        view.addSubview(stackVerticalInfo)
         view.addSubview(imgPerfil)
         
         NSLayoutConstraint.activate([
-            stackVertical.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            stackVertical.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
+            btnCerrar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            btnCerrar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            btnCerrar.widthAnchor.constraint(equalToConstant: 24),
+            btnCerrar.heightAnchor.constraint(equalToConstant: 24),
+
+            lblTituloPerfil.topAnchor.constraint(equalTo: btnCerrar.bottomAnchor, constant: 24),
+            lblTituloPerfil.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            stackVerticalInfo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            stackVerticalInfo.topAnchor.constraint(equalTo: lblTituloPerfil.bottomAnchor, constant: 28),
+            stackVerticalInfo.trailingAnchor.constraint(equalTo: imgPerfil.leadingAnchor, constant: -16),
+            
             imgPerfil.widthAnchor.constraint(equalToConstant: 72),
             imgPerfil.heightAnchor.constraint(equalToConstant: 72),
             view.trailingAnchor.constraint(equalTo: imgPerfil.trailingAnchor, constant: 24),
-            imgPerfil.centerYAnchor.constraint(equalTo: stackVertical.centerYAnchor)
+            imgPerfil.centerYAnchor.constraint(equalTo: stackVerticalInfo.centerYAnchor)
         ])
         
-        summaryStack = stackVertical
+        summaryStack = stackVerticalInfo
     }
     
     func construirOpcionesPerfil() {
         stackOpcionesCuenta?.removeFromSuperview()
         
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.spacing = 24
+        let stackPrincipal = UIStackView()
+        stackPrincipal.translatesAutoresizingMaskIntoConstraints = false
+        stackPrincipal.axis = .vertical
+        stackPrincipal.spacing = 32
         
-        let tituloCuenta = crearTituloSeccion("Ajustes de cuenta")
-        let tituloAsistencia = crearTituloSeccion("Asistencia")
-        
-        let filasCuenta = crearFilas([
-            ("person.circle", "Información personal"),
-            ("car", "Mis vehículos"),
-            ("creditcard", "Pagos y cobros")
+        let seccionCuenta = crearSeccion(titulo: "Ajustes de cuenta", filas: [
+            ("person.circle", "Información personal", #selector(irAPersonalInfo)),
+            ("car", "Mis vehículos", #selector(irAGarage)),
+            ("creditcard", "Pagos y cobros", #selector(irAPagos))
         ])
         
-        let filasAsistencia = crearFilas([
-            ("questionmark.circle", "Centro de ayuda"),
-            ("shield", "Privacidad y seguridad")
+        let seccionAsistencia = crearSeccion(titulo: "Asistencia", filas: [
+            ("questionmark.circle", "Centro de ayuda", #selector(irAAyuda)),
+            ("shield", "Privacidad y seguridad", #selector(irAPrivacidad))
         ])
         
-        [tituloCuenta, filasCuenta, tituloAsistencia, filasAsistencia].forEach { stack.addArrangedSubview($0) }
-        view.addSubview(stack)
+        stackPrincipal.addArrangedSubview(seccionCuenta)
+        stackPrincipal.addArrangedSubview(seccionAsistencia)
+        
+        view.addSubview(stackPrincipal)
         
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: summaryStack?.bottomAnchor ?? view.safeAreaLayoutGuide.topAnchor, constant: 36),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            view.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant: 24)
+            stackPrincipal.topAnchor.constraint(equalTo: summaryStack?.bottomAnchor ?? view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            stackPrincipal.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            view.trailingAnchor.constraint(equalTo: stackPrincipal.trailingAnchor, constant: 24)
         ])
         
-        stackOpcionesCuenta = stack
+        stackOpcionesCuenta = stackPrincipal
     }
     
-    func crearTituloSeccion(_ texto: String) -> UILabel {
+    func crearSeccion(titulo: String, filas: [(String, String, Selector)]) -> UIStackView {
+        let stackSeccion = UIStackView()
+        stackSeccion.axis = .vertical
+        stackSeccion.spacing = 16
+        
         let lblTitulo = UILabel()
-        lblTitulo.text = texto
-        lblTitulo.font = .boldSystemFont(ofSize: 18)
-        return lblTitulo
-    }
-    
-    func crearFilas(_ filas: [(String, String)]) -> UIStackView {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 0
+        lblTitulo.text = titulo
+        lblTitulo.font = .boldSystemFont(ofSize: 22)
+        stackSeccion.addArrangedSubview(lblTitulo)
+        
+        let stackFilas = UIStackView()
+        stackFilas.axis = .vertical
+        stackFilas.spacing = 0
         
         for (indice, fila) in filas.enumerated() {
             let vistaFila = UIView()
@@ -164,46 +198,86 @@ class PerfilViewController: UIViewController {
             
             let icono = UIImageView(image: UIImage(systemName: fila.0))
             icono.translatesAutoresizingMaskIntoConstraints = false
-            icono.tintColor = WayraTheme.textPrimary
+            icono.tintColor = .black
+            icono.contentMode = .scaleAspectFit
             
             let etiquetaTitulo = UILabel()
             etiquetaTitulo.translatesAutoresizingMaskIntoConstraints = false
             etiquetaTitulo.text = fila.1
-            etiquetaTitulo.font = .systemFont(ofSize: 18, weight: .medium)
+            etiquetaTitulo.font = .systemFont(ofSize: 18, weight: .regular)
             
             let iconoChevron = UIImageView(image: UIImage(systemName: "chevron.right"))
             iconoChevron.translatesAutoresizingMaskIntoConstraints = false
-            iconoChevron.tintColor = WayraTheme.textSecondary
+            iconoChevron.tintColor = .systemGray3
             
             vistaFila.addSubview(icono)
             vistaFila.addSubview(etiquetaTitulo)
             vistaFila.addSubview(iconoChevron)
             
             NSLayoutConstraint.activate([
-                vistaFila.heightAnchor.constraint(equalToConstant: 66),
+                vistaFila.heightAnchor.constraint(equalToConstant: 54),
                 icono.leadingAnchor.constraint(equalTo: vistaFila.leadingAnchor),
                 icono.centerYAnchor.constraint(equalTo: vistaFila.centerYAnchor),
-                icono.widthAnchor.constraint(equalToConstant: 24),
-                icono.heightAnchor.constraint(equalToConstant: 24),
+                icono.widthAnchor.constraint(equalToConstant: 28),
+                icono.heightAnchor.constraint(equalToConstant: 28),
                 
                 etiquetaTitulo.leadingAnchor.constraint(equalTo: icono.trailingAnchor, constant: 16),
                 etiquetaTitulo.centerYAnchor.constraint(equalTo: vistaFila.centerYAnchor),
                 
                 iconoChevron.trailingAnchor.constraint(equalTo: vistaFila.trailingAnchor),
-                iconoChevron.centerYAnchor.constraint(equalTo: vistaFila.centerYAnchor)
+                iconoChevron.centerYAnchor.constraint(equalTo: vistaFila.centerYAnchor),
+                iconoChevron.widthAnchor.constraint(equalToConstant: 14)
             ])
             
-            stack.addArrangedSubview(vistaFila)
+            let btnInvisible = UIButton(type: .custom)
+            btnInvisible.translatesAutoresizingMaskIntoConstraints = false
+            btnInvisible.addTarget(self, action: fila.2, for: .touchUpInside)
+            vistaFila.addSubview(btnInvisible)
+            NSLayoutConstraint.activate([
+                btnInvisible.topAnchor.constraint(equalTo: vistaFila.topAnchor),
+                btnInvisible.leadingAnchor.constraint(equalTo: vistaFila.leadingAnchor),
+                btnInvisible.trailingAnchor.constraint(equalTo: vistaFila.trailingAnchor),
+                btnInvisible.bottomAnchor.constraint(equalTo: vistaFila.bottomAnchor)
+            ])
+            
+            stackFilas.addArrangedSubview(vistaFila)
             
             if indice < filas.count - 1 {
                 let divisor = UIView()
-                divisor.backgroundColor = WayraTheme.divider
+                divisor.backgroundColor = UIColor(white: 0.92, alpha: 1)
                 divisor.translatesAutoresizingMaskIntoConstraints = false
                 NSLayoutConstraint.activate([divisor.heightAnchor.constraint(equalToConstant: 1)])
-                stack.addArrangedSubview(divisor)
+                stackFilas.addArrangedSubview(divisor)
             }
         }
         
-        return stack
+        stackSeccion.addArrangedSubview(stackFilas)
+        return stackSeccion
+    }
+    
+    @objc func irAPersonalInfo() {
+        print("Ir a Info Personal")
+    }
+    
+    @objc func irAGarage() {
+        if let garageVC = storyboard?.instantiateViewController(withIdentifier: "vc-garage") {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+            navigationController?.pushViewController(garageVC, animated: true)
+        }
+    }
+    
+    @objc func irAPagos() {
+        if let pagosVC = storyboard?.instantiateViewController(withIdentifier: "vc-pagos") {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+            navigationController?.pushViewController(pagosVC, animated: true)
+        }
+    }
+    
+    @objc func irAAyuda() {
+        print("Ir a Ayuda")
+    }
+    
+    @objc func irAPrivacidad() {
+        print("Ir a Privacidad")
     }
 }
