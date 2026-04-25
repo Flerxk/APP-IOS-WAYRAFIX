@@ -307,8 +307,10 @@ class LoginViewController: UIViewController {
             print("Error: no se encontró el TabBarController con Storyboard ID 'MainTabBar'")
             return
         }
-        if let escena = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let ventana = escena.windows.first {
+        if let escena = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            // keyWindow es el método preferido en iOS 15+; windows.first como fallback
+            let ventana = escena.keyWindow ?? escena.windows.first
+            guard let ventana = ventana else { return }
             ventana.rootViewController = tabBar
             ventana.makeKeyAndVisible()
             UIView.transition(with: ventana, duration: 0.35,

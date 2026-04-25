@@ -183,12 +183,12 @@ class SignUpViewController: UIViewController {
             ocultarError(lblErrorContrasena, en: contrasenaTextField)
         }
 
-        // Confirmar contraseña
-        if confirmar != password {
-            mostrarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel, mensaje: "Las contraseñas no coinciden.")
-            valido = false
-        } else if confirmar.isEmpty {
+        // Confirmar contraseña (orden correcto: primero vacío, luego no coincide)
+        if confirmar.isEmpty {
             mostrarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel, mensaje: "Confirma tu contraseña.")
+            valido = false
+        } else if confirmar != password {
+            mostrarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel, mensaje: "Las contraseñas no coinciden.")
             valido = false
         } else {
             ocultarError(lblErrorConfirmar, en: confirmarContraseniaTextFiel)
@@ -219,38 +219,29 @@ class SignUpViewController: UIViewController {
 
     // MARK: - Labels de error dinámicos
     private func configurarLabelsError() {
-        let campos: [(UITextField?, inout UILabel?)] = [
-            (nombreTextField,             &lblErrorNombre),
-            (emailTextField,              &lblErrorEmail),
-            (celularTextField,            &lblErrorCelular),
-            (contrasenaTextField,         &lblErrorContrasena),
-            (confirmarContraseniaTextFiel, &lblErrorConfirmar)
-        ]
+        lblErrorNombre     = crearYAnclarLabel(en: nombreTextField)
+        lblErrorEmail      = crearYAnclarLabel(en: emailTextField)
+        lblErrorCelular    = crearYAnclarLabel(en: celularTextField)
+        lblErrorContrasena = crearYAnclarLabel(en: contrasenaTextField)
+        lblErrorConfirmar  = crearYAnclarLabel(en: confirmarContraseniaTextFiel)
+    }
 
-        for (campo, _) in campos {
-            guard let campo = campo, let contenedor = campo.superview else { continue }
-            let lbl = UILabel()
-            lbl.translatesAutoresizingMaskIntoConstraints = false
-            lbl.font = .systemFont(ofSize: 11, weight: .medium)
-            lbl.textColor = WayraTheme.brand
-            lbl.numberOfLines = 1
-            lbl.isHidden = true
-            contenedor.addSubview(lbl)
-            NSLayoutConstraint.activate([
-                lbl.leadingAnchor.constraint(equalTo: contenedor.leadingAnchor, constant: 8),
-                lbl.trailingAnchor.constraint(equalTo: contenedor.trailingAnchor, constant: -8),
-                lbl.bottomAnchor.constraint(equalTo: contenedor.bottomAnchor, constant: -3)
-            ])
-            // Asignar al label correspondiente
-            switch campo {
-            case nombreTextField:             lblErrorNombre    = lbl
-            case emailTextField:              lblErrorEmail     = lbl
-            case celularTextField:            lblErrorCelular   = lbl
-            case contrasenaTextField:         lblErrorContrasena = lbl
-            case confirmarContraseniaTextFiel: lblErrorConfirmar = lbl
-            default: break
-            }
-        }
+    private func crearYAnclarLabel(en campo: UITextField?) -> UILabel {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .systemFont(ofSize: 11, weight: .medium)
+        lbl.textColor = WayraTheme.brand
+        lbl.numberOfLines = 1
+        lbl.isHidden = true
+
+        guard let campo = campo, let contenedor = campo.superview else { return lbl }
+        contenedor.addSubview(lbl)
+        NSLayoutConstraint.activate([
+            lbl.leadingAnchor.constraint(equalTo: contenedor.leadingAnchor, constant: 8),
+            lbl.trailingAnchor.constraint(equalTo: contenedor.trailingAnchor, constant: -8),
+            lbl.bottomAnchor.constraint(equalTo: contenedor.bottomAnchor, constant: -3)
+        ])
+        return lbl
     }
 
     // MARK: - UI Helpers
@@ -283,16 +274,5 @@ class SignUpViewController: UIViewController {
             alerta.addAction(UIAlertAction(title: "OK", style: .default))
             self.present(alerta, animated: true)
         }
-    }
-}
-
-// MARK: - Extension IBInspectable (borde desde Storyboard)
-extension UIView {
-    @IBInspectable var borderColor: UIColor? {
-        get {
-            if let color = layer.borderColor { return UIColor(cgColor: color) }
-            return nil
-        }
-        set { layer.borderColor = newValue?.cgColor }
     }
 }

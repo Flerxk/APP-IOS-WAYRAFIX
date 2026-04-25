@@ -136,3 +136,31 @@ extension UIViewController {
         }
     }
 }
+
+// MARK: - IBInspectable: borde configurable desde Storyboard
+extension UIView {
+    /// Permite definir el color de borde directamente en el Storyboard
+    /// via User Defined Runtime Attributes o el Attributes Inspector.
+    @IBInspectable var borderColor: UIColor? {
+        get {
+            if let color = layer.borderColor { return UIColor(cgColor: color) }
+            return nil
+        }
+        set { layer.borderColor = newValue?.cgColor }
+    }
+
+    /// Permite definir el ancho de borde directamente en el Storyboard.
+    @IBInspectable var borderWidth: CGFloat {
+        get { layer.borderWidth }
+        set { layer.borderWidth = newValue }
+    }
+
+    /// Permite definir el radio de esquinas directamente en el Storyboard.
+    @IBInspectable var cornerRadius: CGFloat {
+        get { layer.cornerRadius }
+        set {
+            layer.cornerRadius  = newValue
+            layer.masksToBounds = newValue > 0
+        }
+    }
+}
