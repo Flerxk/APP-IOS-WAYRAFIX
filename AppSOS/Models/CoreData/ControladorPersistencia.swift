@@ -122,7 +122,6 @@ class ControladorPersistencia {
     
     func sincronizarVehiculo(idFirebase: String, propietarioId: String, marca: String, modelo: String, placa: String, color: String, anio: Int64, finalizacion: @escaping (Bool, Error?) -> Void) {
         let datos: [String: Any] = [
-            "propietarioId": propietarioId,
             "marca": marca,
             "modelo": modelo,
             "placa": placa,
@@ -131,7 +130,8 @@ class ControladorPersistencia {
             "is_active": true
         ]
         
-        baseDeDatos.collection("vehiculos").document(idFirebase).setData(datos) { [weak self] error in
+        // Guardar en subcolección de usuario para One-to-Many real
+        baseDeDatos.collection("usuarios").document(propietarioId).collection("vehiculos").document(idFirebase).setData(datos) { [weak self] error in
             if let error = error {
                 finalizacion(false, error)
                 return
@@ -140,14 +140,14 @@ class ControladorPersistencia {
             guard let autoRef = self else { return }
             autoRef.contextoVista.perform {
                 let peticionBusqueda: NSFetchRequest<VehiculoEntity> = NSFetchRequest<VehiculoEntity>(entityName: "VehiculoEntity")
-                peticionBusqueda.predicate = NSPredicate(format: "idFirebase == %@", idFirebase)
+                peticionBusqueda.predicate = NSPredicate(format: "vin == %@", idFirebase)
                 
                 let vehiculo: VehiculoEntity
                 if let existente = try? autoRef.contextoVista.fetch(peticionBusqueda).first {
                     vehiculo = existente
                 } else {
                     vehiculo = NSEntityDescription.insertNewObject(forEntityName: "VehiculoEntity", into: autoRef.contextoVista) as! VehiculoEntity
-                    vehiculo.idFirebase = idFirebase
+                    vehiculo.vin = idFirebase
                 }
                 
                 vehiculo.marca = marca
@@ -157,7 +157,7 @@ class ControladorPersistencia {
                 vehiculo.anio = anio
                 vehiculo.is_active = true
                 
-                // Relacionar propietario
+                // Relacionar propietario en CoreData
                 let peticionUsuario: NSFetchRequest<UsuarioEntity> = NSFetchRequest<UsuarioEntity>(entityName: "UsuarioEntity")
                 peticionUsuario.predicate = NSPredicate(format: "id == %@", propietarioId)
                 if let propietario = try? autoRef.contextoVista.fetch(peticionUsuario).first {
@@ -174,7 +174,8 @@ class ControladorPersistencia {
     }
     
     func eliminarLogicamenteVehiculo(idFirebase: String, finalizacion: @escaping (Bool, Error?) -> Void) {
-        baseDeDatos.collection("vehiculos").document(idFirebase).updateData(["is_active": false]) { [weak self] error in
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        baseDeDatos.collection("usuarios").document(uid).collection("vehiculos").document(idFirebase).updateData(["is_active": false]) { [weak self] error in
             if let error = error {
                 finalizacion(false, error)
                 return
@@ -183,7 +184,7 @@ class ControladorPersistencia {
             guard let autoRef = self else { return }
             autoRef.contextoVista.perform {
                 let peticionBusqueda: NSFetchRequest<VehiculoEntity> = NSFetchRequest<VehiculoEntity>(entityName: "VehiculoEntity")
-                peticionBusqueda.predicate = NSPredicate(format: "idFirebase == %@", idFirebase)
+                peticionBusqueda.predicate = NSPredicate(format: "vin == %@", idFirebase)
                 if let vehiculo = try? autoRef.contextoVista.fetch(peticionBusqueda).first {
                     vehiculo.is_active = false
                     autoRef.guardarContexto()

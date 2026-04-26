@@ -202,9 +202,13 @@ class AgregarVehiculoViewController: UIViewController {
             registro.tipoCombustible = tipoCombustibleSeleccionado
             registro.transmision = transmision
             
-            // Asignar el ID del usuario actual para filtrar el Garage
+            // Asignar el propietario buscando el UsuarioEntity correspondiente para el Garage
             if let uid = Auth.auth().currentUser?.uid {
-                registro.usuarioId = uid
+                let fetchRequest: NSFetchRequest<UsuarioEntity> = UsuarioEntity.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %@", uid)
+                if let usuario = try? context.fetch(fetchRequest).first {
+                    registro.propietario = usuario
+                }
             }
             
             // Sincronizar con Firestore

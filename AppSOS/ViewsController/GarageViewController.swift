@@ -38,6 +38,11 @@ class GarageViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cargarVehiculos()
+        
+        // Sincronizar desde Firebase en segundo plano
+        repositorioVehiculo.descargarVehiculosDeFirestore { _ in
+            // El observador ya disparará cargarVehiculos() si hay cambios
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
