@@ -243,6 +243,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @IBAction func btnSOSTapped(_ sender: UIButton) {
+        prepararYEnviarSOS()
+    }
+    
+    private func prepararYEnviarSOS() {
         // 1. Validar Cliente (Firebase Auth)
         guard let usuarioFirebase = Auth.auth().currentUser else {
             mostrarAlertaValidacion(mensaje: "Debes estar logueado para enviar un SOS.")
@@ -264,28 +268,25 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             return
         }
         
-        // Construir JSON
-        let payload: [String: Any] = [
-            "cliente": [
-                "nombre": usuarioFirebase.displayName ?? usuarioFirebase.email ?? "Usuario"
-            ],
-            "vehiculo": [
-                "modelo": vehiculo.modelo ?? "N/A",
-                "placa": vehiculo.placa ?? "N/A",
-                "marca": vehiculo.marca ?? "N/A",
-                "color": vehiculo.color ?? "N/A",
-                "vin": vehiculo.vin ?? "N/A",
-                "transmision": vehiculo.transmision ?? "N/A"
-            ],
-            "tipoSiniestro": tipoSiniestro,
-            "ubicacion": [
-                "latitud": ubicacion.coordinate.latitude,
-                "longitud": ubicacion.coordinate.longitude
-            ]
-        ]
+        // Construir Request Model (Estructura plana para Node.js)
+        let requestPayload = SOSRequest(
+            uid_usuario: usuarioFirebase.uid,
+            nombre_cliente: usuarioFirebase.displayName ?? usuarioFirebase.email ?? "Usuario",
+            vehiculo_id: VehiculoInfo(
+                modelo: vehiculo.modelo ?? "N/A",
+                placa: vehiculo.placa ?? "N/A",
+                marca: vehiculo.marca ?? "N/A",
+                color: vehiculo.color ?? "N/A",
+                vin: vehiculo.vin ?? "N/A",
+                transmision: vehiculo.transmision ?? "N/A"
+            ),
+            tipo_siniestro: tipoSiniestro,
+            latitud: ubicacion.coordinate.latitude,
+            longitud: ubicacion.coordinate.longitude
+        )
         
-        // Enviar JSON (Simulación de envío)
-        enviarJSONSOS(payload)
+        // Enviar al Backend real
+        enviarSolicitudSOS(requestPayload)
     }
     
     private func obtenerNombreCategoriaSeleccionada() -> String {
@@ -301,19 +302,21 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         return "Incidente"
     }
     
-    private func enviarJSONSOS(_ payload: [String: Any]) {
-        // Convertir a Data para visualizar el JSON
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print("SOS Payload a enviar:\n\(jsonString)")
+    private func enviarSolicitudSOS(_ payload: SOSRequest) {
+        // Mostrar indicador de carga si fuera necesario
+        
+        APIService.shared.crearAsistencia(payload: payload) { [weak self] resultado in
+            guard let self = self else { return }
+            
+            switch resultado {
+            case .success(let respuesta):
+                print("¡Éxito! ID de asistencia: \(respuesta.id ?? "N/A")")
+                self.presentarOverlayExito(para: self.vehiculoSeleccionado!, sosResponse: respuesta)
                 
-                // Aquí se realizaría la petición URLSession o Alamofire
-                // Por ahora mostramos éxito visual
-                presentarOverlayExito(para: vehiculoSeleccionado!)
+            case .failure(let error):
+                print("Error enviando SOS: \(error.localizedDescription)")
+                self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor de WayraFix. Verifica tu conexión.")
             }
-        } catch {
-            print("Error al serializar JSON: \(error.localizedDescription)")
         }
     }
     
@@ -328,9 +331,14 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
            let destino = segue.destination as? ElegirVehiculoViewController {
             destino.delegado = self
         } else if segue.identifier == "irARastreo",
-                  let destino = segue.destination as? RastreoViewController,
-                  let vehiculoElegido = sender as? VehiculoEntity {
-            destino.vehiculoAveriado = vehiculoElegido
+                  let destino = segue.destination as? RastreoViewController {
+            
+            if let contexto = sender as? [String: Any?] {
+                destino.vehiculoAveriado = contexto["vehiculo"] as? VehiculoEntity
+                destino.sosData = contexto["sos"] as? SOSResponse
+            } else if let vehiculoElegido = sender as? VehiculoEntity {
+                destino.vehiculoAveriado = vehiculoElegido
+            }
             destino.direccionServicio = direccionActual
         }
     }
@@ -386,7 +394,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         botonSolicitar.applyPrimaryStyle(title: "Solicitar Ayuda Ahora")
         botonSolicitar.addAction(UIAction { [weak self] _ in
             self?.vehiculoSeleccionado = vehiculo
-            self?.presentarOverlayExito(para: vehiculo)
+            self?.removerOverlayActivo()
+            self?.prepararYEnviarSOS()
         }, for: .touchUpInside)
         
         let botonCancelar = UIButton(type: .system)
@@ -456,7 +465,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         vistaOverlayActiva = fondoOscuro
     }
     
-    func presentarOverlayExito(para vehiculo: VehiculoEntity) {
+    func presentarOverlayExito(para vehiculo: VehiculoEntity, sosResponse: SOSResponse? = nil) {
         removerOverlayActivo()
         
         let fondoOscuro = UIView(frame: view.bounds)
@@ -495,7 +504,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         botonSeguimiento.applyPrimaryStyle(title: "Ver Seguimiento")
         botonSeguimiento.addAction(UIAction { [weak self] _ in
             self?.removerOverlayActivo()
-            self?.performSegue(withIdentifier: "irARastreo", sender: vehiculo)
+            // Pasamos un diccionario o una tupla con ambos datos
+            let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
+            self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
         }, for: .touchUpInside)
         
         let botonCerrar = UIButton(type: .system)
