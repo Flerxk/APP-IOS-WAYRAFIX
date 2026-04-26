@@ -22,7 +22,7 @@ class RastreoViewController: UIViewController {
     var vehiculoAveriado: VehiculoEntity?
     var direccionServicio: String?
     var sosData: SOSResponse?
-    
+
     @IBOutlet weak var lblEtaMinutos: UILabel!
     @IBOutlet weak var lblEtaHora: UILabel!
     @IBOutlet weak var barraProgreso: UIProgressView!
