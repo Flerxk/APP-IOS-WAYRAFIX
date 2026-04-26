@@ -7,6 +7,7 @@
 
 import UIKit
 internal import CoreData
+import FirebaseAuth
 
 class AgregarVehiculoViewController: UIViewController {
 
@@ -28,7 +29,7 @@ class AgregarVehiculoViewController: UIViewController {
     var tipoVehiculoSeleccionado: String = ""
     var tipoCombustibleSeleccionado: String = ""
         
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +68,9 @@ class AgregarVehiculoViewController: UIViewController {
         view.backgroundColor = .clear
         view.aplicarFondoRosadoRadial()
         title = "Agregar Vehículo"
-        btnGuardar.applyAccentStyle(title: "Guardar Vehículo")
+        btnGuardar.applyPrimaryStyle(title: "Guardar Vehículo")
+        // Cambiar a dorado/ocre para seguir el wireframe
+        btnGuardar.configuration?.baseBackgroundColor = UIColor(red: 0.77, green: 0.58, blue: 0.30, alpha: 1.0)
         btnGuardar.titleLabel?.font = .boldSystemFont(ofSize: 18)
         btnGuardar.layer.cornerRadius = 26
         btnGuardar.layer.masksToBounds = true
@@ -198,6 +201,31 @@ class AgregarVehiculoViewController: UIViewController {
             registro.tipoVehiculo = tipoVehiculoSeleccionado
             registro.tipoCombustible = tipoCombustibleSeleccionado
             registro.transmision = transmision
+            
+            // Asignar el propietario buscando el UsuarioEntity correspondiente para el Garage
+            if let uid = Auth.auth().currentUser?.uid {
+                let fetchRequest: NSFetchRequest<UsuarioEntity> = UsuarioEntity.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "id == %@", uid)
+                if let usuario = try? context.fetch(fetchRequest).first {
+                    registro.propietario = usuario
+                }
+            }
+            
+            // Sincronizar con Firestore
+            if let uid = Auth.auth().currentUser?.uid {
+                let vehiculoData: [String: Any] = [
+                    "placa": placa.uppercased(),
+                    "marca": marca,
+                    "modelo": modelo,
+                    "anio": anio,
+                    "color": color,
+                    "vin": vin.uppercased(),
+                    "tipoVehiculo": tipoVehiculoSeleccionado,
+                    "tipoCombustible": tipoCombustibleSeleccionado,
+                    "transmision": transmision
+                ]
+                FirebaseManager.shared.guardarVehiculo(uidUsuario: uid, vehiculo: vehiculoData, idVehiculo: vin.uppercased()) { _ in }
+            }
             
             do {
                 try context.save()

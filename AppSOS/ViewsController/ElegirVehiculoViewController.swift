@@ -13,7 +13,7 @@ class ElegirVehiculoViewController: UIViewController {
     @IBOutlet weak var tblVehiculos: UITableView!
     
     var listaVehiculos: [VehiculoEntity] = []
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
     
     weak var delegado: SeleccionVehiculoDelegate?
 

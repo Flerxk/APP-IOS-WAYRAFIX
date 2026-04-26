@@ -18,11 +18,12 @@ class DetalleVehiculoViewController: UIViewController {
     @IBOutlet weak var lblTransmision: UILabel!
     
     var vehiculo: VehiculoEntity?
-    private let repositorioVehiculo: RepositorioVehiculoProtocol = RepositorioVehiculoCoreData()
+    private var repositorioVehiculo: RepositorioVehiculoProtocol!
     private var btnEliminar: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        repositorioVehiculo = VehiculoLocalRepository()
         view.backgroundColor = WayraTheme.background
         title = "Detalle del Vehículo"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Editar", style: .plain, target: self, action: #selector(editarVehiculo))

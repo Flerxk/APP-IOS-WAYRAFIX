@@ -41,6 +41,20 @@ class ConfiguracionViewController: UIViewController {
         imgPerfil.clipsToBounds = true
         imgPerfil.tintColor = WayraTheme.textSecondary
         
+        // Corregir solapamiento añadiendo espacio programático
+        lblTitulo.translatesAutoresizingMaskIntoConstraints = false
+        imgPerfil.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            lblTitulo.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            lblTitulo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            imgPerfil.topAnchor.constraint(equalTo: lblTitulo.bottomAnchor, constant: 30),
+            imgPerfil.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            imgPerfil.widthAnchor.constraint(equalToConstant: 72),
+            imgPerfil.heightAnchor.constraint(equalToConstant: 72)
+        ])
+        
         [btnInformacionPersonal, btnMisVehiculos, btnPagosCobros, btnCentroAyuda, btnPrivacidadSeguridad].forEach { boton in
             boton?.configuration?.baseForegroundColor = WayraTheme.textPrimary
             boton?.configuration?.imagePadding = 12
@@ -55,7 +69,18 @@ class ConfiguracionViewController: UIViewController {
             return
         }
         
-        lblNombreUsuario.text = user.displayName?.isEmpty == false ? user.displayName : "Usuario WayraFix"
-        lblCorreoUsuario.text = user.email ?? "Correo no disponible"
+        // Cargar desde Firestore para consistencia de datos persistentes
+        FirebaseManager.shared.verificarEstadoUsuario(uid: user.uid) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datos):
+                    self?.lblNombreUsuario.text = datos["nombre"] as? String ?? user.displayName ?? "Usuario WayraFix"
+                    self?.lblCorreoUsuario.text = datos["email"] as? String ?? user.email ?? "Correo no disponible"
+                case .failure(_):
+                    self?.lblNombreUsuario.text = user.displayName ?? "Usuario WayraFix"
+                    self?.lblCorreoUsuario.text = user.email ?? "Correo no disponible"
+                }
+            }
+        }
     }
 }

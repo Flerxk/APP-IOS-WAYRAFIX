@@ -26,8 +26,15 @@ extension UIView {
     // MARK: Borde contenedor legacy (Login / SignUp)
     func aplicarBordeContenedor() {
         layer.cornerRadius = 16
-        layer.borderColor  = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-        layer.borderWidth  = 1
+        layer.borderColor  = UIColor.clear.cgColor
+        layer.borderWidth  = 0
+        backgroundColor    = .white
+        
+        layer.shadowColor   = UIColor.black.cgColor
+        layer.shadowOpacity = 0.05
+        layer.shadowOffset  = CGSize(width: 0, height: 4)
+        layer.shadowRadius  = 12
+        layer.masksToBounds = false
     }
 
     // MARK: Motor global de identidad WayraFix

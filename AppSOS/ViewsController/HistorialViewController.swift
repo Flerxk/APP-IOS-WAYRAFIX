@@ -14,7 +14,7 @@ class HistorialViewController: UIViewController {
     
     var listaServicios: [ServicioEntity] = []
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
 
     override func viewDidLoad() {
         super.viewDidLoad()

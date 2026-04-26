@@ -23,10 +23,12 @@ struct VehiculoInfo: Codable {
 // MARK: - Response Models
 // Basado en la respuesta real del backend
 struct SOSResponse: Codable {
-    let id: String?
-    let id_servicio: String?
-    let nombre_grua: String?
-    let ubicacion_tiempo_real_grua: UbicacionResponse?
+    var success: Bool? = nil
+    var message: String? = nil
+    var id: String? = nil
+    var id_servicio: String? = nil
+    var nombre_grua: String? = nil
+    var ubicacion_tiempo_real_grua: UbicacionResponse? = nil
 }
 
 struct UbicacionResponse: Codable {

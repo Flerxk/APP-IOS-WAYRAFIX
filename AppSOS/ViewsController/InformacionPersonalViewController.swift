@@ -19,14 +19,27 @@ class InformacionPersonalViewController: UIViewController {
     
     private func setupUI() {
         self.view.aplicarFondoRosadoRadial()
-        btnGuardar.aplicarEstiloPrincipalRoja()
         
-        imgPerfil.layer.cornerRadius = 50
+        btnGuardar.applyPrimaryStyle(title: "Guardar cambios")
+        btnGuardar.configuration?.baseBackgroundColor = WayraTheme.brand
+        btnGuardar.layer.cornerRadius = 25
+        
+        imgPerfil.layer.cornerRadius = 60
         imgPerfil.clipsToBounds = true
-        imgPerfil.layer.borderWidth = 2
+        imgPerfil.layer.borderWidth = 4
         imgPerfil.layer.borderColor = UIColor.white.cgColor
         
+        lblTitulo.font = .systemFont(ofSize: 34, weight: .bold)
         lblTitulo.text = "Información personal"
+        
+        [txtNombres, txtApellido, txtCorreo, txtCelular].forEach { field in
+            field?.backgroundColor = .white
+            field?.layer.cornerRadius = 12
+            field?.layer.borderWidth = 1
+            field?.layer.borderColor = UIColor(white: 0.9, alpha: 1).cgColor
+            field?.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 10))
+            field?.leftViewMode = .always
+        }
     }
     
     private func cargarDatosUsuario() {
