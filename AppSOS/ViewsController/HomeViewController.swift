@@ -337,9 +337,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         vc.modalTransitionStyle = .crossDissolve
         
         vc.onSolicitarTapped = { [weak self] in
-            vc.dismiss(animated: true) {
-                self?.prepararYEnviarSOS(vehiculo: vehiculo)
-            }
+            self?.prepararYEnviarSOS(vehiculo: vehiculo)
         }
         
         present(vc, animated: true)
@@ -353,10 +351,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         vc.modalTransitionStyle = .crossDissolve
         
         vc.onSeguimientoTapped = { [weak self] in
-            vc.dismiss(animated: true) {
-                let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
-                self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
-            }
+            let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
+            self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
         }
         
         present(vc, animated: true)
@@ -375,6 +371,75 @@ extension HomeViewController: SeleccionVehiculoDelegate {
             self.lblVehiculoInfo.text = "Vehículo: \(marca) \(modelo) (\(placa))"
             self.lblVehiculoInfo.textColor = WayraTheme.accent
             self.btnSeleccionarVehiculo.setTitle("Cambiar Vehículo", for: .normal)
+        }
+    }
+}
+
+// MARK: - Clases Integradas para evitar errores de Scope en Xcode
+class SOSDestinoViewController: UIViewController {
+    @IBOutlet weak var tarjetaDestino: UIView!
+    @IBOutlet weak var btnSolicitarAyuda: UIButton!
+    @IBOutlet weak var btnCancelar: UIButton!
+    
+    var onSolicitarTapped: (() -> Void)?
+    var onCancelarTapped: (() -> Void)?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        tarjetaDestino?.applyCardStyle(radius: 30, shadow: true)
+        btnSolicitarAyuda?.applyPrimaryStyle(title: "Solicitar Ayuda Ahora")
+        btnCancelar?.setTitle("Cancelar", for: .normal)
+        btnCancelar?.setTitleColor(WayraTheme.textPrimary, for: .normal)
+    }
+    
+    @IBAction func btnSolicitarTapped(_ sender: UIButton) {
+        dismiss(animated: true) {
+            self.onSolicitarTapped?()
+        }
+    }
+    
+    @IBAction func btnCancelarTapped(_ sender: UIButton) {
+        dismiss(animated: true) {
+            self.onCancelarTapped?()
+        }
+    }
+}
+
+class SOSExitoViewController: UIViewController {
+    @IBOutlet weak var tarjetaExito: UIView!
+    @IBOutlet weak var btnVerSeguimiento: UIButton!
+    @IBOutlet weak var btnCerrar: UIButton!
+    
+    var onSeguimientoTapped: (() -> Void)?
+    var onCerrarTapped: (() -> Void)?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        tarjetaExito?.applyCardStyle(radius: 30, shadow: true)
+        btnVerSeguimiento?.applyPrimaryStyle(title: "Ver Seguimiento")
+        btnCerrar?.setTitle("Cerrar", for: .normal)
+        btnCerrar?.setTitleColor(WayraTheme.textPrimary, for: .normal)
+    }
+    
+    @IBAction func btnSeguimientoTapped(_ sender: UIButton) {
+        dismiss(animated: true) {
+            self.onSeguimientoTapped?()
+        }
+    }
+    
+    @IBAction func btnCerrarTapped(_ sender: UIButton) {
+        dismiss(animated: true) {
+            self.onCerrarTapped?()
         }
     }
 }
