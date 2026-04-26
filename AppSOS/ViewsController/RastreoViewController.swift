@@ -22,15 +22,19 @@ class RastreoViewController: UIViewController {
     var vehiculoAveriado: VehiculoEntity?
     var direccionServicio: String?
     var sosData: SOSResponse?
-    private weak var lblEtaMinutos: UILabel?
-    private weak var lblEtaHora: UILabel?
-    private weak var barraProgreso: UIProgressView?
+
+    @IBOutlet weak var lblEtaMinutos: UILabel!
+    @IBOutlet weak var lblEtaHora: UILabel!
+    @IBOutlet weak var barraProgreso: UIProgressView!
+    @IBOutlet weak var btnMensaje: UIButton!
+    @IBOutlet weak var btnLlamar: UIButton!
+    @IBOutlet weak var btnCerrarRastreo: UIButton!
     
     // Firebase Realtime Database
     private var ref: DatabaseReference!
     private var gruaAnnotation: MKPointAnnotation?
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
     
     override func viewDidLoad() {
         super.viewDidLoad()
