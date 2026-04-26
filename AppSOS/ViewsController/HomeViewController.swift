@@ -29,6 +29,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     private var ultimaUbicacionGeocodificada: CLLocation?
     private var direccionActual: String = "Selecciona tu ubicación actual"
     private weak var vistaOverlayActiva: UIView?
+    private var categoriaSeleccionada: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +57,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         bottomPanel.layer.shadowOffset = CGSize(width: 0, height: -6)
         bottomPanel.layer.shadowRadius = 16
         
-        // Botón SOS: estilo de marca rojo/naranja (= "Registrarme")
         btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
         btnSOS.layer.cornerRadius = 55
@@ -84,13 +84,37 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         for (indice, vista) in stack.arrangedSubviews.enumerated() {
             vista.layer.cornerRadius = 18
             vista.layer.masksToBounds = true
-            // Primera categoría seleccionada usa el color suave de marca, el resto blanco
-            vista.backgroundColor = indice == 0 ? WayraTheme.brandSoft : .white
+            
+            let seleccionado = (indice == categoriaSeleccionada)
+            vista.backgroundColor = seleccionado ? WayraTheme.brandSoft : .white
+            vista.layer.borderWidth = seleccionado ? 2 : 1
+            vista.layer.borderColor = seleccionado ? WayraTheme.brand.cgColor : UIColor(white: 0.94, alpha: 1).cgColor
+            
             if let img = vista.subviews.compactMap({ $0 as? UIImageView }).first {
-                // Íconos (llanta, batería, herramientas) con el color del botón SOS
-                img.tintColor = WayraTheme.brand
+                img.tintColor = seleccionado ? WayraTheme.brand : WayraTheme.textSecondary
             }
+            
+            if let label = vista.subviews.compactMap({ $0 as? UILabel }).first {
+                label.textColor = seleccionado ? WayraTheme.textPrimary : WayraTheme.textSecondary
+                label.font = seleccionado ? .boldSystemFont(ofSize: 14) : .systemFont(ofSize: 14, weight: .medium)
+            }
+            
+            vista.isUserInteractionEnabled = true
+            let tap = UITapGestureRecognizer(target: self, action: #selector(categoriaTapped(_:)))
+            vista.gestureRecognizers?.forEach { vista.removeGestureRecognizer($0) }
+            vista.addGestureRecognizer(tap)
+            vista.tag = indice
         }
+    }
+    
+    @objc func categoriaTapped(_ gesture: UITapGestureRecognizer) {
+        guard let vista = gesture.view else { return }
+        categoriaSeleccionada = vista.tag
+        
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
+        
+        styleCategorias()
     }
     
     func styleTopActionButton() {
@@ -140,25 +164,30 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         self.ultimaUbicacionGeocodificada = ubicacion
         
         Task { [weak self] in
-                guard let self = self else { return }
+            guard let self = self else { return }
+            let geocoder = CLGeocoder()
+            do {
+                let placemarks = try await geocoder.reverseGeocodeLocation(ubicacion)
+                if let lugar = placemarks.first {
+                    // Formatear dirección similar al mockup
+                    let nombre = lugar.name ?? ""
+                    let calle = lugar.thoroughfare ?? ""
+                    let ciudad = lugar.locality ?? ""
                     
-                guard let request = MKReverseGeocodingRequest(location: ubicacion) else { return }
-                    
-                do {
-                    let mapItems = try await request.mapItems
-                    guard let lugar = mapItems.first else { return }
-                        
-                    let texto = lugar.address?.shortAddress ?? lugar.name ?? "Ubicación actual"
-                        
-                    self.direccionActual = texto
-                        
-                    DispatchQueue.main.async {
-                        self.lblDireccionActual.text = texto
-                    }
-                } catch {
-                    print("Error al obtener la dirección: \(error.localizedDescription)")
+                    let partes = [nombre, calle, ciudad].filter { !$0.isEmpty }
+                    let texto = partes.joined(separator: ", ")
+                    self.direccionActual = texto.isEmpty ? "Ubicación detectada" : texto
                 }
+                
+                DispatchQueue.main.async {
+                    self.lblDireccionActual.text = self.direccionActual
+                }
+            } catch {
+                print("Error en geocodificación: \(error.localizedDescription)")
+                // Fallback visual si falla CLGeocoder (problema reportado por usuario)
+                self.lblDireccionActual.text = "Ubicación actual"
             }
+        }
     }
     
     @objc func manejarPresionadoSOS(_ gesto: UILongPressGestureRecognizer) {
@@ -172,14 +201,19 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         do {
             let conteo = try context.count(for: VehiculoEntity.fetchRequest())
             if conteo == 0 {
-                // Sin vehículos → redirigir automáticamente a "Mi Garage" (Tab 1)
-                if let tabBarController = self.tabBarController {
-                    tabBarController.selectedIndex = 1
-                } else {
-                    // Fallback: segue directo a Agregar Vehículo
-                    performSegue(withIdentifier: "mostrarAgregarVehiculo", sender: nil)
-                }
+                // Requerimiento 1: Alerta si no hay vehículos
+                let alerta = UIAlertController(
+                    title: "Atención",
+                    message: "No hay vehículos registrados, favor de agregar uno.",
+                    preferredStyle: .alert
+                )
+                alerta.addAction(UIAlertAction(title: "Ir a Garage", style: .default) { _ in
+                    self.tabBarController?.selectedIndex = 1
+                })
+                alerta.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+                present(alerta, animated: true)
             } else {
+                // Requerimiento 2: Navegar a selección
                 performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
             }
         } catch {
@@ -487,6 +521,12 @@ extension HomeViewController: SeleccionVehiculoDelegate {
     func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity) {
         let placa = vehiculo.placa ?? ""
         print("Preparando rescate para: \(placa)")
-        presentarOverlayDestino(para: vehiculo)
+        
+        // Corregir error de navegación: esperar a que el modal se cierre (dismiss) 
+        // antes de intentar mostrar el overlay sobre HomeViewController
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else { return }
+            self.presentarOverlayDestino(para: vehiculo)
+        }
     }
 }
