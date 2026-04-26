@@ -3,6 +3,7 @@ import CoreData
 
 protocol RepositorioVehiculoProtocol {
     func obtenerVehiculos() throws -> [VehiculoEntity]
+    func eliminarVehiculo(_ vehiculo: VehiculoEntity) throws
     func agregarObservador(_ observer: Any, selector: Selector)
     func quitarObservador(_ observer: Any)
 }
@@ -22,6 +23,11 @@ final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
     func obtenerVehiculos() throws -> [VehiculoEntity] {
         let request: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
         return try context.fetch(request)
+    }
+
+    func eliminarVehiculo(_ vehiculo: VehiculoEntity) throws {
+        context.delete(vehiculo)
+        try context.save()
     }
     
     func agregarObservador(_ observer: Any, selector: Selector) {
