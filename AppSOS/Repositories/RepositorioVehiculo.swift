@@ -1,5 +1,6 @@
 import UIKit
 import CoreData
+import FirebaseAuth
 
 protocol RepositorioVehiculoProtocol {
     func obtenerVehiculos() throws -> [VehiculoEntity]

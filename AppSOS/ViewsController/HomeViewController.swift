@@ -52,6 +52,15 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         lbl.textAlignment = .center
         return lbl
     }()
+    
+    private let lblNeedHelp: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .boldSystemFont(ofSize: 22)
+        lbl.textColor = .black
+        lbl.text = "Need help?"
+        return lbl
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
