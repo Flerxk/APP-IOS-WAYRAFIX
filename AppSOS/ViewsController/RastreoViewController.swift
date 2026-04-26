@@ -20,6 +20,7 @@ class RastreoViewController: UIViewController {
     
     var vehiculoAveriado: VehiculoEntity?
     var direccionServicio: String?
+    var sosData: SOSResponse?
     private weak var lblEtaMinutos: UILabel?
     private weak var lblEtaHora: UILabel?
     private weak var barraProgreso: UIProgressView?
@@ -43,9 +44,11 @@ class RastreoViewController: UIViewController {
         perfilImageView.clipsToBounds = true
         perfilImageView.tintColor = WayraTheme.accent
         
-        lblNombreMecanico.text = "Carlos Mendoza"
+        lblNombreMecanico.text = sosData?.nombre_grua ?? "Unidad en Camino"
         lblNombreMecanico.font = .boldSystemFont(ofSize: 24)
-        lblEstadoServicio.text = "Grúa Plataforma • \(vehiculoAveriado?.placa ?? "ABC-123")"
+        
+        let subInfo = sosData?.id_servicio ?? (vehiculoAveriado?.placa ?? "WayraFix")
+        lblEstadoServicio.text = "Grúa Asignada • \(subInfo)"
         lblEstadoServicio.textColor = WayraTheme.textSecondary
         if let direccionServicio, !direccionServicio.isEmpty {
             lblEstadoServicio.text = "Grúa Plataforma • \(vehiculoAveriado?.placa ?? "ABC-123")\n\(direccionServicio)"
