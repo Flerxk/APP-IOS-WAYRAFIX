@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import CoreData
+import FirebaseDatabase
 
 class RastreoViewController: UIViewController {
 
@@ -29,11 +30,23 @@ class RastreoViewController: UIViewController {
     @IBOutlet weak var btnLlamar: UIButton!
     @IBOutlet weak var btnCerrarRastreo: UIButton!
     
+    // Firebase Realtime Database
+    private var ref: DatabaseReference!
+    private var gruaAnnotation: MKPointAnnotation?
+    
     let context = ControladorPersistencia.compartido.contextoVista
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
         setupUI()
+        configurarMapa()
+        iniciarRastreoEnTiempoReal()
+    }
+    
+    deinit {
+        guard let idServicio = sosData?.id_servicio else { return }
+        ref.child("activos/\(idServicio)").removeAllObservers()
     }
         
     func setupUI() {
@@ -134,4 +147,94 @@ class RastreoViewController: UIViewController {
         present(alerta, animated: true)
     }
 
+    // MARK: - Lógica de Rastreo Realtime
+    
+    private func configurarMapa() {
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+    }
+    
+    private func iniciarRastreoEnTiempoReal() {
+        guard let idServicio = sosData?.id_servicio else {
+            print("Error: No hay ID de servicio para rastrear.")
+            return
+        }
+        
+        // El backend guarda en: activos/{id_servicio}
+        let rutaRastreo = "activos/\(idServicio)"
+        print("Escuchando rastreo en: \(rutaRastreo)")
+        
+        ref.child(rutaRastreo).observe(.value) { [weak self] snapshot in
+            guard let self = self, let dict = snapshot.value as? [String: Any] else { return }
+            
+            // 1. Actualizar Estado
+            if let estado = dict["estado"] as? String {
+                self.lblEstadoServicio.text = "Estado: \(estado.capitalized)"
+            }
+            
+            // 2. Obtener Coordenadas de la Grúa
+            if let ubicacion = dict["ubicacion_grua"] as? [String: Any],
+               let lat = ubicacion["lat"] as? Double,
+               let lng = ubicacion["lng"] as? Double {
+                self.actualizarUbicacionGrua(lat: lat, lng: lng)
+            }
+        }
+    }
+    
+    private func actualizarUbicacionGrua(lat: Double, lng: Double) {
+        let coordenada = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+        
+        if let annotation = gruaAnnotation {
+            // Animar movimiento
+            UIView.animate(withDuration: 1.0) {
+                annotation.coordinate = coordenada
+            }
+        } else {
+            // Crear por primera vez
+            let annotation = MKPointAnnotation()
+            annotation.title = sosData?.nombre_grua ?? "Grúa de Asistencia"
+            annotation.coordinate = coordenada
+            mapView.addAnnotation(annotation)
+            gruaAnnotation = annotation
+            
+            // Centrar el mapa la primera vez
+            let region = MKCoordinateRegion(center: coordenada, latitudinalMeters: 1000, longitudinalMeters: 1000)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+}
+
+// MARK: - MKMapViewDelegate
+extension RastreoViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+        
+        let identifier = "GruaMarker"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            // Icono de grúa (SF Symbol o imagen personalizada)
+            let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
+            let imagen = UIImage(systemName: "box.truck.fill", withConfiguration: config)
+            
+            let imageView = UIImageView(image: imagen)
+            imageView.tintColor = WayraTheme.brand
+            imageView.backgroundColor = .white
+            imageView.layer.cornerRadius = 20
+            imageView.layer.borderWidth = 3
+            imageView.layer.borderColor = WayraTheme.brand.cgColor
+            imageView.contentMode = .center
+            imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            
+            annotationView?.addSubview(imageView)
+            annotationView?.frame = imageView.frame
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
 }
