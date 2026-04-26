@@ -35,3 +35,15 @@ struct UbicacionResponse: Codable {
     let lat: Double
     let lng: Double
 }
+
+// MARK: - History Models
+struct HistoryItem: Codable {
+    let id: String?
+    let id_servicio: String?
+    let ticket: String?
+    let uid_usuario: String?
+    let tipoSiniestro: String?
+    let estado: String?
+    let fechaCorta: String?
+    let vehiculo: VehiculoInfo?
+}
