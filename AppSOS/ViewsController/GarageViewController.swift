@@ -18,7 +18,7 @@ class GarageViewController: UIViewController {
     
     var listaVehiculos: [VehiculoEntity] = []
     private let context = ControladorPersistencia.compartido.contextoVista
-    private let repositorioVehiculo: RepositorioVehiculoProtocol = RepositorioVehiculoCoreData()
+    private lazy var repositorioVehiculo: RepositorioVehiculoProtocol = RepositorioVehiculoCoreData()
     private weak var botonAgregarVacio: UIButton?
     private weak var botonAgregarPrincipal: UIButton?
     private weak var etiquetaTituloVacio: UILabel?

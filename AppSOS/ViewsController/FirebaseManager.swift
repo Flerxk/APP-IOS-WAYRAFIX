@@ -7,7 +7,7 @@ import FirebaseFirestore
 class FirebaseManager {
     
     static let shared = FirebaseManager()
-    private let db = Firestore.firestore()
+    private lazy var db = Firestore.firestore()
     
     private init() {}
     

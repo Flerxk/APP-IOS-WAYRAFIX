@@ -9,7 +9,7 @@ class ControladorPersistencia {
 
     /// Reutiliza el contenedor del AppDelegate para evitar doble carga de CoreData
     let contenedor: NSPersistentContainer
-    let baseDeDatos = Firestore.firestore()
+    lazy var baseDeDatos = Firestore.firestore()
 
     init() {
         // Obtener el contenedor ya inicializado por AppDelegate

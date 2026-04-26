@@ -14,7 +14,7 @@ protocol RepositorioVehiculoProtocol {
 final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
     private let context: NSManagedObjectContext
     private let notificationCenter: NotificationCenter	
-    private let db = Firestore.firestore()
+    private lazy var db = Firestore.firestore()
     
     init(
         context: NSManagedObjectContext = ControladorPersistencia.compartido.contextoVista,
