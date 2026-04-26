@@ -9,6 +9,7 @@ import UIKit
 import MapKit
 import CoreLocation
 import CoreData
+import FirebaseAuth
 
 protocol SeleccionVehiculoDelegate: AnyObject {
     func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity)
@@ -30,6 +31,28 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     private var direccionActual: String = "Selecciona tu ubicación actual"
     private weak var vistaOverlayActiva: UIView?
     private var categoriaSeleccionada: Int = 0
+    
+    // UI adicional para selección de vehículo
+    private let btnSeleccionarVehiculo: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Seleccionar Vehículo", for: .normal)
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        btn.tintColor = WayraTheme.brand
+        btn.backgroundColor = WayraTheme.brandSoft.withAlphaComponent(0.2)
+        btn.layer.cornerRadius = 12
+        return btn
+    }()
+    
+    private let lblVehiculoInfo: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .systemFont(ofSize: 14, weight: .medium)
+        lbl.textColor = WayraTheme.textSecondary
+        lbl.text = "Ningún vehículo seleccionado"
+        lbl.textAlignment = .center
+        return lbl
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +97,32 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         lblDireccionActual.text = direccionActual
         lblDireccionActual.font = .systemFont(ofSize: 15, weight: .medium)
         lblDireccionActual.textColor = WayraTheme.textSecondary
-
+        
+        setupVehicleSelectionUI()
         styleCategorias()
         styleTopActionButton()
+    }
+    
+    func setupVehicleSelectionUI() {
+        bottomPanel.addSubview(btnSeleccionarVehiculo)
+        bottomPanel.addSubview(lblVehiculoInfo)
+        
+        btnSeleccionarVehiculo.addTarget(self, action: #selector(btnSeleccionarVehiculoTapped), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            btnSeleccionarVehiculo.bottomAnchor.constraint(equalTo: btnSOS.topAnchor, constant: -16),
+            btnSeleccionarVehiculo.centerXAnchor.constraint(equalTo: bottomPanel.centerXAnchor),
+            btnSeleccionarVehiculo.widthAnchor.constraint(equalToConstant: 200),
+            btnSeleccionarVehiculo.heightAnchor.constraint(equalToConstant: 40),
+            
+            lblVehiculoInfo.bottomAnchor.constraint(equalTo: btnSeleccionarVehiculo.topAnchor, constant: -8),
+            lblVehiculoInfo.leadingAnchor.constraint(equalTo: bottomPanel.leadingAnchor, constant: 20),
+            lblVehiculoInfo.trailingAnchor.constraint(equalTo: bottomPanel.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    @objc func btnSeleccionarVehiculoTapped() {
+        performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
     }
 
     func styleCategorias() {
@@ -197,28 +243,84 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @IBAction func btnSOSTapped(_ sender: UIButton) {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        // 1. Validar Cliente (Firebase Auth)
+        guard let usuarioFirebase = Auth.auth().currentUser else {
+            mostrarAlertaValidacion(mensaje: "Debes estar logueado para enviar un SOS.")
+            return
+        }
+        
+        // 2. Validar Vehículo Seleccionado
+        guard let vehiculo = vehiculoSeleccionado else {
+            mostrarAlertaValidacion(mensaje: "Por favor, selecciona un vehículo antes de enviar el SOS.")
+            return
+        }
+        
+        // 3. Validar Tipo de Siniestro
+        let tipoSiniestro = obtenerNombreCategoriaSeleccionada()
+        
+        // 4. Validar Ubicación (CoreLocation)
+        guard let ubicacion = locationManager.location else {
+            mostrarAlertaValidacion(mensaje: "No se pudo obtener tu ubicación actual. Asegúrate de tener el GPS activo.")
+            return
+        }
+        
+        // Construir JSON
+        let payload: [String: Any] = [
+            "cliente": [
+                "nombre": usuarioFirebase.displayName ?? usuarioFirebase.email ?? "Usuario"
+            ],
+            "vehiculo": [
+                "modelo": vehiculo.modelo ?? "N/A",
+                "placa": vehiculo.placa ?? "N/A",
+                "marca": vehiculo.marca ?? "N/A",
+                "color": vehiculo.color ?? "N/A",
+                "vin": vehiculo.vin ?? "N/A",
+                "transmision": vehiculo.transmision ?? "N/A"
+            ],
+            "tipoSiniestro": tipoSiniestro,
+            "ubicacion": [
+                "latitud": ubicacion.coordinate.latitude,
+                "longitud": ubicacion.coordinate.longitude
+            ]
+        ]
+        
+        // Enviar JSON (Simulación de envío)
+        enviarJSONSOS(payload)
+    }
+    
+    private func obtenerNombreCategoriaSeleccionada() -> String {
+        guard let stack = catScrollView.subviews.first(where: { $0 is UIStackView }) as? UIStackView,
+              categoriaSeleccionada < stack.arrangedSubviews.count else {
+            return "General"
+        }
+        
+        let vista = stack.arrangedSubviews[categoriaSeleccionada]
+        if let label = vista.subviews.compactMap({ $0 as? UILabel }).first {
+            return label.text ?? "Incidente"
+        }
+        return "Incidente"
+    }
+    
+    private func enviarJSONSOS(_ payload: [String: Any]) {
+        // Convertir a Data para visualizar el JSON
         do {
-            let conteo = try context.count(for: VehiculoEntity.fetchRequest())
-            if conteo == 0 {
-                // Requerimiento 1: Alerta si no hay vehículos
-                let alerta = UIAlertController(
-                    title: "Atención",
-                    message: "No hay vehículos registrados, favor de agregar uno.",
-                    preferredStyle: .alert
-                )
-                alerta.addAction(UIAlertAction(title: "Ir a Garage", style: .default) { _ in
-                    self.tabBarController?.selectedIndex = 1
-                })
-                alerta.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
-                present(alerta, animated: true)
-            } else {
-                // Requerimiento 2: Navegar a selección
-                performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("SOS Payload a enviar:\n\(jsonString)")
+                
+                // Aquí se realizaría la petición URLSession o Alamofire
+                // Por ahora mostramos éxito visual
+                presentarOverlayExito(para: vehiculoSeleccionado!)
             }
         } catch {
-            print("Error: \(error)")
+            print("Error al serializar JSON: \(error.localizedDescription)")
         }
+    }
+    
+    private func mostrarAlertaValidacion(mensaje: String) {
+        let alerta = UIAlertController(title: "Atención", message: mensaje, preferredStyle: .alert)
+        alerta.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alerta, animated: true)
     }
         
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -519,14 +621,16 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
 
 extension HomeViewController: SeleccionVehiculoDelegate {
     func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity) {
-        let placa = vehiculo.placa ?? ""
-        print("Preparando rescate para: \(placa)")
+        self.vehiculoSeleccionado = vehiculo
+        let placa = vehiculo.placa ?? "N/A"
+        let marca = vehiculo.marca ?? ""
+        let modelo = vehiculo.modelo ?? ""
         
-        // Corregir error de navegación: esperar a que el modal se cierre (dismiss) 
-        // antes de intentar mostrar el overlay sobre HomeViewController
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.presentarOverlayDestino(para: vehiculo)
+            self.lblVehiculoInfo.text = "Vehículo: \(marca) \(modelo) (\(placa))"
+            self.lblVehiculoInfo.textColor = WayraTheme.accent
+            self.btnSeleccionarVehiculo.setTitle("Cambiar Vehículo", for: .normal)
         }
     }
 }
