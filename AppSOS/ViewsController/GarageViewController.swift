@@ -18,7 +18,8 @@ class GarageViewController: UIViewController {
     
     var listaVehiculos: [VehiculoEntity] = []
     private let context = ControladorPersistencia.compartido.contextoVista
-    private lazy var repositorioVehiculo: RepositorioVehiculoProtocol = RepositorioVehiculoCoreData()
+    private var repositorioVehiculo: RepositorioVehiculoProtocol!
+    
     private weak var botonAgregarVacio: UIButton?
     private weak var botonAgregarPrincipal: UIButton?
     private weak var etiquetaTituloVacio: UILabel?
@@ -27,11 +28,13 @@ class GarageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Inicializar repositorio aquí para evitar crashes en el init del VC
+        repositorioVehiculo = VehiculoLocalRepository()
 
         tblVehiculos.delegate = self
         tblVehiculos.dataSource = self
         setupUI()
-        // Forzar consistencia global de estilos
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
     }
     
@@ -40,9 +43,7 @@ class GarageViewController: UIViewController {
         cargarVehiculos()
         
         // Sincronizar desde Firebase en segundo plano
-        repositorioVehiculo.descargarVehiculosDeFirestore { _ in
-            // El observador ya disparará cargarVehiculos() si hay cambios
-        }
+        repositorioVehiculo.descargarVehiculosDeFirestore { _ in }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -92,13 +93,13 @@ class GarageViewController: UIViewController {
         
         botonAgregarPrincipal = btnAgregarVehiculo
         btnAgregarVehiculo.setTitle("Agregar", for: .normal)
-        btnAgregarVehiculo.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0) // Rojo del wireframe
+        btnAgregarVehiculo.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0)
         btnAgregarVehiculo.tintColor = .white
         btnAgregarVehiculo.layer.cornerRadius = 24
         btnAgregarVehiculo.titleLabel?.font = .boldSystemFont(ofSize: 18)
         btnAgregarVehiculo.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
         
-        btnEscanearVIN.isHidden = true // Ocultar según wireframe
+        btnEscanearVIN.isHidden = true
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton
@@ -154,10 +155,6 @@ class GarageViewController: UIViewController {
         cargarVehiculos()
     }
     
-    @objc func irAAgregarVehiculo() {
-        performSegue(withIdentifier: "mostrarAgregarVehiculo", sender: nil)
-    }
-    
     @objc func irAEscanearVIN() {
         performSegue(withIdentifier: "mostrarScanVIN", sender: nil)
     }
@@ -194,23 +191,17 @@ extension GarageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vehiculo = listaVehiculos[indexPath.row]
-        
         performSegue(withIdentifier: "mostrarDetalleVehiculo", sender: vehiculo)
-        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let autoAEliminar = listaVehiculos[indexPath.row]
-            
-            // Sincronizar eliminación en Firestore
             if let uid = Auth.auth().currentUser?.uid, let vin = autoAEliminar.vin {
                 FirebaseManager.shared.eliminarVehiculo(uidUsuario: uid, idVehiculo: vin) { _ in }
             }
-            
             context.delete(autoAEliminar)
-            
             do {
                 try context.save()
                 listaVehiculos.remove(at: indexPath.row)
@@ -256,7 +247,6 @@ final class GarageVehiculoCell: UITableViewCell {
         
         imgVehiculo.translatesAutoresizingMaskIntoConstraints = false
         imgVehiculo.image = UIImage(systemName: "car.fill")
-        // Ícono del auto: Gris oscuro (paleta oficial, sin azul genérico)
         imgVehiculo.tintColor = WayraTheme.textPrimary
         imgVehiculo.contentMode = .scaleAspectFit
         imgVehiculo.backgroundColor = UIColor(white: 0.96, alpha: 1)

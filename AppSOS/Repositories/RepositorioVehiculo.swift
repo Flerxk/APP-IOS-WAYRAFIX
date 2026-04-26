@@ -1,3 +1,10 @@
+//
+//  RepositorioVehiculo.swift
+//  AppSOS
+//
+//  Created by Erick Chunga on 12/04/26.
+//
+
 import UIKit
 import CoreData
 import FirebaseAuth
@@ -11,17 +18,17 @@ protocol RepositorioVehiculoProtocol {
     func descargarVehiculosDeFirestore(completion: @escaping (Error?) -> Void)
 }
 
-final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
+final class VehiculoLocalRepository: RepositorioVehiculoProtocol {
     private let context: NSManagedObjectContext
-    private let notificationCenter: NotificationCenter	
-    private lazy var db = Firestore.firestore()
+    private let notificationCenter: NotificationCenter
     
-    init(
-        context: NSManagedObjectContext = ControladorPersistencia.compartido.contextoVista,
-        notificationCenter: NotificationCenter = .default
-    ) {
-        self.context = context
-        self.notificationCenter = notificationCenter
+    private var db: Firestore {
+        return Firestore.firestore()
+    }
+    
+    init() {
+        self.context = ControladorPersistencia.compartido.contextoVista
+        self.notificationCenter = .default
     }
     
     func obtenerVehiculos() throws -> [VehiculoEntity] {
@@ -110,4 +117,3 @@ final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
         )
     }
 }
-
