@@ -80,4 +80,40 @@ class APIService {
             }
         }.resume()
     }
+    
+    /// Obtiene el historial de asistencias de un usuario específico
+    func obtenerHistorial(uid: String, completion: @escaping (Result<[HistoryItem], Error>) -> Void) {
+        let urlString = APIConfig.baseURL + APIConfig.Endpoints.asistencias + "?uid=\(uid)"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "APIService", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL inválida"])))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                DispatchQueue.main.async { completion(.failure(error)) }
+                return
+            }
+            
+            guard let data = data else {
+                DispatchQueue.main.async { completion(.failure(NSError(domain: "APIService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No se recibieron datos"]))) }
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let items = try decoder.decode([HistoryItem].self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(items))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }.resume()
+    }
 }
