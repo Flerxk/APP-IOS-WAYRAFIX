@@ -21,9 +21,12 @@ class RastreoViewController: UIViewController {
     var vehiculoAveriado: VehiculoEntity?
     var direccionServicio: String?
     var sosData: SOSResponse?
-    private weak var lblEtaMinutos: UILabel?
-    private weak var lblEtaHora: UILabel?
-    private weak var barraProgreso: UIProgressView?
+    @IBOutlet weak var lblEtaMinutos: UILabel!
+    @IBOutlet weak var lblEtaHora: UILabel!
+    @IBOutlet weak var barraProgreso: UIProgressView!
+    @IBOutlet weak var btnMensaje: UIButton!
+    @IBOutlet weak var btnLlamar: UIButton!
+    @IBOutlet weak var btnCerrarRastreo: UIButton!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -55,15 +58,26 @@ class RastreoViewController: UIViewController {
             lblEstadoServicio.numberOfLines = 2
         }
         
-        btnCancelar.configuration = .filled()
-        btnCancelar.configuration?.title = "Enviar Mensaje"
-        btnCancelar.configuration?.baseBackgroundColor = UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1)
-        btnCancelar.configuration?.baseForegroundColor = .white
-        btnCancelar.configuration?.cornerStyle = .large
-        btnCancelar.titleLabel?.font = .boldSystemFont(ofSize: 20)
-        btnCancelar.addTarget(self, action: #selector(btnCancelar(_:)), for: .touchUpInside)
+        btnCancelar.isHidden = true // Usaremos los nuevos botones
         
-        construirBloqueETA()
+        btnMensaje.applyPrimaryStyle(title: "Enviar Mensaje")
+        btnMensaje.configuration?.image = UIImage(systemName: "bubble.left.fill")
+        btnMensaje.configuration?.imagePadding = 8
+        
+        btnLlamar.configuration = .plain()
+        btnLlamar.configuration?.image = UIImage(systemName: "phone.fill")
+        btnLlamar.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        btnLlamar.layer.cornerRadius = 22
+        btnLlamar.tintColor = WayraTheme.textPrimary
+        
+        btnCerrarRastreo.configuration = .plain()
+        btnCerrarRastreo.configuration?.image = UIImage(systemName: "xmark")
+        btnCerrarRastreo.layer.borderWidth = 1
+        btnCerrarRastreo.layer.borderColor = WayraTheme.divider.cgColor
+        btnCerrarRastreo.layer.cornerRadius = 22
+        btnCerrarRastreo.tintColor = WayraTheme.textPrimary
+        
+        // UI configurada vía Storyboard
         
         if let auto = vehiculoAveriado {
             self.title = "En camino"
@@ -71,49 +85,10 @@ class RastreoViewController: UIViewController {
         }
     }
     
-    func construirBloqueETA() {
-        guard lblEtaMinutos == nil else { return }
-        
-        let lblMin = UILabel()
-        lblMin.translatesAutoresizingMaskIntoConstraints = false
-        lblMin.text = "12 min"
-        lblMin.font = .boldSystemFont(ofSize: 50)
-        lblMin.textColor = WayraTheme.textPrimary
-        
-        let lblHora = UILabel()
-        lblHora.translatesAutoresizingMaskIntoConstraints = false
-        lblHora.text = "Llegada estimada a las 14:30"
-        lblHora.font = .systemFont(ofSize: 16, weight: .medium)
-        lblHora.textColor = WayraTheme.textSecondary
-        
-        let progress = UIProgressView(progressViewStyle: .default)
-        progress.translatesAutoresizingMaskIntoConstraints = false
-        progress.progress = 0.6
-        progress.trackTintColor = UIColor(white: 0.9, alpha: 1)
-        progress.progressTintColor = WayraTheme.accent
-        progress.layer.cornerRadius = 4
-        progress.clipsToBounds = true
-        progress.transform = CGAffineTransform(scaleX: 1, y: 3)
-        
-        infoPanelView.addSubview(lblMin)
-        infoPanelView.addSubview(lblHora)
-        infoPanelView.addSubview(progress)
-        
-        NSLayoutConstraint.activate([
-            lblMin.leadingAnchor.constraint(equalTo: infoPanelView.leadingAnchor, constant: 24),
-            lblMin.topAnchor.constraint(equalTo: infoPanelView.topAnchor, constant: 16),
-            
-            lblHora.leadingAnchor.constraint(equalTo: lblMin.leadingAnchor),
-            lblHora.topAnchor.constraint(equalTo: lblMin.bottomAnchor, constant: 4),
-            
-            progress.leadingAnchor.constraint(equalTo: infoPanelView.leadingAnchor, constant: 24),
-            infoPanelView.trailingAnchor.constraint(equalTo: progress.trailingAnchor, constant: 24),
-            progress.topAnchor.constraint(equalTo: lblHora.bottomAnchor, constant: 20)
-        ])
-        
-        lblEtaMinutos = lblMin
-        lblEtaHora = lblHora
-        barraProgreso = progress
+    func actualizarProgreso(minutos: Int, hora: String, progreso: Float) {
+        lblEtaMinutos.text = "\(minutos) min"
+        lblEtaHora.text = "Llegada estimada a las \(hora)"
+        barraProgreso.progress = progreso
     }
 
     func guardarEnHistorial(estado: String) {
@@ -134,9 +109,27 @@ class RastreoViewController: UIViewController {
         }
     }
 
-    @IBAction func btnCancelar(_ sender: UIButton) {
-        let alerta = UIAlertController(title: "Mensaje enviado", message: "Tu mensaje fue enviado al conductor asignado.", preferredStyle: .alert)
-        alerta.addAction(UIAlertAction(title: "OK", style: .default))
+    @IBAction func btnMensajeTapped(_ sender: UIButton) {
+        // Lógica para enviar mensaje
+    }
+    
+    @IBAction func btnLlamarTapped(_ sender: UIButton) {
+        // Lógica para llamar
+    }
+    
+    @IBAction func btnCerrarTapped(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    
+    @IBAction func btnCancelar(_ sender: Any) {
+        let alerta = UIAlertController(title: "Cancelar Servicio",
+                                      message: "¿Estás seguro que deseas cancelar el servicio?",
+                                      preferredStyle: .alert)
+        alerta.addAction(UIAlertAction(title: "No", style: .cancel))
+        alerta.addAction(UIAlertAction(title: "Sí, Cancelar", style: .destructive) { _ in
+            self.guardarEnHistorial(estado: "Cancelado")
+            self.navigationController?.popToRootViewController(animated: true)
+        })
         present(alerta, animated: true)
     }
 

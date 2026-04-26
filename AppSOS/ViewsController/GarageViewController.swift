@@ -7,6 +7,7 @@
 
 import UIKit
 internal import CoreData
+import FirebaseAuth
 
 class GarageViewController: UIViewController {
 
@@ -194,6 +195,11 @@ extension GarageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let autoAEliminar = listaVehiculos[indexPath.row]
+            
+            // Sincronizar eliminación en Firestore
+            if let uid = Auth.auth().currentUser?.uid, let vin = autoAEliminar.vin {
+                FirebaseManager.shared.eliminarVehiculo(uidUsuario: uid, idVehiculo: vin) { _ in }
+            }
             
             context.delete(autoAEliminar)
             

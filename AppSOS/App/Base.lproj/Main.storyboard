@@ -843,54 +843,127 @@
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hkw-ma-H3r">
-                                <rect key="frame" x="0.0" y="549" width="393" height="220"/>
+                                <rect key="frame" x="0.0" y="452" width="393" height="400"/>
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-eta-min">
+                                        <rect key="frame" x="24" y="24" width="144" height="60"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="50"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Llegada estimada a las 14:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-eta-hora">
+                                        <rect key="frame" x="24" y="88" width="345" height="19.333333333333343"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                        <color key="textColor" systemColor="systemGrayColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="bar-progreso">
+                                        <rect key="frame" x="24" y="127.33333333333337" width="345" height="4"/>
+                                        <color key="progressTintColor" red="0.7725490196" green="0.57647058819999997" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </progressView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="xOt-iX-QcA">
-                                        <rect key="frame" x="24" y="24.666666666666664" width="72" height="70.666666666666686"/>
+                                        <rect key="frame" x="24" y="156.33333333333337" width="54" height="52.666666666666686"/>
+                                        <color key="tintColor" systemColor="systemGray3Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="72" id="1hP-Zf-GKh"/>
-                                            <constraint firstAttribute="height" constant="72" id="HA8-1B-C9u"/>
+                                            <constraint firstAttribute="width" constant="54" id="1hP-Zf-GKh"/>
+                                            <constraint firstAttribute="height" constant="54" id="HA8-1B-C9u"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Carlos Mendoza" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UfY-a5-RdS">
-                                        <rect key="frame" x="112" y="28" width="257" height="24"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <rect key="frame" x="90" y="159.33333333333337" width="223" height="21.666666666666657"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Grúa Plataforma • ABC-123" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bR-bG-Mhh">
-                                        <rect key="frame" x="112" y="60.000000000000007" width="257" height="20.333333333333336"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Grúa Plataforma • ABC-123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bR-bG-Mhh">
+                                        <rect key="frame" x="90" y="185" width="223" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" systemColor="systemGrayColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hv8-39-9uK">
-                                        <rect key="frame" x="24" y="148" width="345" height="44"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-llamar">
+                                        <rect key="frame" x="325" y="161.33333333333337" width="44" height="44"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="q6r-oB-ZkU"/>
+                                            <constraint firstAttribute="width" constant="44" id="w-llamar-w"/>
+                                            <constraint firstAttribute="height" constant="44" id="w-llamar-h"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Cancelar Servicio"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="phone.fill" catalog="system" cornerStyle="capsule">
+                                            <color key="baseBackgroundColor" systemColor="systemGray6Color"/>
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="btnLlamarTapped:" destination="rnN-dX-lMq" eventType="touchUpInside" id="act-llamar"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-mensaje">
+                                        <rect key="frame" x="24" y="243.33333333333337" width="345" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="q6r-oB-ZkU"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Enviar Mensaje" cornerStyle="capsule">
+                                            <color key="baseBackgroundColor" red="0.1215686275" green="0.1215686275" blue="0.1215686275" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="btnMensajeTapped:" destination="rnN-dX-lMq" eventType="touchUpInside" id="act-mensaje"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hv8-39-9uK">
+                                        <rect key="frame" x="24" y="309.33333333333337" width="345" height="34.333333333333314"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Cancelar Servicio">
+                                            <color key="baseForegroundColor" systemColor="systemGrayColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="btnCancelar:" destination="rnN-dX-lMq" eventType="touchUpInside" id="act-cancelar"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-cerrar-rastreo">
+                                        <rect key="frame" x="339" y="20" width="34" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="34" id="c-cerrar-w"/>
+                                            <constraint firstAttribute="height" constant="34" id="c-cerrar-h"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system" cornerStyle="capsule">
+                                            <color key="baseForegroundColor" systemColor="systemGrayColor"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="btnCerrarTapped:" destination="rnN-dX-lMq" eventType="touchUpInside" id="act-cerrar"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="xOt-iX-QcA" firstAttribute="top" secondItem="Hkw-ma-H3r" secondAttribute="top" constant="24" id="0gQ-dm-m8N"/>
-                                    <constraint firstItem="xOt-iX-QcA" firstAttribute="leading" secondItem="Hkw-ma-H3r" secondAttribute="leading" constant="24" id="4ni-mF-Ip8"/>
-                                    <constraint firstItem="UfY-a5-RdS" firstAttribute="top" secondItem="Hkw-ma-H3r" secondAttribute="top" constant="28" id="J3L-B2-PDj"/>
-                                    <constraint firstItem="UfY-a5-RdS" firstAttribute="leading" secondItem="xOt-iX-QcA" secondAttribute="trailing" constant="16" id="JJY-rQ-W3f"/>
-                                    <constraint firstAttribute="trailing" secondItem="UfY-a5-RdS" secondAttribute="trailing" constant="24" id="M6p-cv-qmP"/>
-                                    <constraint firstItem="2bR-bG-Mhh" firstAttribute="top" secondItem="UfY-a5-RdS" secondAttribute="bottom" constant="8" id="QpX-kO-p6r"/>
-                                    <constraint firstItem="2bR-bG-Mhh" firstAttribute="leading" secondItem="xOt-iX-QcA" secondAttribute="trailing" constant="16" id="Tup-sr-U6U"/>
-                                    <constraint firstAttribute="trailing" secondItem="2bR-bG-Mhh" secondAttribute="trailing" constant="24" id="VW2-mM-REz"/>
-                                    <constraint firstItem="Hv8-39-9uK" firstAttribute="top" secondItem="xOt-iX-QcA" secondAttribute="bottom" constant="52" id="q7w-Zg-9ed"/>
-                                    <constraint firstItem="Hv8-39-9uK" firstAttribute="leading" secondItem="Hkw-ma-H3r" secondAttribute="leading" constant="24" id="uPy-t3-0Pv"/>
-                                    <constraint firstAttribute="bottom" secondItem="Hv8-39-9uK" secondAttribute="bottom" constant="28" id="v8D-oa-c3u"/>
-                                    <constraint firstAttribute="trailing" secondItem="Hv8-39-9uK" secondAttribute="trailing" constant="24" id="z2W-DP-zfY"/>
+                                    <constraint firstItem="lbl-eta-min" firstAttribute="top" secondItem="Hkw-ma-H3r" secondAttribute="top" constant="24" id="0gQ-dm-m8N"/>
+                                    <constraint firstItem="lbl-eta-min" firstAttribute="leading" secondItem="Hkw-ma-H3r" secondAttribute="leading" constant="24" id="4ni-mF-Ip8"/>
+                                    <constraint firstAttribute="trailing" secondItem="lbl-eta-hora" secondAttribute="trailing" constant="24" id="M6p-cv-qmP"/>
+                                    <constraint firstItem="lbl-eta-hora" firstAttribute="top" secondItem="lbl-eta-min" secondAttribute="bottom" constant="4" id="J3L-B2-PDj"/>
+                                    <constraint firstItem="lbl-eta-hora" firstAttribute="leading" secondItem="lbl-eta-min" secondAttribute="leading" id="JJY-rQ-W3f"/>
+                                    <constraint firstItem="bar-progreso" firstAttribute="top" secondItem="lbl-eta-hora" secondAttribute="bottom" constant="20" id="QpX-kO-p6r"/>
+                                    <constraint firstItem="bar-progreso" firstAttribute="leading" secondItem="lbl-eta-min" secondAttribute="leading" id="Tup-sr-U6U"/>
+                                    <constraint firstAttribute="trailing" secondItem="bar-progreso" secondAttribute="trailing" constant="24" id="VW2-mM-REz"/>
+                                    <constraint firstItem="xOt-iX-QcA" firstAttribute="top" secondItem="bar-progreso" secondAttribute="bottom" constant="24" id="q7w-Zg-9ed"/>
+                                    <constraint firstItem="xOt-iX-QcA" firstAttribute="leading" secondItem="lbl-eta-min" secondAttribute="leading" id="uPy-t3-0Pv"/>
+                                    <constraint firstItem="UfY-a5-RdS" firstAttribute="top" secondItem="xOt-iX-QcA" secondAttribute="top" constant="4" id="s-name-t"/>
+                                    <constraint firstItem="UfY-a5-RdS" firstAttribute="leading" secondItem="xOt-iX-QcA" secondAttribute="trailing" constant="12" id="s-name-l"/>
+                                    <constraint firstItem="btn-llamar" firstAttribute="centerY" secondItem="xOt-iX-QcA" secondAttribute="centerY" id="s-call-cy"/>
+                                    <constraint firstAttribute="trailing" secondItem="btn-llamar" secondAttribute="trailing" constant="24" id="s-call-tr"/>
+                                    <constraint firstItem="2bR-bG-Mhh" firstAttribute="top" secondItem="UfY-a5-RdS" secondAttribute="bottom" constant="4" id="s-sub-t"/>
+                                    <constraint firstItem="2bR-bG-Mhh" firstAttribute="leading" secondItem="UfY-a5-RdS" secondAttribute="leading" id="s-sub-l"/>
+                                    <constraint firstItem="btn-mensaje" firstAttribute="top" secondItem="xOt-iX-QcA" secondAttribute="bottom" constant="34" id="s-msg-t"/>
+                                    <constraint firstItem="btn-mensaje" firstAttribute="leading" secondItem="Hkw-ma-H3r" secondAttribute="leading" constant="24" id="s-msg-l"/>
+                                    <constraint firstAttribute="trailing" secondItem="btn-mensaje" secondAttribute="trailing" constant="24" id="s-msg-tr"/>
+                                    <constraint firstItem="Hv8-39-9uK" firstAttribute="top" secondItem="btn-mensaje" secondAttribute="bottom" constant="16" id="s-can-t"/>
+                                    <constraint firstItem="Hv8-39-9uK" firstAttribute="leading" secondItem="Hkw-ma-H3r" secondAttribute="leading" constant="24" id="s-can-l"/>
+                                    <constraint firstAttribute="trailing" secondItem="Hv8-39-9uK" secondAttribute="trailing" constant="24" id="s-can-tr"/>
+                                    <constraint firstAttribute="trailing" secondItem="btn-cerrar-rastreo" secondAttribute="trailing" constant="20" id="s-close-tr"/>
+                                    <constraint firstItem="btn-cerrar-rastreo" firstAttribute="top" secondItem="Hkw-ma-H3r" secondAttribute="top" constant="20" id="s-close-tp"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="25"/>
+                                        <integer key="value" value="35"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
@@ -900,19 +973,25 @@
                         <constraints>
                             <constraint firstItem="Hkw-ma-H3r" firstAttribute="leading" secondItem="CbA-5Y-xg3" secondAttribute="leading" id="0Te-uF-aQo"/>
                             <constraint firstItem="8lZ-IE-eeL" firstAttribute="trailing" secondItem="hAw-Fr-qet" secondAttribute="trailing" id="1rh-0w-Jze"/>
-                            <constraint firstItem="Hkw-ma-H3r" firstAttribute="bottom" secondItem="CbA-5Y-xg3" secondAttribute="bottom" id="9e3-JI-g2c"/>
+                            <constraint firstAttribute="bottom" secondItem="Hkw-ma-H3r" secondAttribute="bottom" id="9e3-JI-g2c"/>
                             <constraint firstItem="8lZ-IE-eeL" firstAttribute="top" secondItem="hAw-Fr-qet" secondAttribute="top" id="cl5-1I-WQO"/>
                             <constraint firstItem="Hkw-ma-H3r" firstAttribute="trailing" secondItem="CbA-5Y-xg3" secondAttribute="trailing" id="dR5-pS-RsN"/>
-                            <constraint firstItem="Hkw-ma-H3r" firstAttribute="height" constant="220" id="pmb-fy-rSz"/>
+                            <constraint firstItem="Hkw-ma-H3r" firstAttribute="height" constant="400" id="pmb-fy-rSz"/>
                             <constraint firstItem="8lZ-IE-eeL" firstAttribute="leading" secondItem="hAw-Fr-qet" secondAttribute="leading" id="r1t-3I-KnM"/>
                             <constraint firstAttribute="bottom" secondItem="8lZ-IE-eeL" secondAttribute="bottom" id="rEf-Cx-wiH"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Buscando/En camino" id="jgU-S1-zQH"/>
+                    <navigationItem key="navigationItem" title="En camino" id="jgU-S1-zQH"/>
                     <connections>
+                        <outlet property="barraProgreso" destination="bar-progreso" id="out-progreso"/>
                         <outlet property="btnCancelar" destination="Hv8-39-9uK" id="eVU-8a-b1i"/>
+                        <outlet property="btnCerrarRastreo" destination="btn-cerrar-rastreo" id="out-cerrar"/>
+                        <outlet property="btnLlamar" destination="btn-llamar" id="out-llamar"/>
+                        <outlet property="btnMensaje" destination="btn-mensaje" id="out-mensaje"/>
                         <outlet property="infoPanelView" destination="Hkw-ma-H3r" id="f6y-m0-vgR"/>
                         <outlet property="lblEstadoServicio" destination="2bR-bG-Mhh" id="LdQ-5u-sBP"/>
+                        <outlet property="lblEtaHora" destination="lbl-eta-hora" id="out-eta-hora"/>
+                        <outlet property="lblEtaMinutos" destination="lbl-eta-min" id="out-eta-min"/>
                         <outlet property="lblNombreMecanico" destination="UfY-a5-RdS" id="jIi-sU-WbV"/>
                         <outlet property="mapView" destination="8lZ-IE-eeL" id="YQk-24-SfO"/>
                         <outlet property="perfilImageView" destination="xOt-iX-QcA" id="qpg-ti-jJr"/>
@@ -2296,6 +2375,177 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="priv-resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5706" y="835"/>
+        </scene>
+        <!--SOS Destino Overlay-->
+        <scene sceneID="SOS-Destino-Scene">
+            <objects>
+                <viewController storyboardIdentifier="SOSDestinoVC" id="SOS-Destino-VC" customClass="SOSDestinoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SOS-Destino-View">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Dest-Card">
+                                <rect key="frame" x="24" y="276" width="345" height="300"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¿A dónde llevamos tu vehículo?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Dest-Title">
+                                        <rect key="frame" x="24" y="32" width="297" height="48"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Dest-Stk">
+                                        <rect key="frame" x="24" y="104" width="297" height="112"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Btn-Dest1">
+                                                <rect key="frame" x="0.0" y="0.0" width="297" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="SOS-Btn-H"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Solicitar Ayuda Ahora" cornerStyle="capsule">
+                                                    <color key="baseBackgroundColor" red="0.9215686275" green="0.25882352939999997" blue="0.20784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnSolicitarTapped:" destination="SOS-Dest-VC" eventType="touchUpInside" id="SOS-Act-Sol"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Btn-Can">
+                                                <rect key="frame" x="0.0" y="62" width="297" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="SOS-Btn-Can-H"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Cancelar">
+                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
+                                                    <color key="baseForegroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnCancelarTapped:" destination="SOS-Dest-VC" eventType="touchUpInside" id="SOS-Act-Can"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="SOS-Dest-Title" secondAttribute="trailing" constant="24" id="SOS-D-T-R"/>
+                                    <constraint firstItem="SOS-Dest-Title" firstAttribute="top" secondItem="SOS-Dest-Card" secondAttribute="top" constant="32" id="SOS-D-T-T"/>
+                                    <constraint firstItem="SOS-Dest-Title" firstAttribute="leading" secondItem="SOS-Dest-Card" secondAttribute="leading" constant="24" id="SOS-D-T-L"/>
+                                    <constraint firstAttribute="height" constant="300" id="SOS-D-C-H"/>
+                                    <constraint firstItem="SOS-Dest-Stk" firstAttribute="top" secondItem="SOS-Dest-Title" secondAttribute="bottom" constant="24" id="SOS-D-S-T"/>
+                                    <constraint firstItem="SOS-Dest-Stk" firstAttribute="leading" secondItem="SOS-Dest-Card" secondAttribute="leading" constant="24" id="SOS-D-S-L"/>
+                                    <constraint firstAttribute="trailing" secondItem="SOS-Dest-Stk" secondAttribute="trailing" constant="24" id="SOS-D-S-R"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="SOS-Dest-Safe"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="SOS-Dest-Card" firstAttribute="centerY" secondItem="SOS-Dest-View" secondAttribute="centerY" id="SOS-D-V-CY"/>
+                            <constraint firstItem="SOS-Dest-Card" firstAttribute="leading" secondItem="SOS-Dest-Safe" secondAttribute="leading" constant="24" id="SOS-D-V-L"/>
+                            <constraint firstItem="SOS-Dest-Safe" firstAttribute="trailing" secondItem="SOS-Dest-Card" secondAttribute="trailing" constant="24" id="SOS-D-V-R"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnCancelar" destination="SOS-Btn-Can" id="SOS-Out-Can"/>
+                        <outlet property="btnSolicitarAyuda" destination="SOS-Btn-Dest1" id="SOS-Out-Sol"/>
+                        <outlet property="tarjetaDestino" destination="SOS-Dest-Card" id="SOS-Out-Card"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SOS-Dest-Resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1811" y="-550"/>
+        </scene>
+
+        <!--SOS Exito Overlay-->
+        <scene sceneID="SOS-Exito-Scene">
+            <objects>
+                <viewController storyboardIdentifier="SOSExitoVC" id="SOS-Exito-VC" customClass="SOSExitoViewController" customModule="AppSOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SOS-Exito-View">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Exit-Card">
+                                <rect key="frame" x="24" y="276" width="345" height="300"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Exit-Icon">
+                                        <rect key="frame" x="142.66666666666666" y="33" width="60" height="58.666666666666671"/>
+                                        <color key="tintColor" red="0.29803921570000003" green="0.68627450980000004" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="SOS-E-I-W"/>
+                                            <constraint firstAttribute="height" constant="60" id="SOS-E-I-H"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="¡Ayuda en Camino!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Exit-Title">
+                                        <rect key="frame" x="24" y="108" width="297" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Exit-Stk">
+                                        <rect key="frame" x="24" y="156" width="297" height="112"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Btn-Seg">
+                                                <rect key="frame" x="0.0" y="0.0" width="297" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="SOS-Btn-Seg-H"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Ver Seguimiento" cornerStyle="capsule">
+                                                    <color key="baseBackgroundColor" red="0.1215686275" green="0.1215686275" blue="0.1215686275" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnSeguimientoTapped:" destination="SOS-Exito-VC" eventType="touchUpInside" id="SOS-Act-Seg"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Btn-Exit-Cl">
+                                                <rect key="frame" x="0.0" y="62" width="297" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="SOS-Btn-Cl-H"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Cerrar">
+                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
+                                                    <color key="baseForegroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnCerrarTapped:" destination="SOS-Exito-VC" eventType="touchUpInside" id="SOS-Act-Cl"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="SOS-Exit-Icon" firstAttribute="centerX" secondItem="SOS-Exit-Card" secondAttribute="centerX" id="SOS-E-I-CX"/>
+                                    <constraint firstItem="SOS-Exit-Icon" firstAttribute="top" secondItem="SOS-Exit-Card" secondAttribute="top" constant="32" id="SOS-E-I-T"/>
+                                    <constraint firstAttribute="trailing" secondItem="SOS-Exit-Title" secondAttribute="trailing" constant="24" id="SOS-E-T-R"/>
+                                    <constraint firstItem="SOS-Exit-Title" firstAttribute="top" secondItem="SOS-Exit-Icon" secondAttribute="bottom" constant="16" id="SOS-E-T-T"/>
+                                    <constraint firstItem="SOS-Exit-Title" firstAttribute="leading" secondItem="SOS-Exit-Card" secondAttribute="leading" constant="24" id="SOS-E-T-L"/>
+                                    <constraint firstAttribute="height" constant="300" id="SOS-E-C-H"/>
+                                    <constraint firstItem="SOS-Exit-Stk" firstAttribute="top" secondItem="SOS-Exit-Title" secondAttribute="bottom" constant="24" id="SOS-E-S-T"/>
+                                    <constraint firstItem="SOS-Exit-Stk" firstAttribute="leading" secondItem="SOS-Exit-Card" secondAttribute="leading" constant="24" id="SOS-E-S-L"/>
+                                    <constraint firstAttribute="trailing" secondItem="SOS-Exit-Stk" secondAttribute="trailing" constant="24" id="SOS-E-S-R"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="SOS-Exito-Safe"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="SOS-Exit-Card" firstAttribute="centerY" secondItem="SOS-Exito-View" secondAttribute="centerY" id="SOS-E-V-CY"/>
+                            <constraint firstItem="SOS-Exit-Card" firstAttribute="leading" secondItem="SOS-Exito-Safe" secondAttribute="leading" constant="24" id="SOS-E-V-L"/>
+                            <constraint firstItem="SOS-Exito-Safe" firstAttribute="trailing" secondItem="SOS-Exit-Card" secondAttribute="trailing" constant="24" id="SOS-E-V-R"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="btnCerrar" destination="SOS-Btn-Exit-Cl" id="SOS-Out-Cl"/>
+                        <outlet property="btnVerSeguimiento" destination="SOS-Btn-Seg" id="SOS-Out-Seg"/>
+                        <outlet property="tarjetaExito" destination="SOS-Exit-Card" id="SOS-Out-Card-Ex"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SOS-Exit-Resp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2500" y="-550"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

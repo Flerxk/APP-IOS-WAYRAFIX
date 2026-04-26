@@ -47,30 +47,36 @@ class SignUpViewController: UIViewController {
 
             guard let userId = authResult?.user.uid else { return }
 
-            // Guardar en Firestore + Core Data
-            ControladorPersistencia.compartido.sincronizarUsuario(
-                id: userId,
-                nombre: nombre,
-                email: email,
-                celular: celular,
-                pais: "+51",
-                rol: "cliente"
-            ) { exito, errorDeSincronizacion in
-                DispatchQueue.main.async {
-                    if let e = errorDeSincronizacion {
-                        self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
-                    } else if exito {
-                        print("Registro y sincronización exitosos (Firestore + Core Data)")
-                        try? Auth.auth().signOut()
-                        let alerta = UIAlertController(
-                            title: "¡Registro Exitoso! 🎉",
-                            message: "Tu cuenta fue creada correctamente.\nInicia sesión con tus nuevas credenciales para continuar.",
-                            preferredStyle: .alert
-                        )
-                        alerta.addAction(UIAlertAction(title: "Ir a Iniciar Sesión", style: .default) { _ in
-                            self?.navigationController?.popViewController(animated: true)
-                        })
-                        self?.present(alerta, animated: true)
+            // Preparamos el payload y guardamos en Firestore
+            let datosUsuario: [String: Any] = [
+                "nombre": nombre,
+                "email": email,
+                "celular": celular,
+                "rol": "cliente",
+                "is_active": true
+            ]
+            
+            FirebaseManager.shared.crearUsuario(uid: userId, datos: datosUsuario) { errorFs in
+                // Guardar en Core Data (Sincronización local)
+                ControladorPersistencia.compartido.sincronizarUsuario(
+                    id: userId, nombre: nombre, email: email, celular: celular, pais: "+51", rol: "cliente"
+                ) { exito, errorDeSincronizacion in
+                    DispatchQueue.main.async {
+                        if let e = errorDeSincronizacion ?? errorFs {
+                            self?.mostrarAlerta(titulo: "Error al Sincronizar", mensaje: e.localizedDescription)
+                        } else if exito {
+                            print("Registro y sincronización exitosos (Firestore + Core Data)")
+                            try? Auth.auth().signOut()
+                            let alerta = UIAlertController(
+                                title: "¡Registro Exitoso! 🎉",
+                                message: "Tu cuenta fue creada correctamente.\nInicia sesión con tus nuevas credenciales para continuar.",
+                                preferredStyle: .alert
+                            )
+                            alerta.addAction(UIAlertAction(title: "Ir a Iniciar Sesión", style: .default) { _ in
+                                self?.navigationController?.popViewController(animated: true)
+                            })
+                            self?.present(alerta, animated: true)
+                        }
                     }
                 }
             }
@@ -127,9 +133,10 @@ class SignUpViewController: UIViewController {
 
     private func limpiarError(_ label: UILabel?, en campo: UITextField) {
         label?.isHidden = true
-        // Restaurar borde normal al empezar a escribir
-        campo.superview?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-        campo.superview?.layer.borderWidth = 1.0
+        // El contenedor real es el superview del stackview (SU-nm-bg, etc.)
+        let contenedor = campo.superview?.superview ?? campo.superview
+        contenedor?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        contenedor?.layer.borderWidth = 1.0
     }
 
     // MARK: - Validación completa
@@ -206,15 +213,17 @@ class SignUpViewController: UIViewController {
     private func mostrarError(_ label: UILabel?, en campo: UITextField, mensaje: String) {
         label?.text = mensaje
         label?.isHidden = false
-        // Borde rojo en el contenedor del campo
-        campo.superview?.layer.borderColor = WayraTheme.brand.cgColor
-        campo.superview?.layer.borderWidth = 1.5
+        // Borde rojo en el contenedor real
+        let contenedor = campo.superview?.superview ?? campo.superview
+        contenedor?.layer.borderColor = WayraTheme.brand.cgColor
+        contenedor?.layer.borderWidth = 1.5
     }
 
     private func ocultarError(_ label: UILabel?, en campo: UITextField) {
         label?.isHidden = true
-        campo.superview?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
-        campo.superview?.layer.borderWidth = 1.0
+        let contenedor = campo.superview?.superview ?? campo.superview
+        contenedor?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        contenedor?.layer.borderWidth = 1.0
     }
 
     // MARK: - Labels de error dinámicos

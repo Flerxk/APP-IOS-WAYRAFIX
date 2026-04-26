@@ -7,6 +7,7 @@
 
 import UIKit
 internal import CoreData
+import FirebaseAuth
 
 class AgregarVehiculoViewController: UIViewController {
 
@@ -198,6 +199,22 @@ class AgregarVehiculoViewController: UIViewController {
             registro.tipoVehiculo = tipoVehiculoSeleccionado
             registro.tipoCombustible = tipoCombustibleSeleccionado
             registro.transmision = transmision
+            
+            // Sincronizar con Firestore
+            if let uid = Auth.auth().currentUser?.uid {
+                let vehiculoData: [String: Any] = [
+                    "placa": placa.uppercased(),
+                    "marca": marca,
+                    "modelo": modelo,
+                    "anio": anio,
+                    "color": color,
+                    "vin": vin.uppercased(),
+                    "tipoVehiculo": tipoVehiculoSeleccionado,
+                    "tipoCombustible": tipoCombustibleSeleccionado,
+                    "transmision": transmision
+                ]
+                FirebaseManager.shared.guardarVehiculo(uidUsuario: uid, vehiculo: vehiculoData, idVehiculo: vin.uppercased()) { _ in }
+            }
             
             do {
                 try context.save()

@@ -55,7 +55,18 @@ class ConfiguracionViewController: UIViewController {
             return
         }
         
-        lblNombreUsuario.text = user.displayName?.isEmpty == false ? user.displayName : "Usuario WayraFix"
-        lblCorreoUsuario.text = user.email ?? "Correo no disponible"
+        // Cargar desde Firestore para consistencia de datos persistentes
+        FirebaseManager.shared.verificarEstadoUsuario(uid: user.uid) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let datos):
+                    self?.lblNombreUsuario.text = datos["nombre"] as? String ?? user.displayName ?? "Usuario WayraFix"
+                    self?.lblCorreoUsuario.text = datos["email"] as? String ?? user.email ?? "Correo no disponible"
+                case .failure(_):
+                    self?.lblNombreUsuario.text = user.displayName ?? "Usuario WayraFix"
+                    self?.lblCorreoUsuario.text = user.email ?? "Correo no disponible"
+                }
+            }
+        }
     }
 }

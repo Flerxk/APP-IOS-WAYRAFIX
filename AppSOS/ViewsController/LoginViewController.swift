@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
-import FirebaseFirestore
 import GoogleSignIn
 
 class LoginViewController: UIViewController {
@@ -146,15 +144,16 @@ class LoginViewController: UIViewController {
         let email    = emailTextField.text!
         let password = passwordTextField.text!
 
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            if let e = error {
-                DispatchQueue.main.async {
-                    self?.mostrarAlerta(titulo: "Error de acceso", mensaje: e.localizedDescription)
+        // Usamos nuestro Manager encapsulado (Tema 10)
+        FirebaseManager.shared.iniciarSesion(email: email, contrasena: password) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let uid):
+                    self?.verificarYSincronizarUsuario(uid: uid)
+                case .failure(let error):
+                    self?.mostrarAlerta(titulo: "Error de acceso", mensaje: error.localizedDescription)
                 }
-                return
             }
-            guard let uid = authResult?.user.uid else { return }
-            self?.verificarYSincronizarUsuario(uid: uid)
         }
     }
 
@@ -253,48 +252,33 @@ class LoginViewController: UIViewController {
 
     // MARK: - Verificación is_active + Sincronización (Email/Password)
     private func verificarYSincronizarUsuario(uid: String) {
-        let db = Firestore.firestore()
-        db.collection("usuarios").document(uid).getDocument { [weak self] snapshot, error in
-            if let error = error {
-                DispatchQueue.main.async {
+        FirebaseManager.shared.verificarEstadoUsuario(uid: uid) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
                     self?.mostrarAlerta(titulo: "Error de red", mensaje: error.localizedDescription)
-                }
-                return
-            }
-
-            guard let datos = snapshot?.data() else {
-                DispatchQueue.main.async {
-                    self?.mostrarAlerta(titulo: "Usuario no encontrado",
-                                        mensaje: "No se encontraron datos para este usuario.")
-                }
-                return
-            }
-
-            let activo = datos["is_active"] as? Bool ?? false
-            guard activo else {
-                DispatchQueue.main.async {
-                    try? Auth.auth().signOut()
-                    self?.mostrarAlerta(titulo: "Usuario no registrado",
-                                        mensaje: "Tu cuenta está inactiva o fue eliminada. Contacta al soporte.")
-                }
-                return
-            }
-
-            let nombre  = datos["nombre"]  as? String ?? ""
-            let email   = datos["email"]   as? String ?? ""
-            let celular = datos["celular"] as? String ?? ""
-            let pais    = datos["pais"]    as? String ?? ""
-            let rol     = datos["rol"]     as? String ?? "cliente"
-
-            ControladorPersistencia.compartido.sincronizarUsuario(
-                id: uid, nombre: nombre, email: email,
-                celular: celular, pais: pais, rol: rol
-            ) { [weak self] _, errorSync in
-                DispatchQueue.main.async {
-                    if let e = errorSync {
-                        print("Advertencia: Error al sincronizar localmente: \(e.localizedDescription)")
+                    
+                case .success(let datos):
+                    let activo = datos["is_active"] as? Bool ?? false
+                    guard activo else {
+                        try? FirebaseManager.shared.cerrarSesion()
+                        self?.mostrarAlerta(titulo: "Usuario no registrado",
+                                            mensaje: "Tu cuenta está inactiva o fue eliminada. Contacta al soporte.")
+                        return
                     }
-                    self?.irAlTabBar()
+                    
+                    let nombre  = datos["nombre"]  as? String ?? ""
+                    let email   = datos["email"]   as? String ?? ""
+                    let celular = datos["celular"] as? String ?? ""
+                    let pais    = datos["pais"]    as? String ?? ""
+                    let rol     = datos["rol"]     as? String ?? "cliente"
+                    
+                    ControladorPersistencia.compartido.sincronizarUsuario(
+                        id: uid, nombre: nombre, email: email,
+                        celular: celular, pais: pais, rol: rol
+                    ) { _, _ in
+                        DispatchQueue.main.async { self?.irAlTabBar() }
+                    }
                 }
             }
         }

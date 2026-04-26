@@ -243,19 +243,28 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @IBAction func btnSOSTapped(_ sender: UIButton) {
+        guard let _ = Auth.auth().currentUser else {
+            mostrarAlertaValidacion(mensaje: "Debes estar logueado para enviar un SOS.")
+            return
+        }
+        
+        // Desplegar selector de vehículos si aún no hay uno afectado seleccionado
+        guard vehiculoSeleccionado != nil else {
+            performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
+            return
+        }
+        
         prepararYEnviarSOS()
     }
     
     private func prepararYEnviarSOS() {
         // 1. Validar Cliente (Firebase Auth)
         guard let usuarioFirebase = Auth.auth().currentUser else {
-            mostrarAlertaValidacion(mensaje: "Debes estar logueado para enviar un SOS.")
             return
         }
         
         // 2. Validar Vehículo Seleccionado
         guard let vehiculo = vehiculoSeleccionado else {
-            mostrarAlertaValidacion(mensaje: "Por favor, selecciona un vehículo antes de enviar el SOS.")
             return
         }
         
@@ -344,11 +353,140 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func presentarOverlayDestino(para vehiculo: VehiculoEntity) {
-        removerOverlayActivo()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "SOSDestinoVC") as? SOSDestinoViewController else { return }
         
-        let fondoOscuro = UIView(frame: view.bounds)
-        fondoOscuro.backgroundColor = UIColor.black.withAlphaComponent(0.18)
-        fondoOscuro.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        
+        vc.onSolicitarTapped = { [weak self] in
+            self?.prepararYEnviarSOS(vehiculo: vehiculo)
+        }
+        
+        present(vc, animated: true)
+    }
+    
+    func presentarOverlayExito(para vehiculo: VehiculoEntity, sosResponse: SOSResponse? = nil) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let vc = storyboard.instantiateViewController(withIdentifier: "SOSExitoVC") as? SOSExitoViewController else { return }
+        
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        
+        vc.onSeguimientoTapped = { [weak self] in
+            let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
+            self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
+        }
+        
+        present(vc, animated: true)
+    }
+    
+    func crearBotonOpcion(titulo: String, subtitulo: String, icono: String, seleccionado: Bool = false) -> UIView {
+        let contenedor = UIView()
+        contenedor.translatesAutoresizingMaskIntoConstraints = false
+        contenedor.backgroundColor = seleccionado ? WayraTheme.accentSoft : UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1)
+        contenedor.layer.cornerRadius = 18
+        
+        let contenedorIcono = UIView()
+        contenedorIcono.translatesAutoresizingMaskIntoConstraints = false
+        contenedorIcono.backgroundColor = .white
+        contenedorIcono.layer.cornerRadius = 18
+        
+        let imagenIcono = UIImageView(image: UIImage(systemName: icono))
+        imagenIcono.translatesAutoresizingMaskIntoConstraints = false
+        imagenIcono.tintColor = WayraTheme.primary
+        
+        let etiquetaTitulo = UILabel()
+        etiquetaTitulo.translatesAutoresizingMaskIntoConstraints = false
+        etiquetaTitulo.text = titulo
+        etiquetaTitulo.font = .boldSystemFont(ofSize: 18)
+        
+        let etiquetaSubtitulo = UILabel()
+        etiquetaSubtitulo.translatesAutoresizingMaskIntoConstraints = false
+        etiquetaSubtitulo.text = subtitulo
+        etiquetaSubtitulo.font = .systemFont(ofSize: 15)
+        etiquetaSubtitulo.textColor = WayraTheme.textSecondary
+        
+        contenedor.addSubview(contenedorIcono)
+        contenedorIcono.addSubview(imagenIcono)
+        contenedor.addSubview(etiquetaTitulo)
+        contenedor.addSubview(etiquetaSubtitulo)
+        
+        if seleccionado {
+            let iconoCheck = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+            iconoCheck.translatesAutoresizingMaskIntoConstraints = false
+            iconoCheck.tintColor = WayraTheme.accent
+            contenedor.addSubview(iconoCheck)
+            NSLayoutConstraint.activate([
+                iconoCheck.centerYAnchor.constraint(equalTo: contenedor.centerYAnchor),
+                contenedor.trailingAnchor.constraint(equalTo: iconoCheck.trailingAnchor, constant: 16),
+                iconoCheck.widthAnchor.constraint(equalToConstant: 22),
+                iconoCheck.heightAnchor.constraint(equalToConstant: 22)
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
+            contenedor.heightAnchor.constraint(equalToConstant: 78),
+            contenedorIcono.leadingAnchor.constraint(equalTo: contenedor.leadingAnchor, constant: 14),
+            contenedorIcono.centerYAnchor.constraint(equalTo: contenedor.centerYAnchor),
+            contenedorIcono.widthAnchor.constraint(equalToConstant: 36),
+            contenedorIcono.heightAnchor.constraint(equalToConstant: 36),
+            
+            imagenIcono.centerXAnchor.constraint(equalTo: contenedorIcono.centerXAnchor),
+            imagenIcono.centerYAnchor.constraint(equalTo: contenedorIcono.centerYAnchor),
+            
+            etiquetaTitulo.topAnchor.constraint(equalTo: contenedor.topAnchor, constant: 16),
+            etiquetaTitulo.leadingAnchor.constraint(equalTo: contenedorIcono.trailingAnchor, constant: 14),
+            
+            etiquetaSubtitulo.topAnchor.constraint(equalTo: etiquetaTitulo.bottomAnchor, constant: 4),
+            etiquetaSubtitulo.leadingAnchor.constraint(equalTo: etiquetaTitulo.leadingAnchor)
+        ])
+        
+        return contenedor
+    }
+    
+    func removerOverlayActivo() {
+        vistaOverlayActiva?.removeFromSuperview()
+        vistaOverlayActiva = nil
+    }
+}
+
+extension HomeViewController: SeleccionVehiculoDelegate {
+    func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity) {
+        self.vehiculoSeleccionado = vehiculo
+        let placa = vehiculo.placa ?? "N/A"
+        let marca = vehiculo.marca ?? ""
+        let modelo = vehiculo.modelo ?? ""
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.lblVehiculoInfo.text = "Vehículo: \(marca) \(modelo) (\(placa))"
+            self.lblVehiculoInfo.textColor = WayraTheme.accent
+            self.btnSeleccionarVehiculo.setTitle("Cambiar Vehículo", for: .normal)
+        }
+    }
+
+// MARK: - Custom Views
+// Tema 1.2.1: Clases, variables y métodos
+// Tema 1.3.4: Componentes básicos de interfaz
+
+class SOSDestinoOverlayView: UIView {
+    
+    var onSolicitarTapped: (() -> Void)?
+    var onCancelarTapped: (() -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    private func setupUI() {
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.18)
         
         let tarjeta = UIView()
         tarjeta.translatesAutoresizingMaskIntoConstraints = false
@@ -388,6 +526,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         let botonTallerSugerido = crearBotonOpcion(titulo: "Taller Sugerido", subtitulo: "Mecánica Express • 2.5 km", icono: "wrench.and.screwdriver", seleccionado: true)
         let botonDomicilio = crearBotonOpcion(titulo: "Mi Domicilio", subtitulo: "Calle Las Flores 123", icono: "house")
         let botonMapa = crearBotonOpcion(titulo: "Elegir punto en el mapa", subtitulo: "Selecciona una ubicación personalizada", icono: "mappin.and.ellipse")
+        // Estos botones son solo representativos para la UI
+        let botonTallerSugerido = crearMockBoton(titulo: "Taller Sugerido", subtitulo: "Mecánica Express • 2.5 km", icono: "wrench.and.screwdriver", seleccionado: true)
+        let botonDomicilio = crearMockBoton(titulo: "Mi Domicilio", subtitulo: "Calle Las Flores 123", icono: "house", seleccionado: false)
         
         let botonSolicitar = UIButton(type: .system)
         botonSolicitar.translatesAutoresizingMaskIntoConstraints = false
@@ -396,6 +537,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             self?.vehiculoSeleccionado = vehiculo
             self?.removerOverlayActivo()
             self?.prepararYEnviarSOS()
+            self?.onSolicitarTapped?()
         }, for: .touchUpInside)
         
         let botonCancelar = UIButton(type: .system)
@@ -405,18 +547,24 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         botonCancelar.titleLabel?.font = .boldSystemFont(ofSize: 16)
         botonCancelar.addAction(UIAction { [weak self] _ in
             self?.removerOverlayActivo()
+            self?.onCancelarTapped?()
         }, for: .touchUpInside)
         
         view.addSubview(fondoOscuro)
         fondoOscuro.addSubview(tarjeta)
+        self.addSubview(tarjeta)
         tarjeta.addSubview(contenedorIcono)
         contenedorIcono.addSubview(icono)
         [etiquetaTitulo, etiquetaPregunta, etiquetaSubtitulo, botonTallerSugerido, botonDomicilio, botonMapa, botonSolicitar, botonCancelar].forEach { tarjeta.addSubview($0) }
+        [etiquetaTitulo, etiquetaPregunta, etiquetaSubtitulo, botonTallerSugerido, botonDomicilio, botonSolicitar, botonCancelar].forEach { tarjeta.addSubview($0) }
         
         NSLayoutConstraint.activate([
             tarjeta.centerYAnchor.constraint(equalTo: fondoOscuro.centerYAnchor),
             tarjeta.leadingAnchor.constraint(equalTo: fondoOscuro.leadingAnchor, constant: 22),
             fondoOscuro.trailingAnchor.constraint(equalTo: tarjeta.trailingAnchor, constant: 22),
+            tarjeta.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            tarjeta.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 22),
+            self.trailingAnchor.constraint(equalTo: tarjeta.trailingAnchor, constant: 22),
             
             contenedorIcono.topAnchor.constraint(equalTo: tarjeta.topAnchor, constant: 26),
             contenedorIcono.centerXAnchor.constraint(equalTo: tarjeta.centerXAnchor),
@@ -443,16 +591,19 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             botonTallerSugerido.topAnchor.constraint(equalTo: etiquetaSubtitulo.bottomAnchor, constant: 24),
             botonTallerSugerido.leadingAnchor.constraint(equalTo: tarjeta.leadingAnchor, constant: 18),
             tarjeta.trailingAnchor.constraint(equalTo: botonTallerSugerido.trailingAnchor, constant: 18),
+            botonTallerSugerido.heightAnchor.constraint(equalToConstant: 78),
             
             botonDomicilio.topAnchor.constraint(equalTo: botonTallerSugerido.bottomAnchor, constant: 14),
             botonDomicilio.leadingAnchor.constraint(equalTo: botonTallerSugerido.leadingAnchor),
             botonDomicilio.trailingAnchor.constraint(equalTo: botonTallerSugerido.trailingAnchor),
+            botonDomicilio.heightAnchor.constraint(equalToConstant: 78),
             
             botonMapa.topAnchor.constraint(equalTo: botonDomicilio.bottomAnchor, constant: 14),
             botonMapa.leadingAnchor.constraint(equalTo: botonTallerSugerido.leadingAnchor),
             botonMapa.trailingAnchor.constraint(equalTo: botonTallerSugerido.trailingAnchor),
             
             botonSolicitar.topAnchor.constraint(equalTo: botonMapa.bottomAnchor, constant: 24),
+            botonSolicitar.topAnchor.constraint(equalTo: botonDomicilio.bottomAnchor, constant: 24),
             botonSolicitar.leadingAnchor.constraint(equalTo: tarjeta.leadingAnchor, constant: 18),
             tarjeta.trailingAnchor.constraint(equalTo: botonSolicitar.trailingAnchor, constant: 18),
             botonSolicitar.heightAnchor.constraint(equalToConstant: 52),
@@ -467,6 +618,32 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     
     func presentarOverlayExito(para vehiculo: VehiculoEntity, sosResponse: SOSResponse? = nil) {
         removerOverlayActivo()
+    private func crearMockBoton(titulo: String, subtitulo: String, icono: String, seleccionado: Bool) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = seleccionado ? WayraTheme.accentSoft : UIColor(white: 0.96, alpha: 1)
+        view.layer.cornerRadius = 18
+        return view
+    }
+}
+
+class SOSExitoOverlayView: UIView {
+    
+    var onSeguimientoTapped: (() -> Void)?
+    var onCerrarTapped: (() -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    private func setupUI() {
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.24)
         
         let fondoOscuro = UIView(frame: view.bounds)
         fondoOscuro.backgroundColor = UIColor.black.withAlphaComponent(0.24)
@@ -507,6 +684,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             // Pasamos un diccionario o una tupla con ambos datos
             let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
             self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
+            self?.onSeguimientoTapped?()
         }, for: .touchUpInside)
         
         let botonCerrar = UIButton(type: .system)
@@ -516,10 +694,12 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         botonCerrar.titleLabel?.font = .boldSystemFont(ofSize: 16)
         botonCerrar.addAction(UIAction { [weak self] _ in
             self?.removerOverlayActivo()
+            self?.onCerrarTapped?()
         }, for: .touchUpInside)
         
         view.addSubview(fondoOscuro)
         fondoOscuro.addSubview(tarjeta)
+        self.addSubview(tarjeta)
         tarjeta.addSubview(contenedorIcono)
         contenedorIcono.addSubview(icono)
         [etiquetaTitulo, etiquetaSubtitulo, botonSeguimiento, botonCerrar].forEach { tarjeta.addSubview($0) }
@@ -528,6 +708,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             tarjeta.centerYAnchor.constraint(equalTo: fondoOscuro.centerYAnchor),
             tarjeta.leadingAnchor.constraint(equalTo: fondoOscuro.leadingAnchor, constant: 22),
             fondoOscuro.trailingAnchor.constraint(equalTo: tarjeta.trailingAnchor, constant: 22),
+            tarjeta.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            tarjeta.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 22),
+            self.trailingAnchor.constraint(equalTo: tarjeta.trailingAnchor, constant: 22),
             
             contenedorIcono.topAnchor.constraint(equalTo: tarjeta.topAnchor, constant: 28),
             contenedorIcono.centerXAnchor.constraint(equalTo: tarjeta.centerXAnchor),
