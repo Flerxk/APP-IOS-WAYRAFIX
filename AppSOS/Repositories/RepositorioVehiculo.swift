@@ -17,7 +17,7 @@ final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
     private let db = Firestore.firestore()
     
     init(
-        context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext,
+        context: NSManagedObjectContext = ControladorPersistencia.compartido.contextoVista,
         notificationCenter: NotificationCenter = .default
     ) {
         self.context = context

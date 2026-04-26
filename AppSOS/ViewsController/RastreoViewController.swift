@@ -21,6 +21,7 @@ class RastreoViewController: UIViewController {
     var vehiculoAveriado: VehiculoEntity?
     var direccionServicio: String?
     var sosData: SOSResponse?
+    
     @IBOutlet weak var lblEtaMinutos: UILabel!
     @IBOutlet weak var lblEtaHora: UILabel!
     @IBOutlet weak var barraProgreso: UIProgressView!
@@ -28,7 +29,7 @@ class RastreoViewController: UIViewController {
     @IBOutlet weak var btnLlamar: UIButton!
     @IBOutlet weak var btnCerrarRastreo: UIButton!
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
     
     override func viewDidLoad() {
         super.viewDidLoad()

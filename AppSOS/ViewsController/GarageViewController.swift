@@ -17,7 +17,7 @@ class GarageViewController: UIViewController {
     @IBOutlet weak var tblVehiculos: UITableView!
     
     var listaVehiculos: [VehiculoEntity] = []
-    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    private let context = ControladorPersistencia.compartido.contextoVista
     private let repositorioVehiculo: RepositorioVehiculoProtocol = RepositorioVehiculoCoreData()
     private weak var botonAgregarVacio: UIButton?
     private weak var botonAgregarPrincipal: UIButton?

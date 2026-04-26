@@ -29,7 +29,7 @@ class AgregarVehiculoViewController: UIViewController {
     var tipoVehiculoSeleccionado: String = ""
     var tipoCombustibleSeleccionado: String = ""
         
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = ControladorPersistencia.compartido.contextoVista
 
     override func viewDidLoad() {
         super.viewDidLoad()
