@@ -21,7 +21,9 @@ final class RepositorioVehiculoCoreData: RepositorioVehiculoProtocol {
     }
     
     func obtenerVehiculos() throws -> [VehiculoEntity] {
+        guard let uid = Auth.auth().currentUser?.uid else { return [] }
         let request: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "usuarioId == %@", uid)
         return try context.fetch(request)
     }
 

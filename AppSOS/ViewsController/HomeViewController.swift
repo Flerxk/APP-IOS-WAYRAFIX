@@ -103,25 +103,32 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func setupVehicleSelectionUI() {
+        bottomPanel.addSubview(lblNeedHelp)
         bottomPanel.addSubview(btnSeleccionarVehiculo)
         bottomPanel.addSubview(lblVehiculoInfo)
         
         btnSeleccionarVehiculo.addTarget(self, action: #selector(btnSeleccionarVehiculoTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            btnSeleccionarVehiculo.bottomAnchor.constraint(equalTo: btnSOS.topAnchor, constant: -16),
-            btnSeleccionarVehiculo.centerXAnchor.constraint(equalTo: bottomPanel.centerXAnchor),
-            btnSeleccionarVehiculo.widthAnchor.constraint(equalToConstant: 200),
-            btnSeleccionarVehiculo.heightAnchor.constraint(equalToConstant: 40),
+            lblNeedHelp.topAnchor.constraint(equalTo: bottomPanel.topAnchor, constant: 24),
+            lblNeedHelp.leadingAnchor.constraint(equalTo: bottomPanel.leadingAnchor, constant: 24),
             
-            lblVehiculoInfo.bottomAnchor.constraint(equalTo: btnSeleccionarVehiculo.topAnchor, constant: -8),
-            lblVehiculoInfo.leadingAnchor.constraint(equalTo: bottomPanel.leadingAnchor, constant: 20),
-            lblVehiculoInfo.trailingAnchor.constraint(equalTo: bottomPanel.trailingAnchor, constant: -20)
+            lblVehiculoInfo.topAnchor.constraint(equalTo: lblNeedHelp.bottomAnchor, constant: 16),
+            lblVehiculoInfo.leadingAnchor.constraint(equalTo: bottomPanel.leadingAnchor, constant: 24),
+            
+            btnSeleccionarVehiculo.centerYAnchor.constraint(equalTo: lblVehiculoInfo.centerYAnchor),
+            btnSeleccionarVehiculo.trailingAnchor.constraint(equalTo: bottomPanel.trailingAnchor, constant: -24),
+            btnSeleccionarVehiculo.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
+        // Ajustar el scroll de categorías para que empiece debajo de la info
+        if let topCat = bottomPanel.constraints.first(where: { $0.firstItem as? UIView == catScrollView && $0.firstAttribute == .top }) {
+            topCat.constant = 100 
+        }
     }
     
     @objc func btnSeleccionarVehiculoTapped() {
-        performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
+        performSegue(withIdentifier: "irAGarage", sender: nil)
     }
 
     func styleCategorias() {
@@ -246,7 +253,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         guard let vehiculo = vehiculoSeleccionado else {
-            performSegue(withIdentifier: "mostrarElegirVehiculo", sender: nil)
+            // Usamos el segue que va al Garage (configurado en el Storyboard como el botón de auto en el Nav Bar)
+            performSegue(withIdentifier: "irAGarage", sender: nil)
             return
         }
         

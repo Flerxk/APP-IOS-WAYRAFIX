@@ -68,7 +68,9 @@ class AgregarVehiculoViewController: UIViewController {
         view.backgroundColor = .clear
         view.aplicarFondoRosadoRadial()
         title = "Agregar Vehículo"
-        btnGuardar.applyAccentStyle(title: "Guardar Vehículo")
+        btnGuardar.applyPrimaryStyle(title: "Guardar Vehículo")
+        // Cambiar a dorado/ocre para seguir el wireframe
+        btnGuardar.configuration?.baseBackgroundColor = UIColor(red: 0.77, green: 0.58, blue: 0.30, alpha: 1.0)
         btnGuardar.titleLabel?.font = .boldSystemFont(ofSize: 18)
         btnGuardar.layer.cornerRadius = 26
         btnGuardar.layer.masksToBounds = true
@@ -199,6 +201,11 @@ class AgregarVehiculoViewController: UIViewController {
             registro.tipoVehiculo = tipoVehiculoSeleccionado
             registro.tipoCombustible = tipoCombustibleSeleccionado
             registro.transmision = transmision
+            
+            // Asignar el ID del usuario actual para filtrar el Garage
+            if let uid = Auth.auth().currentUser?.uid {
+                registro.usuarioId = uid
+            }
             
             // Sincronizar con Firestore
             if let uid = Auth.auth().currentUser?.uid {

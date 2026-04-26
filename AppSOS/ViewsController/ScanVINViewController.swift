@@ -97,19 +97,17 @@ class ScanVINViewController: UIViewController {
     }
     
     @objc func btnManualTapped() {
-        let cerrarFlujo = {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first,
-               let tabBarController = window.rootViewController as? UITabBarController {
-                tabBarController.selectedIndex = 1 
-            }
-        }
-        
-        if let nav = navigationController, nav.viewControllers.count > 1 {
-            nav.popViewController(animated: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25, execute: cerrarFlujo)
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "vc-agregar-vehiculo") as? AgregarVehiculoViewController {
+            navigationController?.pushViewController(vc, animated: true)
         } else {
-            dismiss(animated: true, completion: cerrarFlujo)
+            // Fallback en caso de que el ID del storyboard cambie
+            dismiss(animated: true) {
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first,
+                   let tabBarController = window.rootViewController as? UITabBarController {
+                    tabBarController.selectedIndex = 1 
+                }
+            }
         }
     }
     

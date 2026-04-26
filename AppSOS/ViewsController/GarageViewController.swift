@@ -86,23 +86,22 @@ class GarageViewController: UIViewController {
         tblVehiculos.register(GarageVehiculoCell.self, forCellReuseIdentifier: GarageVehiculoCell.reuseId)
         
         botonAgregarPrincipal = btnAgregarVehiculo
-        btnAgregarVehiculo.applyBrandStyle(title: "Agregar")
-        btnEscanearVIN.configuration = .filled()
-        btnEscanearVIN.configuration?.image = UIImage(systemName: "barcode.viewfinder")
-        btnEscanearVIN.configuration?.title = "Escanear VIN"
-        btnEscanearVIN.configuration?.imagePadding = 8
-        btnEscanearVIN.configuration?.baseBackgroundColor = .white
-        btnEscanearVIN.configuration?.baseForegroundColor = WayraTheme.textPrimary
-        btnEscanearVIN.layer.cornerRadius = 16
-        btnEscanearVIN.layer.borderWidth = 1
-        btnEscanearVIN.layer.borderColor = WayraTheme.divider.cgColor
-        btnEscanearVIN.clipsToBounds = true
+        btnAgregarVehiculo.setTitle("Agregar", for: .normal)
+        btnAgregarVehiculo.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0) // Rojo del wireframe
+        btnAgregarVehiculo.tintColor = .white
+        btnAgregarVehiculo.layer.cornerRadius = 24
+        btnAgregarVehiculo.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        btnAgregarVehiculo.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
+        
+        btnEscanearVIN.isHidden = true // Ocultar según wireframe
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton
-            // Igual que el botón principal: estilo de marca
-            boton.applyBrandStyle(title: "Agregar")
-            boton.addTarget(self, action: #selector(irAAgregarVehiculo), for: .touchUpInside)
+            boton.setTitle("Agregar", for: .normal)
+            boton.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0)
+            boton.tintColor = .white
+            boton.layer.cornerRadius = 20
+            boton.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
         }
         
         mapearEtiquetasEstadoVacio()
@@ -152,6 +151,10 @@ class GarageViewController: UIViewController {
     
     @objc func irAAgregarVehiculo() {
         performSegue(withIdentifier: "mostrarAgregarVehiculo", sender: nil)
+    }
+    
+    @objc func irAEscanearVIN() {
+        performSegue(withIdentifier: "mostrarScanVIN", sender: nil)
     }
 }
 
