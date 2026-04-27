@@ -45,6 +45,9 @@ class RastreoViewController: UIViewController {
         setupUI()
         configurarMapa()
         iniciarRastreoEnTiempoReal()
+        
+        // Asegurar que el mapa esté al fondo
+        view.sendSubviewToBack(mapView)
     }
     
     deinit {
