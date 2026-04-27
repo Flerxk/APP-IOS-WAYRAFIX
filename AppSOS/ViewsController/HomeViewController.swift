@@ -265,10 +265,18 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         let myMapInitOptions = MapInitOptions(resourceOptions: myResourceOptions, styleURI: .streets)
         
         mapboxView = MapView(frame: mapView.bounds, mapInitOptions: myMapInitOptions)
-        mapboxView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapboxView.translatesAutoresizingMaskIntoConstraints = false
         mapView.addSubview(mapboxView)
         
-        // Configurar el indicador de ubicación de Mapbox (Puck 2D)
+        // Usar constraints para que el mapa ocupe todo el contenedor
+        NSLayoutConstraint.activate([
+            mapboxView.topAnchor.constraint(equalTo: mapView.topAnchor),
+            mapboxView.leadingAnchor.constraint(equalTo: mapView.leadingAnchor),
+            mapboxView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor),
+            mapboxView.bottomAnchor.constraint(equalTo: mapView.bottomAnchor)
+        ])
+        
+        // Configurar el indicador de ubicación de Mapbox
         mapboxView.location.options.puckType = .puck2D()
     }
     
