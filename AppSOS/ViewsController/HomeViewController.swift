@@ -67,11 +67,63 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         setupLocation()
         setupUI()
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(actualizarDesdeSesion), name: .vehicleSelectionChanged, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        actualizarDesdeSesion()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.ajustarMarcoDeFondoRadial()
+    }
+    
+    @objc private func actualizarDesdeSesion() {
+        guard let uid = Auth.auth().currentUser?.uid,
+              let selectedVin = VehicleSessionManager.shared.getSelectedVehicleVin() else {
+            // Si no hay VIN seleccionado, intentar cargar el primero disponible
+            cargarPrimerVehiculoDisponible()
+            return
+        }
+        
+        let context = ControladorPersistencia.compartido.contextoVista
+        let request: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "vin == %@ AND propietario.id == %@", selectedVin, uid)
+        
+        do {
+            if let vehiculo = try context.fetch(request).first {
+                self.vehiculoElegidoParaSOS(vehiculo)
+            } else {
+                cargarPrimerVehiculoDisponible()
+            }
+        } catch {
+            print("Error cargando vehículo de sesión: \(error)")
+        }
+    }
+    
+    private func cargarPrimerVehiculoDisponible() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let context = ControladorPersistencia.compartido.contextoVista
+        let request: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "propietario.id == %@", uid)
+        request.fetchLimit = 1
+        
+        do {
+            if let primero = try context.fetch(request).first {
+                VehicleSessionManager.shared.setSelectedVehicleVin(primero.vin)
+            } else {
+                // Limpiar UI si no hay vehículos
+                self.vehiculoSeleccionado = nil
+                self.lblVehiculoInfo.text = "Ningún vehículo seleccionado"
+                self.lblVehiculoInfo.textColor = WayraTheme.textSecondary
+                self.btnSeleccionarVehiculo.setTitle("Seleccionar Vehículo", for: .normal)
+            }
+        } catch {
+            print("Error cargando primer vehículo: \(error)")
+        }
     }
 
     func setupUI() {
@@ -378,6 +430,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
 
 extension HomeViewController: SeleccionVehiculoDelegate {
     func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity) {
+        if self.vehiculoSeleccionado?.vin != vehiculo.vin {
+            VehicleSessionManager.shared.setSelectedVehicleVin(vehiculo.vin)
+        }
+        
         self.vehiculoSeleccionado = vehiculo
         let placa = vehiculo.placa ?? "N/A"
         let marca = vehiculo.marca ?? ""

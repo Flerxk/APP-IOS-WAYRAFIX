@@ -34,7 +34,8 @@ final class VehiculoLocalRepository: RepositorioVehiculoProtocol {
     func obtenerVehiculos() throws -> [VehiculoEntity] {
         guard let uid = Auth.auth().currentUser?.uid else { return [] }
         let request: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "propietario.id == %@", uid)
+        // Solo obtener vehículos activos del usuario actual
+        request.predicate = NSPredicate(format: "propietario.id == %@ AND is_active == true", uid)
         return try context.fetch(request)
     }
 
@@ -104,7 +105,7 @@ final class VehiculoLocalRepository: RepositorioVehiculoProtocol {
         notificationCenter.addObserver(
             observer,
             selector: selector,
-            name: .NSManagedObjectContextObjectsDidChange,
+            name: .NSManagedObjectContextDidSave,
             object: context
         )
     }
@@ -112,7 +113,7 @@ final class VehiculoLocalRepository: RepositorioVehiculoProtocol {
     func quitarObservador(_ observer: Any) {
         notificationCenter.removeObserver(
             observer,
-            name: .NSManagedObjectContextObjectsDidChange,
+            name: .NSManagedObjectContextDidSave,
             object: context
         )
     }

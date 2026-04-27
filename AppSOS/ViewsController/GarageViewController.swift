@@ -173,13 +173,18 @@ extension GarageViewController: UITableViewDelegate, UITableViewDataSource {
         let marca = vehiculo.marca ?? ""
         let modelo = vehiculo.modelo ?? ""
         let titulo = "\(marca) \(modelo)".trimmingCharacters(in: .whitespaces)
-        let badge = indexPath.row == 0 ? "Principal" : "Secundario"
-        let colorBadge = indexPath.row == 0 ? WayraTheme.accent : WayraTheme.primary
+        let selectedVin = VehicleSessionManager.shared.getSelectedVehicleVin()
+        let isSelected = (vehiculo.vin == selectedVin)
+        
+        let badge = isSelected ? "Seleccionado" : "Secundario"
+        let colorBadge = isSelected ? WayraTheme.accent : WayraTheme.primary
+        
         (celda as? GarageVehiculoCell)?.configurar(
             titulo: titulo.isEmpty ? "Vehículo" : titulo,
             placa: placa,
             badge: badge,
-            colorBadge: colorBadge
+            colorBadge: colorBadge,
+            estaSeleccionado: isSelected
         )
         return celda
     }
@@ -190,8 +195,22 @@ extension GarageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vehiculo = listaVehiculos[indexPath.row]
-        performSegue(withIdentifier: "mostrarDetalleVehiculo", sender: vehiculo)
-        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Al tocar, lo seleccionamos como activo y recargamos
+        VehicleSessionManager.shared.setSelectedVehicleVin(vehiculo.vin)
+        tableView.reloadData()
+        
+        // Opcional: Feedback haptico
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
+        
+        // Después de un pequeño delay, podemos mostrar el detalle si se desea, 
+        // o dejarlo así para que el usuario sepa que ya se seleccionó.
+        // Por ahora, solo seleccionamos. Para ver detalle pueden usar el botón ellipsis si lo implementamos,
+        // o simplemente navegar al detalle.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.performSegue(withIdentifier: "mostrarDetalleVehiculo", sender: vehiculo)
+        }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -308,10 +327,19 @@ final class GarageVehiculoCell: UITableViewCell {
         ])
     }
     
-    func configurar(titulo: String, placa: String, badge: String, colorBadge: UIColor) {
+    func configurar(titulo: String, placa: String, badge: String, colorBadge: UIColor, estaSeleccionado: Bool = false) {
         lblTitulo.text = titulo
         lblPlaca.text = placa
         lblBadge.text = "  \(badge)  "
         lblBadge.backgroundColor = colorBadge
+        
+        card.layer.borderColor = estaSeleccionado ? WayraTheme.accent.cgColor : WayraTheme.divider.cgColor
+        card.layer.borderWidth = estaSeleccionado ? 2 : 1
+        
+        if estaSeleccionado {
+            card.backgroundColor = WayraTheme.accentSoft.withAlphaComponent(0.3)
+        } else {
+            card.backgroundColor = .white
+        }
     }
 }

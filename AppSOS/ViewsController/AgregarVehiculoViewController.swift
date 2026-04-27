@@ -244,6 +244,12 @@ class AgregarVehiculoViewController: UIViewController {
             
             do {
                 try context.save()
+                
+                // Si no hay vehículo seleccionado actualmente, seleccionamos este nuevo
+                if VehicleSessionManager.shared.getSelectedVehicleVin() == nil {
+                    VehicleSessionManager.shared.setSelectedVehicleVin(vin.uppercased())
+                }
+                
                 print("Guardado con éxito: \(transmision)")
                 self.navigationController?.popViewController(animated: true)
             } catch {

@@ -31,6 +31,9 @@ class ElegirVehiculoViewController: UIViewController {
     
     func cargarVehiculos() {
         let solicitud: NSFetchRequest<VehiculoEntity> = VehiculoEntity.fetchRequest()
+        if let uid = Auth.auth().currentUser?.uid {
+            solicitud.predicate = NSPredicate(format: "propietario.id == %@ AND is_active == true", uid)
+        }
         do {
             listaVehiculos = try context.fetch(solicitud)
             tblVehiculos.reloadData()
