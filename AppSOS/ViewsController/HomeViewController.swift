@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import MapKit
 import CoreLocation
 import CoreData
 import FirebaseAuth

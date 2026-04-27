@@ -6,13 +6,16 @@
 //
 
 import UIKit
-import MapKit
+import MapboxMaps
 import CoreData
 import FirebaseDatabase
 
 class RastreoViewController: UIViewController {
 
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: UIView! // Contenedor para Mapbox
+    private var mapboxView: MapView!
+    private var pointAnnotationManager: PointAnnotationManager?
+    
     @IBOutlet weak var infoPanelView: UIView!
     @IBOutlet weak var perfilImageView: UIImageView!
     @IBOutlet weak var lblNombreMecanico: UILabel!
@@ -32,7 +35,7 @@ class RastreoViewController: UIViewController {
     
     // Firebase Realtime Database
     private var ref: DatabaseReference!
-    private var gruaAnnotation: MKPointAnnotation?
+    private var gruaAnnotation: PointAnnotation?
     
     let context = ControladorPersistencia.compartido.contextoVista
     
@@ -72,7 +75,7 @@ class RastreoViewController: UIViewController {
             lblEstadoServicio.numberOfLines = 2
         }
         
-        btnCancelar.isHidden = true // Usaremos los nuevos botones
+        btnCancelar.isHidden = true 
         
         btnMensaje.applyPrimaryStyle(title: "Enviar Mensaje")
         btnMensaje.configuration?.image = UIImage(systemName: "bubble.left.fill")
@@ -90,8 +93,6 @@ class RastreoViewController: UIViewController {
         btnCerrarRastreo.layer.borderColor = WayraTheme.divider.cgColor
         btnCerrarRastreo.layer.cornerRadius = 22
         btnCerrarRastreo.tintColor = WayraTheme.textPrimary
-        
-        // UI configurada vía Storyboard
         
         if let auto = vehiculoAveriado {
             self.title = "En camino"
@@ -150,8 +151,23 @@ class RastreoViewController: UIViewController {
     // MARK: - Lógica de Rastreo Realtime
     
     private func configurarMapa() {
-        mapView.delegate = self
-        mapView.showsUserLocation = true
+        let accessToken = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? ""
+        let myResourceOptions = ResourceOptions(accessToken: accessToken)
+        let myMapInitOptions = MapInitOptions(resourceOptions: myResourceOptions, styleURI: .streets)
+        
+        mapboxView = MapView(frame: mapView.bounds, mapInitOptions: myMapInitOptions)
+        mapboxView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.addSubview(mapboxView)
+        
+        NSLayoutConstraint.activate([
+            mapboxView.topAnchor.constraint(equalTo: mapView.topAnchor),
+            mapboxView.leadingAnchor.constraint(equalTo: mapView.leadingAnchor),
+            mapboxView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor),
+            mapboxView.bottomAnchor.constraint(equalTo: mapView.bottomAnchor)
+        ])
+        
+        mapboxView.location.options.puckType = .puck2D()
+        pointAnnotationManager = mapboxView.annotations.makePointAnnotationManager()
     }
     
     private func iniciarRastreoEnTiempoReal() {
@@ -160,19 +176,16 @@ class RastreoViewController: UIViewController {
             return
         }
         
-        // El backend guarda en: activos/{id_servicio}
         let rutaRastreo = "activos/\(idServicio)"
         print("Escuchando rastreo en: \(rutaRastreo)")
         
         ref.child(rutaRastreo).observe(.value) { [weak self] snapshot in
             guard let self = self, let dict = snapshot.value as? [String: Any] else { return }
             
-            // 1. Actualizar Estado
             if let estado = dict["estado"] as? String {
                 self.lblEstadoServicio.text = "Estado: \(estado.capitalized)"
             }
             
-            // 2. Obtener Coordenadas de la Grúa
             if let ubicacion = dict["ubicacion_grua"] as? [String: Any],
                let lat = ubicacion["lat"] as? Double,
                let lng = ubicacion["lng"] as? Double {
@@ -184,57 +197,29 @@ class RastreoViewController: UIViewController {
     private func actualizarUbicacionGrua(lat: Double, lng: Double) {
         let coordenada = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         
-        if let annotation = gruaAnnotation {
-            // Animar movimiento
-            UIView.animate(withDuration: 1.0) {
-                annotation.coordinate = coordenada
-            }
+        if var annotation = gruaAnnotation {
+            annotation.point = Point(coordenada)
+            pointAnnotationManager?.annotations = [annotation]
         } else {
-            // Crear por primera vez
-            let annotation = MKPointAnnotation()
-            annotation.title = sosData?.nombre_grua ?? "Grúa de Asistencia"
-            annotation.coordinate = coordenada
-            mapView.addAnnotation(annotation)
+            var annotation = PointAnnotation(coordinate: coordenada)
+            
+            // Personalizar icono de la grúa
+            let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
+            if let imagen = UIImage(systemName: "box.truck.fill", withConfiguration: config) {
+                // Para simplificar en Mapbox v10+, usamos una imagen registrada o cargada
+                // Aquí asignamos la imagen directamente a la anotación
+                annotation.image = .init(image: imagen, name: "grua-marker")
+            }
+            
+            pointAnnotationManager?.annotations = [annotation]
             gruaAnnotation = annotation
             
             // Centrar el mapa la primera vez
-            let region = MKCoordinateRegion(center: coordenada, latitudinalMeters: 1000, longitudinalMeters: 1000)
-            mapView.setRegion(region, animated: true)
+            mapboxView.camera.ease(
+                to: CameraOptions(center: coordenada, zoom: 14),
+                duration: 1.5
+            )
         }
     }
 }
 
-// MARK: - MKMapViewDelegate
-extension RastreoViewController: MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation { return nil }
-        
-        let identifier = "GruaMarker"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-        
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-            
-            // Icono de grúa (SF Symbol o imagen personalizada)
-            let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
-            let imagen = UIImage(systemName: "box.truck.fill", withConfiguration: config)
-            
-            let imageView = UIImageView(image: imagen)
-            imageView.tintColor = WayraTheme.brand
-            imageView.backgroundColor = .white
-            imageView.layer.cornerRadius = 20
-            imageView.layer.borderWidth = 3
-            imageView.layer.borderColor = WayraTheme.brand.cgColor
-            imageView.contentMode = .center
-            imageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-            
-            annotationView?.addSubview(imageView)
-            annotationView?.frame = imageView.frame
-        } else {
-            annotationView?.annotation = annotation
-        }
-        
-        return annotationView
-    }
-}
