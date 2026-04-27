@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A25B5DF2F9F8F2500F12C55 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 5A25B5DE2F9F8F2500F12C55 /* MapboxMaps */; };
 		5A756BDD2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A756BDC2F98F96100238155 /* UsuarioEntity+CoreDataProperties.swift */; };
 		5A756BDE2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A756BDB2F98F96100238155 /* UsuarioEntity+CoreDataClass.swift */; };
 		5ACD57632F9A31EF0044D514 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5ACD57622F9A31EF0044D514 /* FirebaseAuth */; };
@@ -55,6 +56,7 @@
 				99D4C7202F88997E007B4181 /* MapKit.framework in Frameworks */,
 				5AF2CA682F9D3CE900F2FC5E /* GoogleSignIn in Frameworks */,
 				5ACD57632F9A31EF0044D514 /* FirebaseAuth in Frameworks */,
+				5A25B5DF2F9F8F2500F12C55 /* MapboxMaps in Frameworks */,
 				5ACD57652F9A31FD0044D514 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,6 +116,7 @@
 				5AF2CA672F9D3CE900F2FC5E /* GoogleSignIn */,
 				5AF2CA692F9D3CE900F2FC5E /* GoogleSignInSwift */,
 				99B8F1422F9EEF2600F30430 /* FirebaseDatabase */,
+				5A25B5DE2F9F8F2500F12C55 /* MapboxMaps */,
 			);
 			productName = AppSOS;
 			productReference = 99D4C7032F88995E007B4181 /* AppSOS.app */;
@@ -146,6 +149,7 @@
 			packageReferences = (
 				5A9403792F98558A00574B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				5AF2CA662F9D3CE900F2FC5E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				5A25B5DD2F9F8F2500F12C55 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99D4C7042F88995E007B4181 /* Products */;
@@ -385,6 +389,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5A25B5DD2F9F8F2500F12C55 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.16.2;
+			};
+		};
 		5A9403792F98558A00574B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -404,6 +416,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5A25B5DE2F9F8F2500F12C55 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A25B5DD2F9F8F2500F12C55 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
+		};
 		5ACD57622F9A31EF0044D514 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5A9403792F98558A00574B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
