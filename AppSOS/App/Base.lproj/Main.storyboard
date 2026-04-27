@@ -442,7 +442,7 @@
                     <navigationItem key="navigationItem" title="CarLinkSOS" id="XLv-iQ-s8l">
                         <barButtonItem key="leftBarButtonItem" title="Item" image="car.fill" catalog="system" id="69B-i4-BgN">
                             <connections>
-                                <segue destination="KLk-XU-WBa" kind="show" id="3er-Ap-GoI"/>
+                                <segue destination="KLk-XU-WBa" kind="show" identifier="irAGarage" id="3er-Ap-GoI"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="slider.horizontal.3" catalog="system" id="rEi-WP-aOL"/>
