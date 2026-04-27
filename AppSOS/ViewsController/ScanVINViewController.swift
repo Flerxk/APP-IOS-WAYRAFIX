@@ -103,7 +103,7 @@ class ScanVINViewController: UIViewController {
             // Fallback en caso de que el ID del storyboard cambie
             dismiss(animated: true) {
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let window = windowScene.windows.first,
+                   let window = windowScene.windows.first(where: { $0.isKeyWindow }) ?? windowScene.windows.first,
                    let tabBarController = window.rootViewController as? UITabBarController {
                     tabBarController.selectedIndex = 1 
                 }

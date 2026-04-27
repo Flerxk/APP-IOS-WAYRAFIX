@@ -40,6 +40,9 @@ final class VehiculoLocalRepository: RepositorioVehiculoProtocol {
     }
 
     func eliminarVehiculo(_ vehiculo: VehiculoEntity) throws {
+        if let uid = Auth.auth().currentUser?.uid, let vin = vehiculo.vin {
+            db.collection("usuarios").document(uid).collection("vehiculos").document(vin).delete()
+        }
         context.delete(vehiculo)
         try context.save()
     }
