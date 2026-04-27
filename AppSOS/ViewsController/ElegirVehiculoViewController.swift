@@ -7,6 +7,8 @@
 
 import UIKit
 import CoreData
+import FirebaseAuth
+
 
 class ElegirVehiculoViewController: UIViewController {
 
