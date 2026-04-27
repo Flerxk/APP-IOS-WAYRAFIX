@@ -1,4 +1,5 @@
 import UIKit
+import MapboxMaps
 
 // MARK: - Fondo radial rosado (identidad de pantalla)
 extension UIView {
@@ -103,6 +104,9 @@ extension UIView {
             }
         }
 
+        // Evitar entrar en las subvistas de Mapbox para no bloquear el hilo principal
+        if raiz is MapboxMaps.MapView { return }
+
         for subvista in raiz.subviews {
             _aplicarIdentidadRecursivo(en: subvista)
         }
@@ -166,6 +170,9 @@ class BuscadorDeElementosGraficos {
                 img.tintColor = WayraTheme.brand
             }
         }
+
+        // Evitar entrar en las subvistas de Mapbox
+        if raiz is MapboxMaps.MapView { return }
 
         for subvista in raiz.subviews {
             rastrearYAplicarEstilos(en: subvista)

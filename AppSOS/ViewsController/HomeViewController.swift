@@ -67,9 +67,12 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocation()
         setupUI()
+        setupLocation()
         BuscadorDeElementosGraficos.rastrearYAplicarEstilos(en: view)
+        
+        // Asegurar que el mapa esté al fondo
+        view.sendSubviewToBack(mapView)
         
         NotificationCenter.default.addObserver(self, selector: #selector(actualizarDesdeSesion), name: .vehicleSelectionChanged, object: nil)
     }
