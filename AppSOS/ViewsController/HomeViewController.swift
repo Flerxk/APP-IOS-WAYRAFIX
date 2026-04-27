@@ -268,8 +268,8 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         mapboxView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.addSubview(mapboxView)
         
-        // Configurar el indicador de ubicación de Mapbox
-        mapboxView.location.options.puckType = .2D()
+        // Configurar el indicador de ubicación de Mapbox (Puck 2D)
+        mapboxView.location.options.puckType = .puck2D()
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
