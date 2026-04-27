@@ -67,74 +67,89 @@ class AgregarVehiculoViewController: UIViewController {
     func styleUI() {
         view.backgroundColor = .clear
         view.aplicarFondoRosadoRadial()
-        title = "Agregar Vehículo"
-        btnGuardar.applyPrimaryStyle(title: "Guardar Vehículo")
-        // Cambiar a dorado/ocre para seguir el wireframe
-        btnGuardar.configuration?.baseBackgroundColor = UIColor(red: 0.77, green: 0.58, blue: 0.30, alpha: 1.0)
-        btnGuardar.titleLabel?.font = .boldSystemFont(ofSize: 18)
-        btnGuardar.layer.cornerRadius = 26
-        btnGuardar.layer.masksToBounds = true
+        title = "Detalles del Vehículo"
+        
+        btnGuardar.applyBrandStyle(title: vehiculoAEditar == nil ? "Guardar Vehículo" : "Actualizar Vehículo")
         
         scTransmision.selectedSegmentTintColor = WayraTheme.primary
-        scTransmision.setTitleTextAttributes([.foregroundColor: UIColor.white, .font: UIFont.boldSystemFont(ofSize: 20)], for: .selected)
-        scTransmision.setTitleTextAttributes([.foregroundColor: WayraTheme.textPrimary, .font: UIFont.boldSystemFont(ofSize: 20)], for: .normal)
-        scTransmision.backgroundColor = .white
-        scTransmision.layer.cornerRadius = 28
-        scTransmision.layer.borderWidth = 1
-        scTransmision.layer.borderColor = WayraTheme.primary.cgColor
-        scTransmision.layer.masksToBounds = true
+        scTransmision.setTitleTextAttributes([.foregroundColor: UIColor.white, .font: UIFont.boldSystemFont(ofSize: 18)], for: .selected)
+        scTransmision.setTitleTextAttributes([.foregroundColor: WayraTheme.textPrimary, .font: UIFont.systemFont(ofSize: 18)], for: .normal)
+        scTransmision.backgroundColor = .white.withAlphaComponent(0.8)
+        scTransmision.layer.cornerRadius = 16
+        scTransmision.clipsToBounds = true
         
-        [txtPlaca, txtMarca, txtModelo, txtAnio, txtColor, txtVin].forEach { textField in
+        let mappings: [UITextField?: String] = [
+            txtPlaca: "creditcard.and.123",
+            txtMarca: "tag.fill",
+            txtModelo: "car.side.fill",
+            txtAnio: "calendar",
+            txtColor: "paintpalette.fill",
+            txtVin: "number"
+        ]
+        
+        mappings.forEach { textField, iconName in
             guard let campo = textField else { return }
             
             campo.backgroundColor = .white
-            campo.layer.cornerRadius = 16
+            campo.layer.cornerRadius = 14
             campo.layer.borderWidth = 1
             campo.layer.borderColor = WayraTheme.divider.cgColor
             
-            campo.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 10))
+            // Icono Izquierdo
+            let container = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+            let iconView = UIImageView(image: UIImage(systemName: iconName))
+            iconView.contentMode = .scaleAspectFit
+            iconView.tintColor = WayraTheme.primary
+            iconView.frame = CGRect(x: 12, y: 12, width: 20, height: 20)
+            container.addSubview(iconView)
+            
+            campo.leftView = container
             campo.leftViewMode = .always
             
-            campo.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 10))
-            campo.rightViewMode = .unlessEditing
-            
-            campo.clearButtonMode = .whileEditing
-            
-            campo.font = .systemFont(ofSize: 18, weight: .medium)
+            campo.font = .systemFont(ofSize: 17, weight: .medium)
             campo.textColor = WayraTheme.textPrimary
             
             if let textoPlaceholder = campo.placeholder {
                 campo.attributedPlaceholder = NSAttributedString(
                     string: textoPlaceholder,
-                    attributes: [.foregroundColor: WayraTheme.textSecondary]
+                    attributes: [.foregroundColor: WayraTheme.textSecondary.withAlphaComponent(0.6)]
                 )
             }
+            
+            // Sombra suave
+            campo.layer.shadowColor = UIColor.black.cgColor
+            campo.layer.shadowOpacity = 0.03
+            campo.layer.shadowOffset = CGSize(width: 0, height: 2)
+            campo.layer.shadowRadius = 4
         }
         
         [btnTipoVehiculo, btnTipoCombustible].forEach { boton in
             guard let boton = boton else { return }
-            let tituloPorDefecto = boton == btnTipoVehiculo ? "Seleccionar Tipo de Vehículo:" : "Seleccionar Tipo de Combustible:"
-            let tituloActual = boton.title(for: .normal) ?? ""
+            let icon = (boton == btnTipoVehiculo) ? "car.fill" : "fuelpump.fill"
+            let tituloPorDefecto = (boton == btnTipoVehiculo) ? "Tipo de Vehículo" : "Tipo de Combustible"
+            let tituloActual = (boton.title(for: .normal) == "Button" || boton.title(for: .normal)?.isEmpty == true) ? tituloPorDefecto : boton.title(for: .normal)
             
             var config = UIButton.Configuration.filled()
             config.baseBackgroundColor = .white
             config.baseForegroundColor = WayraTheme.textPrimary
-            config.title = (tituloActual.isEmpty || tituloActual == "Button") ? tituloPorDefecto : tituloActual
+            config.title = tituloActual
+            config.image = UIImage(systemName: icon)
+            config.imagePlacement = .leading
+            config.imagePadding = 12
             
-            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 14)
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 14)
             
             config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                 var outgoing = incoming
-                outgoing.font = .systemFont(ofSize: 18, weight: .medium)
+                outgoing.font = .systemFont(ofSize: 17, weight: .medium)
                 return outgoing
             }
             
-            config.background.cornerRadius = 16
+            config.background.cornerRadius = 14
             config.background.strokeColor = WayraTheme.divider
             config.background.strokeWidth = 1
             
             boton.configuration = config
-            
             boton.contentHorizontalAlignment = .left
         }
     }

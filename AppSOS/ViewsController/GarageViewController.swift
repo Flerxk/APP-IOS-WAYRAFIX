@@ -92,22 +92,17 @@ class GarageViewController: UIViewController {
         tblVehiculos.register(GarageVehiculoCell.self, forCellReuseIdentifier: GarageVehiculoCell.reuseId)
         
         botonAgregarPrincipal = btnAgregarVehiculo
-        btnAgregarVehiculo.setTitle("Agregar", for: .normal)
-        btnAgregarVehiculo.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0)
-        btnAgregarVehiculo.tintColor = .white
-        btnAgregarVehiculo.layer.cornerRadius = 24
-        btnAgregarVehiculo.titleLabel?.font = .boldSystemFont(ofSize: 18)
-        btnAgregarVehiculo.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
+        btnAgregarVehiculo.applyBrandStyle(title: "Agregar")
+        btnAgregarVehiculo.addTarget(self, action: #selector(irAAgregarVehiculo), for: .touchUpInside)
         
-        btnEscanearVIN.isHidden = true
+        btnEscanearVIN.isHidden = false
+        btnEscanearVIN.applyAccentStyle(title: "Escanear VIN")
+        btnEscanearVIN.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton
-            boton.setTitle("Agregar", for: .normal)
-            boton.backgroundColor = UIColor(red: 0.92, green: 0.22, blue: 0.21, alpha: 1.0)
-            boton.tintColor = .white
-            boton.layer.cornerRadius = 20
-            boton.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
+            boton.applyBrandStyle(title: "Agregar Vehículo")
+            boton.addTarget(self, action: #selector(irAAgregarVehiculo), for: .touchUpInside)
         }
         
         mapearEtiquetasEstadoVacio()
@@ -157,6 +152,10 @@ class GarageViewController: UIViewController {
     
     @objc func irAEscanearVIN() {
         performSegue(withIdentifier: "mostrarScanVIN", sender: nil)
+    }
+    
+    @objc func irAAgregarVehiculo() {
+        performSegue(withIdentifier: "mostrarAgregarVehiculo", sender: nil)
     }
 }
 
