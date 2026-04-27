@@ -1,3 +1,11 @@
+//
+//  ConfiguracionViewController.swift
+//  AppSOS
+//
+//  Created by Erick Chunga on 24/04/26.
+//
+
+
 import UIKit
 import FirebaseAuth
 

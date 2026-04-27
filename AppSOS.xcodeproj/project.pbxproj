@@ -13,6 +13,7 @@
 		5ACD57652F9A31FD0044D514 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5ACD57642F9A31FD0044D514 /* FirebaseFirestore */; };
 		5AF2CA682F9D3CE900F2FC5E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 5AF2CA672F9D3CE900F2FC5E /* GoogleSignIn */; };
 		5AF2CA6A2F9D3CE900F2FC5E /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5AF2CA692F9D3CE900F2FC5E /* GoogleSignInSwift */; };
+		99B8F1432F9EEF2600F30430 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 99B8F1422F9EEF2600F30430 /* FirebaseDatabase */; };
 		99D4C7202F88997E007B4181 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D4C71F2F88997E007B4181 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99B8F1432F9EEF2600F30430 /* FirebaseDatabase in Frameworks */,
 				5AF2CA6A2F9D3CE900F2FC5E /* GoogleSignInSwift in Frameworks */,
 				99D4C7202F88997E007B4181 /* MapKit.framework in Frameworks */,
 				5AF2CA682F9D3CE900F2FC5E /* GoogleSignIn in Frameworks */,
@@ -111,6 +113,7 @@
 				5ACD57642F9A31FD0044D514 /* FirebaseFirestore */,
 				5AF2CA672F9D3CE900F2FC5E /* GoogleSignIn */,
 				5AF2CA692F9D3CE900F2FC5E /* GoogleSignInSwift */,
+				99B8F1422F9EEF2600F30430 /* FirebaseDatabase */,
 			);
 			productName = AppSOS;
 			productReference = 99D4C7032F88995E007B4181 /* AppSOS.app */;
@@ -420,6 +423,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5AF2CA662F9D3CE900F2FC5E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		99B8F1422F9EEF2600F30430 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A9403792F98558A00574B2A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
