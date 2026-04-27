@@ -22,12 +22,20 @@ class LoginViewController: UIViewController {
     // Si no tienes outlets, se crean dinámicamente en configurarLabelsError()
     private var lblErrorEmail: UILabel!
     private var lblErrorPassword: UILabel!
+    
+    private var haIntentadoEnviar = false
+    private var placeholdersOriginales: [UITextField: String] = [:]
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configurarEstilos()
         configurarLabelsError()
+        
+        // Validación en tiempo real
+        [emailTextField, passwordTextField].forEach {
+            $0?.addTarget(self, action: #selector(campoEditado(_:)), for: .editingChanged)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -48,33 +56,37 @@ class LoginViewController: UIViewController {
         lblErrorEmail    = crearLabelError()
         lblErrorPassword = crearLabelError()
 
-        // Los insertamos en los contenedores de campo para que queden bien posicionados
-        if let vistaE = VistaEmail {
-            vistaE.addSubview(lblErrorEmail)
-            NSLayoutConstraint.activate([
-                lblErrorEmail.leadingAnchor.constraint(equalTo: vistaE.leadingAnchor, constant: 12),
-                lblErrorEmail.trailingAnchor.constraint(equalTo: vistaE.trailingAnchor, constant: -12),
-                lblErrorEmail.bottomAnchor.constraint(equalTo: vistaE.bottomAnchor, constant: -4)
-            ])
-        }
-        if let vistaP = VistaPassword {
-            vistaP.addSubview(lblErrorPassword)
-            NSLayoutConstraint.activate([
-                lblErrorPassword.leadingAnchor.constraint(equalTo: vistaP.leadingAnchor, constant: 12),
-                lblErrorPassword.trailingAnchor.constraint(equalTo: vistaP.trailingAnchor, constant: -12),
-                lblErrorPassword.bottomAnchor.constraint(equalTo: vistaP.bottomAnchor, constant: -4)
-            ])
-        }
+        view.addSubview(lblErrorEmail)
+        view.addSubview(lblErrorPassword)
+
+        NSLayoutConstraint.activate([
+            lblErrorEmail.topAnchor.constraint(equalTo: VistaEmail.bottomAnchor, constant: 2),
+            lblErrorEmail.leadingAnchor.constraint(equalTo: VistaEmail.leadingAnchor, constant: 8),
+            lblErrorEmail.trailingAnchor.constraint(equalTo: VistaEmail.trailingAnchor, constant: -8),
+
+            lblErrorPassword.topAnchor.constraint(equalTo: VistaPassword.bottomAnchor, constant: 2),
+            lblErrorPassword.leadingAnchor.constraint(equalTo: VistaPassword.leadingAnchor, constant: 8),
+            lblErrorPassword.trailingAnchor.constraint(equalTo: VistaPassword.trailingAnchor, constant: -8)
+        ])
     }
 
     private func crearLabelError() -> UILabel {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 11, weight: .medium)
-        lbl.textColor = WayraTheme.brand       // Rojo de marca
-        lbl.numberOfLines = 1
+        lbl.font = .systemFont(ofSize: 12, weight: .semibold)
+        lbl.textColor = WayraTheme.brand
+        lbl.numberOfLines = 0
         lbl.isHidden = true
         return lbl
+    }
+
+    @objc private func campoEditado(_ sender: UITextField) {
+        if haIntentadoEnviar {
+            _ = validarCampos()
+        } else {
+            if sender == emailTextField { ocultarError(lblErrorEmail, en: emailTextField) }
+            if sender == passwordTextField { ocultarError(lblErrorPassword, en: passwordTextField) }
+        }
     }
 
     // MARK: - Validación dinámica
@@ -89,29 +101,29 @@ class LoginViewController: UIViewController {
 
         // Email
         if email.isEmpty {
-            mostrarError(lblErrorEmail, mensaje: "El correo no puede estar vacío.")
+            mostrarError(lblErrorEmail, en: emailTextField, mensaje: "El correo no puede estar vacío.")
             resaltarBorde(VistaEmail, error: true)
             valido = false
         } else if !esEmailValido(email) {
-            mostrarError(lblErrorEmail, mensaje: "Ingresa un correo válido (ej: usuario@mail.com).")
+            mostrarError(lblErrorEmail, en: emailTextField, mensaje: "Ingresa un correo válido (ej: usuario@mail.com).")
             resaltarBorde(VistaEmail, error: true)
             valido = false
         } else {
-            ocultarError(lblErrorEmail)
+            ocultarError(lblErrorEmail, en: emailTextField)
             resaltarBorde(VistaEmail, error: false)
         }
 
         // Contraseña
         if password.isEmpty {
-            mostrarError(lblErrorPassword, mensaje: "La contraseña no puede estar vacía.")
+            mostrarError(lblErrorPassword, en: passwordTextField, mensaje: "La contraseña no puede estar vacía.")
             resaltarBorde(VistaPassword, error: true)
             valido = false
         } else if password.count < 6 {
-            mostrarError(lblErrorPassword, mensaje: "Mínimo 6 caracteres.")
+            mostrarError(lblErrorPassword, en: passwordTextField, mensaje: "Mínimo 6 caracteres.")
             resaltarBorde(VistaPassword, error: true)
             valido = false
         } else {
-            ocultarError(lblErrorPassword)
+            ocultarError(lblErrorPassword, en: passwordTextField)
             resaltarBorde(VistaPassword, error: false)
         }
 
@@ -123,13 +135,24 @@ class LoginViewController: UIViewController {
         return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: email)
     }
 
-    private func mostrarError(_ label: UILabel?, mensaje: String) {
+    private func mostrarError(_ label: UILabel?, en campo: UITextField, mensaje: String) {
         label?.text = mensaje
         label?.isHidden = false
+        
+        // Guardar y ocultar placeholder
+        if let placeholder = campo.placeholder, !placeholder.isEmpty {
+            placeholdersOriginales[campo] = placeholder
+        }
+        campo.placeholder = nil
     }
 
-    private func ocultarError(_ label: UILabel?) {
+    private func ocultarError(_ label: UILabel?, en campo: UITextField) {
         label?.isHidden = true
+        
+        // Restaurar placeholder si existía
+        if let original = placeholdersOriginales[campo] {
+            campo.placeholder = original
+        }
     }
 
     private func resaltarBorde(_ vista: UIView?, error: Bool) {
@@ -141,6 +164,7 @@ class LoginViewController: UIViewController {
 
     // MARK: - Login Email/Password
     @IBAction func loginTapped(_ sender: UIButton) {
+        haIntentadoEnviar = true
         guard validarCampos() else { return }
 
         let email    = emailTextField.text!

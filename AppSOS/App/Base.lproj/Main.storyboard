@@ -1387,18 +1387,6 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-bk-Row">
                                                         <rect key="frame" x="0.0" y="0.0" width="345" height="44"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bck-SU-A1x">
-                                                                <rect key="frame" x="0.0" y="0.0" width="34.333333333333336" height="44"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="44" id="bck-Ht-44"/>
-                                                                </constraints>
-                                                                <color key="tintColor" red="0.24313725490196078" green="0.15294117647058825" blue="0.12156862745098039" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <state key="normal" title="Button"/>
-                                                                <buttonConfiguration key="configuration" style="gray" image="chevron.backward.circle.fill" catalog="system" cornerStyle="capsule"/>
-                                                                <connections>
-                                                                    <action selector="volverAtras:" destination="G9M-of-vl0" eventType="touchUpInside" id="bck-Act-01"/>
-                                                                </connections>
-                                                            </button>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-sp-Flx">
                                                                 <rect key="frame" x="34.333333333333343" y="0.0" width="310.66666666666663" height="44"/>
                                                                 <subviews>
@@ -1723,7 +1711,7 @@
                                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </buttonConfiguration>
                                                         <connections>
-                                                            <action selector="registrarTappet:" destination="G9M-of-vl0" eventType="touchUpInside" id="SU-Rg-Act"/>
+                                                            <action selector="registrarTapped:" destination="G9M-of-vl0" eventType="touchUpInside" id="SU-Rg-Act"/>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SU-Ft-Wrapper">
@@ -2405,6 +2393,9 @@
                                                 <buttonConfiguration key="configuration" style="filled" title="Solicitar Ayuda Ahora" cornerStyle="capsule">
                                                     <color key="baseBackgroundColor" red="0.92156862750000001" green="0.25882352939999997" blue="0.20784313730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnSolicitarTapped:" destination="SOS-Dest-VC" eventType="touchUpInside" id="SOS-Act-01"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SOS-Btn-Can">
                                                 <rect key="frame" x="0.0" y="62" width="297" height="50"/>
@@ -2416,6 +2407,9 @@
                                                     <fontDescription key="titleFontDescription" type="boldSystem" pointSize="16"/>
                                                     <color key="baseForegroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="btnCancelarTapped:" destination="SOS-Dest-VC" eventType="touchUpInside" id="SOS-Act-02"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -2437,6 +2431,7 @@
                         <constraints>
                             <constraint firstItem="SOS-Dest-Card" firstAttribute="leading" secondItem="SOS-Dest-Safe" secondAttribute="leading" constant="24" id="SOS-D-V-L"/>
                             <constraint firstItem="SOS-Dest-Safe" firstAttribute="trailing" secondItem="SOS-Dest-Card" secondAttribute="trailing" constant="24" id="SOS-D-V-R"/>
+                            <constraint firstItem="SOS-Dest-Card" firstAttribute="centerY" secondItem="SOS-Dest-View" secondAttribute="centerY" id="SOS-D-V-CY"/>
                         </constraints>
                     </view>
                     <connections>

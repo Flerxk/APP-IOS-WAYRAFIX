@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import CoreData
 import FirebaseAuth
+import MapboxMaps
 
 protocol SeleccionVehiculoDelegate: AnyObject {
     func vehiculoElegidoParaSOS(_ vehiculo: VehiculoEntity)
@@ -17,7 +18,10 @@ protocol SeleccionVehiculoDelegate: AnyObject {
 
 class HomeViewController: UIViewController, CLLocationManagerDelegate {
 
-    @IBOutlet weak var mapView: MKMapView!
+    // Cambiamos MKMapView por una vista de Mapbox
+    private var mapboxView: MapView!
+    @IBOutlet weak var mapView: UIView! // Ahora lo tratamos como un contenedor
+    
     @IBOutlet weak var topBarView: UIView!
     @IBOutlet weak var bottomPanel: UIView!
     @IBOutlet weak var catScrollView: UIScrollView!
@@ -142,6 +146,13 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         
         btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
+        
+        // Asegurar que sea redondo
+        btnSOS.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            btnSOS.widthAnchor.constraint(equalToConstant: 110),
+            btnSOS.heightAnchor.constraint(equalToConstant: 110)
+        ])
         btnSOS.layer.cornerRadius = 55
         btnSOS.layer.borderWidth = 8
         btnSOS.layer.borderColor = WayraTheme.brandSoft.cgColor
@@ -248,7 +259,17 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        mapView.showsUserLocation = true
+        
+        // Configurar Mapbox MapView
+        let myResourceOptions = ResourceOptions(accessToken: Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? "")
+        let myMapInitOptions = MapInitOptions(resourceOptions: myResourceOptions, styleURI: .streets)
+        
+        mapboxView = MapView(frame: mapView.bounds, mapInitOptions: myMapInitOptions)
+        mapboxView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.addSubview(mapboxView)
+        
+        // Configurar el indicador de ubicación de Mapbox
+        mapboxView.location.options.puckType = .2D()
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -262,12 +283,11 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let ubicacion = locations.last else { return }
         
-        let region = MKCoordinateRegion(
-            center: ubicacion.coordinate,
-            latitudinalMeters: 700,
-            longitudinalMeters: 700
+        // Centrar cámara en Mapbox
+        mapboxView.camera.ease(
+            to: CameraOptions(center: ubicacion.coordinate, zoom: 15),
+            duration: 1.3
         )
-        mapView.setRegion(region, animated: true)
         
         if let ultimaUbicacionGeocodificada,
            ubicacion.distance(from: ultimaUbicacionGeocodificada) < 120 {

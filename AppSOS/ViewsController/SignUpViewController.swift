@@ -12,7 +12,9 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var confirmarContraseniaTextFiel: UITextField!
     @IBOutlet weak var terminosCheckbox: UIButton!
 
-    @IBOutlet private var camposConBorde: [UIView]?
+    @IBOutlet var camposConBorde: [UIView]!
+    private var haIntentadoEnviar = false
+    private var placeholdersOriginales: [UITextField: String] = [:]
 
     // MARK: - Labels de error (creados dinámicamente)
     private var lblErrorNombre: UILabel!
@@ -30,7 +32,8 @@ class SignUpViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func registrarTappet(_ sender: UIButton) {
+    @IBAction func registrarTapped(_ sender: Any) {
+        haIntentadoEnviar = true
         guard validarCampos() else { return }
 
         let email    = emailTextField.text!
@@ -110,7 +113,7 @@ class SignUpViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -120,19 +123,30 @@ class SignUpViewController: UIViewController {
 
     // MARK: - Validación en tiempo real
     @objc private func campoEditado(_ sender: UITextField) {
-        // Solo limpiar el error del campo que se está editando
-        switch sender {
-        case nombreTextField:         limpiarError(lblErrorNombre,    en: sender)
-        case emailTextField:          limpiarError(lblErrorEmail,     en: sender)
-        case celularTextField:        limpiarError(lblErrorCelular,   en: sender)
-        case contrasenaTextField:     limpiarError(lblErrorContrasena, en: sender)
-        case confirmarContraseniaTextFiel: limpiarError(lblErrorConfirmar, en: sender)
-        default: break
+        // Si ya intentó enviar, validamos en tiempo real. 
+        // Si no, solo limpiamos el error si existía.
+        if haIntentadoEnviar {
+            _ = validarCampos()
+        } else {
+            switch sender {
+            case nombreTextField:         limpiarError(lblErrorNombre,    en: sender)
+            case emailTextField:          limpiarError(lblErrorEmail,     en: sender)
+            case celularTextField:        limpiarError(lblErrorCelular,   en: sender)
+            case contrasenaTextField:     limpiarError(lblErrorContrasena, en: sender)
+            case confirmarContraseniaTextFiel: limpiarError(lblErrorConfirmar, en: sender)
+            default: break
+            }
         }
     }
 
     private func limpiarError(_ label: UILabel?, en campo: UITextField) {
         label?.isHidden = true
+        
+        // Restaurar placeholder si existía
+        if let original = placeholdersOriginales[campo] {
+            campo.placeholder = original
+        }
+
         // El contenedor real es el superview del stackview (SU-nm-bg, etc.)
         let contenedor = campo.superview?.superview ?? campo.superview
         contenedor?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
@@ -213,6 +227,13 @@ class SignUpViewController: UIViewController {
     private func mostrarError(_ label: UILabel?, en campo: UITextField, mensaje: String) {
         label?.text = mensaje
         label?.isHidden = false
+        
+        // Guardar y ocultar placeholder
+        if let placeholder = campo.placeholder, !placeholder.isEmpty {
+            placeholdersOriginales[campo] = placeholder
+        }
+        campo.placeholder = nil
+        
         // Borde rojo en el contenedor real
         let contenedor = campo.superview?.superview ?? campo.superview
         contenedor?.layer.borderColor = WayraTheme.brand.cgColor
@@ -221,6 +242,12 @@ class SignUpViewController: UIViewController {
 
     private func ocultarError(_ label: UILabel?, en campo: UITextField) {
         label?.isHidden = true
+        
+        // Restaurar placeholder
+        if let original = placeholdersOriginales[campo] {
+            campo.placeholder = original
+        }
+        
         let contenedor = campo.superview?.superview ?? campo.superview
         contenedor?.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
         contenedor?.layer.borderWidth = 1.0
@@ -238,18 +265,26 @@ class SignUpViewController: UIViewController {
     private func crearYAnclarLabel(en campo: UITextField?) -> UILabel {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = .systemFont(ofSize: 11, weight: .medium)
+        lbl.font = .systemFont(ofSize: 12, weight: .semibold)
         lbl.textColor = WayraTheme.brand
-        lbl.numberOfLines = 1
+        lbl.numberOfLines = 0
         lbl.isHidden = true
 
-        guard let campo = campo, let contenedor = campo.superview else { return lbl }
-        contenedor.addSubview(lbl)
-        NSLayoutConstraint.activate([
-            lbl.leadingAnchor.constraint(equalTo: contenedor.leadingAnchor, constant: 8),
-            lbl.trailingAnchor.constraint(equalTo: contenedor.trailingAnchor, constant: -8),
-            lbl.bottomAnchor.constraint(equalTo: contenedor.bottomAnchor, constant: -3)
-        ])
+        guard let campo = campo, 
+              let contenedor = campo.superview?.superview, 
+              let stackView = contenedor.superview as? UIStackView else { 
+            return lbl 
+        }
+        
+        // Insertamos el label justo después del contenedor del campo en el StackView
+        if let index = stackView.arrangedSubviews.firstIndex(of: contenedor) {
+            stackView.insertArrangedSubview(lbl, at: index + 1)
+            
+            // Ajustar espaciado personalizado para que el error esté pegado al campo
+            stackView.setCustomSpacing(4, after: contenedor)
+            stackView.setCustomSpacing(16, after: lbl)
+        }
+        
         return lbl
     }
 
