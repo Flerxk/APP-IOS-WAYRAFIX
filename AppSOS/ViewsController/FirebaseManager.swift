@@ -2,8 +2,6 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-// Tema 1.2.1: Clases, variables y métodos
-// Tema 10: Consumo de servicios Firebase
 class FirebaseManager {
     
     static let shared = FirebaseManager()

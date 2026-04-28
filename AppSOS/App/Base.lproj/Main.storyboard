@@ -158,7 +158,7 @@
                             <constraint firstAttribute="trailing" secondItem="vista-camara-id" secondAttribute="trailing" id="cam-trail-id"/>
                             <constraint firstAttribute="bottom" secondItem="card-info-id" secondAttribute="bottom" id="card-bot-id"/>
                             <constraint firstItem="card-info-id" firstAttribute="leading" secondItem="vin-view-id" secondAttribute="leading" id="card-lead-id"/>
-                            <constraint firstAttribute="trailing" secondItem="card-info-id" secondAttribute="trailing" id="card-trail-id"/>
+                            <constraint firstAttribute="trailing" secondItem="card-info-id" secondAttribute="trailing" id="card-trail-id"/><constraint firstItem="card-info-id" firstAttribute="height" constant="272" id="card-height-id"/>
                             <constraint firstItem="btn-cerrar-id" firstAttribute="leading" secondItem="safe-vin-id" secondAttribute="leading" constant="16" id="cerrar-lead-id"/>
                             <constraint firstItem="btn-cerrar-id" firstAttribute="top" secondItem="safe-vin-id" secondAttribute="top" id="cerrar-top-id"/>
                             <constraint firstItem="btn-flash-id" firstAttribute="top" secondItem="safe-vin-id" secondAttribute="top" id="flash-top-id"/>
@@ -261,7 +261,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vRk-P5-6AT">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="96"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tire" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="A63-fZ-unt">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gauge.with.tire" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="A63-fZ-unt">
                                                                 <rect key="frame" x="16" y="24.666666666666668" width="48" height="46.666666666666657"/>
                                                             </imageView>
                                                         </subviews>
@@ -583,7 +583,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="barcode.viewfinder" catalog="system" title="Escanear VIN"/>
                                 <connections>
-                                    <segue destination="vin-vc-id" kind="show" identifier="mostrarScanVIN" id="pKr-Zy-uIA"/>
+                                    <segue destination="nav-vin-ctrl" kind="presentation" identifier="mostrarScanVIN" id="pKr-Zy-uIA"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jzo-VL-ceJ">
@@ -1345,13 +1345,13 @@
                             <constraint firstItem="9Ki-nr-R18" firstAttribute="trailing" secondItem="Da5-Ll-YeL" secondAttribute="trailing" constant="24" id="nIK-3p-NyD"/>
                             <constraint firstItem="2sq-Iu-FZX" firstAttribute="leading" secondItem="eoA-kr-Wkh" secondAttribute="trailing" constant="-338" id="oRH-m1-4RW"/>
                             <constraint firstItem="9Ki-nr-R18" firstAttribute="trailing" secondItem="z8N-Je-fYD" secondAttribute="trailing" constant="24" id="oYs-N3-MxJ"/>
-                            <constraint firstItem="9Ki-nr-R18" firstAttribute="trailing" secondItem="Qef-Aa-1w9" secondAttribute="trailing" constant="40" id="ohP-pY-fuQ"/>
+                            <constraint firstItem="Qef-Aa-1w9" firstAttribute="centerX" secondItem="EKw-H7-bxh" secondAttribute="centerX" id="SU-Login-Logo-CX"/>
                             <constraint firstItem="2sq-Iu-FZX" firstAttribute="top" secondItem="3oe-F5-anz" secondAttribute="bottom" constant="10" id="q6s-IY-wE4"/>
                             <constraint firstItem="rip-ZZ-vNz" firstAttribute="top" secondItem="Tcs-KH-vEw" secondAttribute="bottom" constant="20" id="qaw-il-7EM"/>
                             <constraint firstItem="Tcs-KH-vEw" firstAttribute="leading" secondItem="9Ki-nr-R18" secondAttribute="leading" constant="24" id="r2D-7L-ShO"/>
                             <constraint firstItem="z8N-Je-fYD" firstAttribute="top" secondItem="Qef-Aa-1w9" secondAttribute="bottom" constant="30" id="sPD-9j-i4S"/>
                             <constraint firstItem="Da5-Ll-YeL" firstAttribute="leading" secondItem="9Ki-nr-R18" secondAttribute="leading" constant="24" id="uj8-GL-yb6"/>
-                            <constraint firstItem="Qef-Aa-1w9" firstAttribute="leading" secondItem="9Ki-nr-R18" secondAttribute="leading" constant="40" id="xaO-rN-8ch"/>
+                            <constraint firstItem="Qef-Aa-1w9" firstAttribute="width" constant="306" id="SU-Login-Logo-W"/>
                             <constraint firstItem="Qef-Aa-1w9" firstAttribute="top" secondItem="9Ki-nr-R18" secondAttribute="top" constant="20" id="zd1-GA-ZvX"/>
                         </constraints>
                     </view>
@@ -2435,6 +2435,7 @@
                         <constraints>
                             <constraint firstItem="SOS-Dest-Card" firstAttribute="leading" secondItem="SOS-Dest-Safe" secondAttribute="leading" constant="24" id="SOS-D-V-L"/>
                             <constraint firstItem="SOS-Dest-Safe" firstAttribute="trailing" secondItem="SOS-Dest-Card" secondAttribute="trailing" constant="24" id="SOS-D-V-R"/>
+                            <constraint firstItem="SOS-Dest-Card" firstAttribute="centerY" secondItem="SOS-Destino-View" secondAttribute="centerY" id="SOS-D-V-CY"/>
                         </constraints>
                     </view>
                     <connections>
