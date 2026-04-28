@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 import CoreData
 import FirebaseAuth
-import FirebaseFirestore
+import Firebase
 import MapboxMaps
 
 protocol SeleccionVehiculoDelegate: AnyObject {
@@ -62,7 +62,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = .boldSystemFont(ofSize: 22)
         lbl.textColor = .black
-        lbl.text = "Need help?"
+        lbl.text = "Necesitas Ayuda?"
         return lbl
     }()
 
@@ -299,10 +299,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         
         // Configurar Mapbox MapView
-        let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? ""
-        print("Mapbox Token cargado: \(token.prefix(10))...")
-        
-        let myResourceOptions = ResourceOptions(accessToken: token)
+        let myResourceOptions = ResourceOptions(accessToken: Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? "")
         let myMapInitOptions = MapInitOptions(resourceOptions: myResourceOptions, styleURI: .streets)
         
         mapboxView = MapView(frame: mapView.bounds, mapInitOptions: myMapInitOptions)
@@ -442,21 +439,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     private func obtenerNombreCategoriaSeleccionada() -> String {
-        let categorias = [
-            0: "Llanta pinchada",
-            1: "Batería baja",
-            2: "Mecánica",
-            3: "Bloqueado"
-        ]
-        
-        if let nombre = categorias[categoriaSeleccionada] {
-            return nombre
-        }
-        
-        // Fallback al label del UI si no está en el diccionario
         guard let stack = catScrollView.subviews.first(where: { $0 is UIStackView }) as? UIStackView,
               categoriaSeleccionada < stack.arrangedSubviews.count else {
-            return "Incidente"
+            return "General"
         }
         
         let vista = stack.arrangedSubviews[categoriaSeleccionada]
@@ -466,29 +451,15 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         return "Incidente"
     }
     
-    private var sosEnviado = false
-    private var enviandoSolicitud = false
-
     private func enviarSolicitudSOS(_ payload: SOSRequest, vehiculo: VehiculoEntity) {
-        if sosEnviado {
-            mostrarAlertaValidacion(mensaje: "Ya tienes una solicitud de auxilio en curso.")
-            return
-        }
-        
-        if enviandoSolicitud { return }
-        
-        enviandoSolicitud = true
-        btnSOS.isEnabled = false
-        btnSOS.alpha = 0.5
+        // Mostrar un pequeño feedback visual de carga si fuera necesario, o proceder directo
         
         // 1. Enviar al Backend (API)
         APIService.shared.crearAsistencia(payload: payload) { [weak self] resultado in
             guard let self = self else { return }
-            self.enviandoSolicitud = false
             
             switch resultado {
             case .success(let respuesta):
-                self.sosEnviado = true
                 // 2. Guardar también en Firebase (Directo)
                 self.guardarSOSEnFirebase(payload: payload)
                 
@@ -496,6 +467,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
                 self.mostrarAlertaExitoDirecta(para: vehiculo, sosResponse: respuesta)
                 
             case .failure(let error):
+<<<<<<< Updated upstream
                 self.btnSOS.isEnabled = true
                 self.btnSOS.alpha = 1.0
                 
@@ -505,6 +477,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
                 } else {
                     self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor. \(error.localizedDescription)")
                 }
+=======
+                print("Error enviando SOS: \(error.localizedDescription)")
+                self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor.")
+>>>>>>> Stashed changes
             }
         }
     }
