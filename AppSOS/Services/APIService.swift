@@ -46,6 +46,14 @@ class APIService {
                 return
             }
             
+            // Manejo de errores específicos según requerimiento (404/500)
+            if httpResponse.statusCode == 404 || httpResponse.statusCode == 500 {
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: "APIService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "No hay grúas disponibles en este momento."])))
+                }
+                return
+            }
+            
             guard let data = data else {
                 DispatchQueue.main.async {
                     completion(.failure(NSError(domain: "APIService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No se recibieron datos"])))
@@ -63,11 +71,19 @@ class APIService {
             do {
                 let decoder = JSONDecoder()
                 let responseObj = try decoder.decode(SOSResponse.self, from: data)
-                DispatchQueue.main.async {
-                    completion(.success(responseObj))
+                
+                // Si es 201 o exitoso, devolvemos el objeto
+                if (200...299).contains(httpResponse.statusCode) {
+                    DispatchQueue.main.async {
+                        completion(.success(responseObj))
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        completion(.failure(NSError(domain: "APIService", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: responseObj.message ?? "Error desconocido"])))
+                    }
                 }
             } catch {
-                // Si el status es exitoso (200-299) pero falló el decode, creamos una respuesta genérica de éxito
+                // Fallback si no se puede decodificar pero el status es exitoso
                 if (200...299).contains(httpResponse.statusCode) {
                     DispatchQueue.main.async {
                         completion(.success(SOSResponse(success: true, message: "Operación exitosa", id: nil)))

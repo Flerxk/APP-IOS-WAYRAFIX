@@ -425,6 +425,7 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             nombre_cliente: nombreReal,
             celular: celularReal,
             vehiculo_id: VehiculoInfo(
+                id: vehiculo.vin ?? "N/A", // Usamos VIN como ID si no hay otro campo id
                 modelo: vehiculo.modelo ?? "N/A",
                 placa: vehiculo.placa ?? "N/A",
                 marca: vehiculo.marca ?? "N/A",
@@ -491,14 +492,19 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
                 // 2. Guardar también en Firebase (Directo)
                 self.guardarSOSEnFirebase(payload: payload)
                 
-                // 3. Mostrar alerta de éxito directa
+                // 3. Mostrar alerta de éxito directa y pasar id_servicio
                 self.mostrarAlertaExitoDirecta(para: vehiculo, sosResponse: respuesta)
                 
             case .failure(let error):
                 self.btnSOS.isEnabled = true
                 self.btnSOS.alpha = 1.0
-                print("Error enviando SOS: \(error.localizedDescription)")
-                self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor.")
+                
+                let nsError = error as NSError
+                if nsError.code == 404 || nsError.code == 500 {
+                    self.mostrarAlertaValidacion(mensaje: "No hay grúas disponibles en este momento. Por favor, intenta de nuevo en unos minutos.")
+                } else {
+                    self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor. \(error.localizedDescription)")
+                }
             }
         }
     }

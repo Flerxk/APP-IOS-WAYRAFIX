@@ -13,6 +13,7 @@ struct SOSRequest: Codable {
 }
 
 struct VehiculoInfo: Codable {
+    let id: String?
     let modelo: String
     let placa: String
     let marca: String

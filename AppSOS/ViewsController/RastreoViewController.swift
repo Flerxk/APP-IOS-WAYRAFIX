@@ -185,44 +185,97 @@ class RastreoViewController: UIViewController {
         ref.child(rutaRastreo).observe(.value) { [weak self] snapshot in
             guard let self = self, let dict = snapshot.value as? [String: Any] else { return }
             
+            // 1. Manejar Estado y Detener Rastreo si es necesario
             if let estado = dict["estado"] as? String {
+                let estadoLimpio = estado.lowercased()
                 self.lblEstadoServicio.text = "Estado: \(estado.capitalized)"
+                
+                if estadoLimpio == "finalizado" || estadoLimpio == "rechazado" {
+                    print("Servicio \(estadoLimpio). Deteniendo rastreo.")
+                    self.ref.child(rutaRastreo).removeAllObservers()
+                    
+                    let mensaje = estadoLimpio == "finalizado" ? "Tu servicio ha finalizado con éxito." : "Tu servicio ha sido rechazado o cancelado."
+                    self.mostrarAlertaFinalizacion(mensaje: mensaje)
+                }
             }
             
+            // 2. Actualizar Ubicación de la Grúa
             if let ubicacion = dict["ubicacion_grua"] as? [String: Any],
                let lat = ubicacion["lat"] as? Double,
                let lng = ubicacion["lng"] as? Double {
                 self.actualizarUbicacionGrua(lat: lat, lng: lng)
             }
+            
+            // 3. Actualizar Info Adicional (Nombre grúa si cambió)
+            if let nombreGrua = dict["nombre_grua"] as? String {
+                self.lblNombreMecanico.text = nombreGrua
+            }
         }
     }
     
+    private func mostrarAlertaFinalizacion(mensaje: String) {
+        let alerta = UIAlertController(title: "Servicio Actualizado", message: mensaje, preferredStyle: .alert)
+        alerta.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            self.dismiss(animated: true)
+        })
+        self.present(alerta, animated: true)
+    }
+    
+    private var markerAnimationTimer: Timer?
+    private var currentMarkerCoordinate: CLLocationCoordinate2D?
+
     private func actualizarUbicacionGrua(lat: Double, lng: Double) {
-        let coordenada = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+        let coordenadaFinal = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         
-        if var annotation = gruaAnnotation {
-            annotation.point = Point(coordenada)
-            pointAnnotationManager?.annotations = [annotation]
-        } else {
-            var annotation = PointAnnotation(coordinate: coordenada)
-            
-            // Personalizar icono de la grúa
-            let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
-            if let imagen = UIImage(systemName: "box.truck.fill", withConfiguration: config) {
-                // Para simplificar en Mapbox v10+, usamos una imagen registrada o cargada
-                // Aquí asignamos la imagen directamente a la anotación
-                annotation.image = .init(image: imagen, name: "grua-marker")
+        guard let annotation = gruaAnnotation else {
+            // Primera vez: crear anotación
+            var newAnnotation = PointAnnotation(coordinate: coordenadaFinal)
+            let config = UIImage.SymbolConfiguration(pointSize: 28, weight: .bold)
+            if let imagen = UIImage(systemName: "car.side.fill", withConfiguration: config) {
+                newAnnotation.image = .init(image: imagen, name: "grua-marker")
             }
             
-            pointAnnotationManager?.annotations = [annotation]
-            gruaAnnotation = annotation
+            pointAnnotationManager?.annotations = [newAnnotation]
+            gruaAnnotation = newAnnotation
+            currentMarkerCoordinate = coordenadaFinal
             
-            // Centrar el mapa la primera vez
-            mapboxView.camera.ease(
-                to: CameraOptions(center: coordenada, zoom: 14),
-                duration: 1.5
-            )
+            mapboxView.camera.ease(to: CameraOptions(center: coordenadaFinal, zoom: 15), duration: 1.5)
+            return
         }
+        
+        // Si ya existe, animamos desde la posición actual a la nueva
+        markerAnimationTimer?.invalidate()
+        let startCoord = currentMarkerCoordinate ?? annotation.point.coordinates
+        let duration: TimeInterval = 2.0 // Duración de la animación entre puntos
+        let startTime = Date()
+        
+        markerAnimationTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
+            
+            let elapsed = Date().timeIntervalSince(startTime)
+            let fraction = min(elapsed / duration, 1.0)
+            
+            // Interpolación lineal simple
+            let interpolatedLat = startCoord.latitude + (coordenadaFinal.latitude - startCoord.latitude) * fraction
+            let interpolatedLng = startCoord.longitude + (coordenadaFinal.longitude - startCoord.longitude) * fraction
+            let currentCoord = CLLocationCoordinate2D(latitude: interpolatedLat, longitude: interpolatedLng)
+            
+            self.currentMarkerCoordinate = currentCoord
+            var updatedAnnotation = annotation
+            updatedAnnotation.point = Point(currentCoord)
+            self.pointAnnotationManager?.annotations = [updatedAnnotation]
+            self.gruaAnnotation = updatedAnnotation
+            
+            if fraction >= 1.0 {
+                timer.invalidate()
+            }
+        }
+        
+        // Centrar cámara suavemente
+        mapboxView.camera.ease(to: CameraOptions(center: coordenadaFinal), duration: 2.0)
     }
 }
 
