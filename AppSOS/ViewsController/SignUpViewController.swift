@@ -1,3 +1,11 @@
+//
+//  SingUpController.swift
+//  AppSOS
+//
+//  Created by user286450 on 4/25/26.
+//
+
+
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore

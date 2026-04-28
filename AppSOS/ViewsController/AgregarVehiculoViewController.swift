@@ -95,7 +95,6 @@ class AgregarVehiculoViewController: UIViewController {
             campo.layer.borderWidth = 1
             campo.layer.borderColor = WayraTheme.divider.cgColor
             
-            // Icono Izquierdo
             let container = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
             let iconView = UIImageView(image: UIImage(systemName: iconName))
             iconView.contentMode = .scaleAspectFit
@@ -116,7 +115,6 @@ class AgregarVehiculoViewController: UIViewController {
                 )
             }
             
-            // Sombra suave
             campo.layer.shadowColor = UIColor.black.cgColor
             campo.layer.shadowOpacity = 0.03
             campo.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -209,7 +207,6 @@ class AgregarVehiculoViewController: UIViewController {
             return
         }
 
-        // Desactivar botón para evitar múltiples clics
         sender.isEnabled = false
         
         ControladorPersistencia.compartido.sincronizarVehiculo(
@@ -232,7 +229,7 @@ class AgregarVehiculoViewController: UIViewController {
                 }
                 
                 if exito {
-                    // Si no hay vehículo seleccionado actualmente, seleccionamos este nuevo/editado
+                    // Establece automáticamente el vehículo guardado como el activo si el usuario no tenía ninguno seleccionado
                     if VehicleSessionManager.shared.getSelectedVehicleVin() == nil {
                         VehicleSessionManager.shared.setSelectedVehicleVin(vin.uppercased())
                     }
