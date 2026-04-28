@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import CoreData
 import FirebaseAuth
+import FirebaseFirestore
 import MapboxMaps
 
 protocol SeleccionVehiculoDelegate: AnyObject {
