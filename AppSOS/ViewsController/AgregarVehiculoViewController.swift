@@ -187,74 +187,68 @@ class AgregarVehiculoViewController: UIViewController {
         }
 
     @IBAction func btnGuardarTapped(_ sender: UIButton) {
-            guard let placa = txtPlaca.text, !placa.isEmpty,
-                  let marca = txtMarca.text, !marca.isEmpty,
-                  let modelo = txtModelo.text, !modelo.isEmpty,
-                  let anioStr = txtAnio.text, let anio = Int16(anioStr),
-                  let color = txtColor.text, !color.isEmpty,
-                  let vin = txtVin.text, !vin.isEmpty else {
-                mostrarAlerta(titulo: "Campos incompletos", mensaje: "Completa todos los datos del vehículo.")
-                return
-            }
-            
-            if tipoVehiculoSeleccionado.isEmpty || tipoCombustibleSeleccionado.isEmpty {
-                mostrarAlerta(titulo: "Campos incompletos", mensaje: "Selecciona el tipo de vehículo y combustible.")
-                return
-            }
+        guard let placa = txtPlaca.text, !placa.isEmpty,
+              let marca = txtMarca.text, !marca.isEmpty,
+              let modelo = txtModelo.text, !modelo.isEmpty,
+              let anioStr = txtAnio.text, let anio = Int64(anioStr),
+              let color = txtColor.text, !color.isEmpty,
+              let vin = txtVin.text, !vin.isEmpty else {
+            mostrarAlerta(titulo: "Campos incompletos", mensaje: "Completa todos los datos del vehículo.")
+            return
+        }
+        
+        if tipoVehiculoSeleccionado.isEmpty || tipoCombustibleSeleccionado.isEmpty {
+            mostrarAlerta(titulo: "Campos incompletos", mensaje: "Selecciona el tipo de vehículo y combustible.")
+            return
+        }
 
-            
-            let indiceSeleccionado = scTransmision.selectedSegmentIndex
-            let transmision = scTransmision.titleForSegment(at: indiceSeleccionado) ?? "No definido"
+        let transmision = scTransmision.titleForSegment(at: scTransmision.selectedSegmentIndex) ?? "No definido"
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            mostrarAlerta(titulo: "Error de Sesión", mensaje: "No se pudo identificar al usuario activo.")
+            return
+        }
 
-            let registro = vehiculoAEditar ?? VehiculoEntity(context: self.context)
-            registro.placa = placa.uppercased()
-            registro.marca = marca
-            registro.modelo = modelo
-            registro.anio = Int64(anio)
-            registro.color = color
-            registro.vin = vin.uppercased()
-            registro.tipoVehiculo = tipoVehiculoSeleccionado
-            registro.tipoCombustible = tipoCombustibleSeleccionado
-            registro.transmision = transmision
-            
-            // Asignar el propietario buscando el UsuarioEntity correspondiente para el Garage
-            if let uid = Auth.auth().currentUser?.uid {
-                let fetchRequest: NSFetchRequest<UsuarioEntity> = UsuarioEntity.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "id == %@", uid)
-                if let usuario = try? context.fetch(fetchRequest).first {
-                    registro.propietario = usuario
-                }
-            }
-            
-            // Sincronizar con Firestore
-            if let uid = Auth.auth().currentUser?.uid {
-                let vehiculoData: [String: Any] = [
-                    "placa": placa.uppercased(),
-                    "marca": marca,
-                    "modelo": modelo,
-                    "anio": anio,
-                    "color": color,
-                    "vin": vin.uppercased(),
-                    "tipoVehiculo": tipoVehiculoSeleccionado,
-                    "tipoCombustible": tipoCombustibleSeleccionado,
-                    "transmision": transmision
-                ]
-                FirebaseManager.shared.guardarVehiculo(uidUsuario: uid, vehiculo: vehiculoData, idVehiculo: vin.uppercased()) { _ in }
-            }
-            
-            do {
-                try context.save()
-                
-                // Si no hay vehículo seleccionado actualmente, seleccionamos este nuevo
-                if VehicleSessionManager.shared.getSelectedVehicleVin() == nil {
-                    VehicleSessionManager.shared.setSelectedVehicleVin(vin.uppercased())
+        // Desactivar botón para evitar múltiples clics
+        sender.isEnabled = false
+        
+        ControladorPersistencia.compartido.sincronizarVehiculo(
+            idFirebase: vin.uppercased(),
+            propietarioId: uid,
+            marca: marca,
+            modelo: modelo,
+            placa: placa.uppercased(),
+            color: color,
+            anio: anio,
+            tipoVehiculo: tipoVehiculoSeleccionado,
+            tipoCombustible: tipoCombustibleSeleccionado,
+            transmision: transmision
+        ) { [weak self] exito, error in
+            DispatchQueue.main.async {
+                sender.isEnabled = true
+                if let error = error {
+                    self?.mostrarAlerta(titulo: "Error al guardar", mensaje: error.localizedDescription)
+                    return
                 }
                 
-                print("Guardado con éxito: \(transmision)")
-                self.navigationController?.popViewController(animated: true)
-            } catch {
-                print("Error al guardar: \(error)")
+                if exito {
+                    // Si no hay vehículo seleccionado actualmente, seleccionamos este nuevo/editado
+                    if VehicleSessionManager.shared.getSelectedVehicleVin() == nil {
+                        VehicleSessionManager.shared.setSelectedVehicleVin(vin.uppercased())
+                    }
+                    
+                    let alerta = UIAlertController(
+                        title: "¡Éxito!",
+                        message: "El vehículo se ha guardado correctamente.",
+                        preferredStyle: .alert
+                    )
+                    alerta.addAction(UIAlertAction(title: "Aceptar", style: .default) { _ in
+                        self?.navigationController?.popViewController(animated: true)
+                    })
+                    self?.present(alerta, animated: true)
+                }
             }
+        }
     }
     
     func mostrarAlerta(titulo: String, mensaje: String) {

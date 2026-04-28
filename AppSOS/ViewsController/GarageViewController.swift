@@ -88,7 +88,7 @@ class GarageViewController: UIViewController {
         tblVehiculos.backgroundColor = .clear
         tblVehiculos.separatorStyle = .none
         tblVehiculos.showsVerticalScrollIndicator = false
-        tblVehiculos.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 18, right: 0)
+        tblVehiculos.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 90, right: 0)
         tblVehiculos.register(GarageVehiculoCell.self, forCellReuseIdentifier: GarageVehiculoCell.reuseId)
         
         botonAgregarPrincipal = btnAgregarVehiculo
@@ -98,6 +98,10 @@ class GarageViewController: UIViewController {
         btnEscanearVIN.isHidden = false
         btnEscanearVIN.applyAccentStyle(title: "Escanear VIN")
         btnEscanearVIN.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
+        
+        // Asegurar que los botones estén por encima de la tabla
+        view.bringSubviewToFront(btnAgregarVehiculo)
+        view.bringSubviewToFront(btnEscanearVIN)
         
         if let boton = buscarBotonEnEstadoVacio() {
             botonAgregarVacio = boton

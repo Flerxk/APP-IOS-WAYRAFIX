@@ -85,6 +85,24 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.ajustarMarcoDeFondoRadial()
+        
+        // Asegurar que el botón SOS sea perfectamente circular
+        btnSOS.layer.cornerRadius = btnSOS.frame.height / 2
+        btnSOS.configuration?.background.cornerRadius = btnSOS.frame.height / 2
+        
+        // El mapa debe ocupar todo su contenedor
+        mapboxView?.frame = mapView.bounds
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Forzar visibilidad del mapa y traerlo al frente de la capa de fondo
+        mapView.alpha = 1.0
+        mapView.isHidden = false
+        view.bringSubviewToFront(mapView)
+        view.bringSubviewToFront(topBarView)
+        view.bringSubviewToFront(bottomPanel)
     }
     
     @objc private func actualizarDesdeSesion() {
@@ -149,16 +167,24 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
         
-        // Asegurar que sea redondo
+        // Configuración para que sea perfectamente redondo y tenga sombra
         btnSOS.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             btnSOS.widthAnchor.constraint(equalToConstant: 110),
             btnSOS.heightAnchor.constraint(equalToConstant: 110)
         ])
-        btnSOS.layer.cornerRadius = 55
-        btnSOS.layer.borderWidth = 8
-        btnSOS.layer.borderColor = WayraTheme.brandSoft.cgColor
-        btnSOS.clipsToBounds = true
+        
+        // Usar la configuración de fondo para el radio de la esquina
+        btnSOS.configuration?.cornerStyle = .fixed
+        btnSOS.configuration?.background.cornerRadius = 55
+        
+        // Sombra (no usar masksToBounds = true para que se vea la sombra)
+        btnSOS.layer.shadowColor = WayraTheme.brand.cgColor
+        btnSOS.layer.shadowOpacity = 0.4
+        btnSOS.layer.shadowOffset = CGSize(width: 0, height: 8)
+        btnSOS.layer.shadowRadius = 12
+        btnSOS.layer.masksToBounds = false
+        
         btnSOS.addTarget(self, action: #selector(btnSOSTapped(_:)), for: .touchUpInside)
         
         let gestoPresionadoSOS = UILongPressGestureRecognizer(target: self, action: #selector(manejarPresionadoSOS(_:)))
@@ -218,11 +244,20 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             
             if let img = vista.subviews.compactMap({ $0 as? UIImageView }).first {
                 img.tintColor = seleccionado ? WayraTheme.brand : WayraTheme.textSecondary
+                img.contentMode = .scaleAspectFit
+                
+                // Actualizar las restricciones existentes del Storyboard para hacerlos más pequeños (24x24)
+                for constraint in img.constraints {
+                    if constraint.firstAttribute == .width || constraint.firstAttribute == .height {
+                        constraint.constant = 24
+                    }
+                }
             }
             
             if let label = vista.subviews.compactMap({ $0 as? UILabel }).first {
                 label.textColor = seleccionado ? WayraTheme.textPrimary : WayraTheme.textSecondary
-                label.font = seleccionado ? .boldSystemFont(ofSize: 14) : .systemFont(ofSize: 14, weight: .medium)
+                label.font = seleccionado ? .boldSystemFont(ofSize: 13) : .systemFont(ofSize: 13, weight: .medium)
+                label.textAlignment = .center
             }
             
             vista.isUserInteractionEnabled = true
@@ -277,6 +312,12 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             mapboxView.trailingAnchor.constraint(equalTo: mapView.trailingAnchor),
             mapboxView.bottomAnchor.constraint(equalTo: mapView.bottomAnchor)
         ])
+        
+        // Asegurar que el contenedor del mapa esté visible y no cubierto
+        mapView.backgroundColor = .white
+        view.bringSubviewToFront(mapView)
+        view.bringSubviewToFront(topBarView)
+        view.bringSubviewToFront(bottomPanel)
         
         // Configurar el indicador de ubicación de Mapbox
         mapboxView.location.options.puckType = .puck2D()

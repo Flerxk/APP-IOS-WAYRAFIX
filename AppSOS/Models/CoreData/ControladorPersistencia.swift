@@ -120,23 +120,28 @@ class ControladorPersistencia {
     
     // MARK: - Vehículos
     
-    func sincronizarVehiculo(idFirebase: String, propietarioId: String, marca: String, modelo: String, placa: String, color: String, anio: Int64, finalizacion: @escaping (Bool, Error?) -> Void) {
+    func sincronizarVehiculo(idFirebase: String, propietarioId: String, marca: String, modelo: String, placa: String, color: String, anio: Int64, tipoVehiculo: String, tipoCombustible: String, transmision: String, finalizacion: @escaping (Bool, Error?) -> Void) {
         let datos: [String: Any] = [
             "marca": marca,
             "modelo": modelo,
             "placa": placa,
             "color": color,
             "anio": anio,
-            "is_active": true
+            "tipoVehiculo": tipoVehiculo,
+            "tipoCombustible": tipoCombustible,
+            "transmision": transmision,
+            "is_active": true,
+            "ultima_actualizacion": FieldValue.serverTimestamp()
         ]
         
         // Guardar en subcolección de usuario para One-to-Many real
-        baseDeDatos.collection("usuarios").document(propietarioId).collection("vehiculos").document(idFirebase).setData(datos) { [weak self] error in
+        baseDeDatos.collection("usuarios").document(propietarioId).collection("vehiculos").document(idFirebase).setData(datos, merge: true) { [weak self] error in
             if let error = error {
                 finalizacion(false, error)
                 return
             }
             
+            // 2. Replicar en Core Data
             guard let autoRef = self else { return }
             autoRef.contextoVista.perform {
                 let peticionBusqueda: NSFetchRequest<VehiculoEntity> = NSFetchRequest<VehiculoEntity>(entityName: "VehiculoEntity")
@@ -155,6 +160,9 @@ class ControladorPersistencia {
                 vehiculo.placa = placa
                 vehiculo.color = color
                 vehiculo.anio = anio
+                vehiculo.tipoVehiculo = tipoVehiculo
+                vehiculo.tipoCombustible = tipoCombustible
+                vehiculo.transmision = transmision
                 vehiculo.is_active = true
                 
                 // Relacionar propietario en CoreData

@@ -14,6 +14,25 @@ class MainTabBarController: UITabBarController {
         configurarEstilo()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configurarIconos()
+    }
+    
+    private func configurarIconos() {
+        guard let items = tabBar.items else { return }
+        
+        let iconos = ["house.fill", "car.2.fill", "clock.fill", "person.fill"]
+        let titulos = ["Inicio", "Garage", "Historial", "Perfil"]
+        
+        for (index, item) in items.enumerated() {
+            if index < iconos.count {
+                item.image = UIImage(systemName: iconos[index])
+                item.title = titulos[index]
+            }
+        }
+    }
+    
     private func configurarEstilo() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
