@@ -76,7 +76,7 @@ class HistorialViewController: UIViewController {
     
 }
 
-// MARK: - Extensiones
+// Extensiones que implementan los delegados y fuentes de datos de la tabla de historial
 extension HistorialViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

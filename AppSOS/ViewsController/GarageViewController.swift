@@ -29,7 +29,6 @@ class GarageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Inicializar repositorio aquí para evitar crashes en el init del VC
         repositorioVehiculo = VehiculoLocalRepository()
 
         tblVehiculos.delegate = self
@@ -42,7 +41,6 @@ class GarageViewController: UIViewController {
         super.viewWillAppear(animated)
         cargarVehiculos()
         
-        // Sincronizar desde Firebase en segundo plano
         repositorioVehiculo.descargarVehiculosDeFirestore { _ in }
     }
     
@@ -99,7 +97,6 @@ class GarageViewController: UIViewController {
         btnEscanearVIN.applyAccentStyle(title: "Escanear VIN")
         btnEscanearVIN.addTarget(self, action: #selector(irAEscanearVIN), for: .touchUpInside)
         
-        // Asegurar que los botones estén por encima de la tabla
         view.bringSubviewToFront(btnAgregarVehiculo)
         view.bringSubviewToFront(btnEscanearVIN)
         
@@ -200,18 +197,12 @@ extension GarageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vehiculo = listaVehiculos[indexPath.row]
         
-        // Al tocar, lo seleccionamos como activo y recargamos
         VehicleSessionManager.shared.setSelectedVehicleVin(vehiculo.vin)
         tableView.reloadData()
         
-        // Opcional: Feedback haptico
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
         
-        // Después de un pequeño delay, podemos mostrar el detalle si se desea, 
-        // o dejarlo así para que el usuario sepa que ya se seleccionó.
-        // Por ahora, solo seleccionamos. Para ver detalle pueden usar el botón ellipsis si lo implementamos,
-        // o simplemente navegar al detalle.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.performSegue(withIdentifier: "mostrarDetalleVehiculo", sender: vehiculo)
         }

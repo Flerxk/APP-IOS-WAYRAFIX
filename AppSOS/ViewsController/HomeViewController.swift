@@ -87,11 +87,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidLayoutSubviews()
         view.ajustarMarcoDeFondoRadial()
         
-        // Asegurar que el botón SOS sea perfectamente circular
         btnSOS.layer.cornerRadius = btnSOS.frame.height / 2
         btnSOS.configuration?.background.cornerRadius = btnSOS.frame.height / 2
         
-        // El mapa debe ocupar todo su contenedor
         mapboxView?.frame = mapView.bounds
     }
     
@@ -168,18 +166,15 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         btnSOS.applyBrandStyle(title: "SOS")
         btnSOS.titleLabel?.font = .boldSystemFont(ofSize: 28)
         
-        // Configuración para que sea perfectamente redondo y tenga sombra
         btnSOS.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             btnSOS.widthAnchor.constraint(equalToConstant: 110),
             btnSOS.heightAnchor.constraint(equalToConstant: 110)
         ])
         
-        // Usar la configuración de fondo para el radio de la esquina
         btnSOS.configuration?.cornerStyle = .fixed
         btnSOS.configuration?.background.cornerRadius = 55
         
-        // Sombra (no usar masksToBounds = true para que se vea la sombra)
         btnSOS.layer.shadowColor = WayraTheme.brand.cgColor
         btnSOS.layer.shadowOpacity = 0.4
         btnSOS.layer.shadowOffset = CGSize(width: 0, height: 8)
@@ -222,7 +217,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             btnSeleccionarVehiculo.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        // Ajustar el scroll de categorías para que empiece debajo de la info
         if let topCat = bottomPanel.constraints.first(where: { $0.firstItem as? UIView == catScrollView && $0.firstAttribute == .top }) {
             topCat.constant = 100 
         }
@@ -247,7 +241,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
                 img.tintColor = seleccionado ? WayraTheme.brand : WayraTheme.textSecondary
                 img.contentMode = .scaleAspectFit
                 
-                // Actualizar las restricciones existentes del Storyboard para hacerlos más pequeños (24x24)
                 for constraint in img.constraints {
                     if constraint.firstAttribute == .width || constraint.firstAttribute == .height {
                         constraint.constant = 24
@@ -309,7 +302,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         mapboxView.translatesAutoresizingMaskIntoConstraints = false
         mapView.addSubview(mapboxView)
         
-        // Usar constraints para que el mapa ocupe todo el contenedor
         NSLayoutConstraint.activate([
             mapboxView.topAnchor.constraint(equalTo: mapView.topAnchor),
             mapboxView.leadingAnchor.constraint(equalTo: mapView.leadingAnchor),
@@ -317,13 +309,11 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             mapboxView.bottomAnchor.constraint(equalTo: mapView.bottomAnchor)
         ])
         
-        // Asegurar que el contenedor del mapa esté visible y no cubierto
         mapView.backgroundColor = .white
         view.bringSubviewToFront(mapView)
         view.bringSubviewToFront(topBarView)
         view.bringSubviewToFront(bottomPanel)
         
-        // Configurar el indicador de ubicación de Mapbox
         mapboxView.location.options.puckType = .puck2D()
     }
     

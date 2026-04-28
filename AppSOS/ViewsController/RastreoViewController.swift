@@ -46,7 +46,6 @@ class RastreoViewController: UIViewController {
         configurarMapa()
         iniciarRastreoEnTiempoReal()
         
-        // Asegurar que el mapa esté al fondo
         view.sendSubviewToBack(mapView)
     }
     
@@ -206,7 +205,6 @@ class RastreoViewController: UIViewController {
         } else {
             var annotation = PointAnnotation(coordinate: coordenada)
             
-            // Personalizar icono de la grúa
             let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
             if let imagen = UIImage(systemName: "box.truck.fill", withConfiguration: config) {
                 // Para simplificar en Mapbox v10+, usamos una imagen registrada o cargada
