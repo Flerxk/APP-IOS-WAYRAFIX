@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 import CoreData
 import FirebaseAuth
+import FirebaseFirestore
 import MapboxMaps
 
 protocol SeleccionVehiculoDelegate: AnyObject {
@@ -298,7 +299,10 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
         
         // Configurar Mapbox MapView
-        let myResourceOptions = ResourceOptions(accessToken: Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? "")
+        let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ?? ""
+        print("Mapbox Token cargado: \(token.prefix(10))...")
+        
+        let myResourceOptions = ResourceOptions(accessToken: token)
         let myMapInitOptions = MapInitOptions(resourceOptions: myResourceOptions, styleURI: .streets)
         
         mapboxView = MapView(frame: mapView.bounds, mapInitOptions: myMapInitOptions)
