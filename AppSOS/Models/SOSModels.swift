@@ -5,6 +5,7 @@ import Foundation
 struct SOSRequest: Codable {
     let uid_usuario: String
     let nombre_cliente: String
+    let celular: String
     let vehiculo_id: VehiculoInfo
     let tipo_siniestro: String
     let latitud: Double

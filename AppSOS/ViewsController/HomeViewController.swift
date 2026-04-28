@@ -385,12 +385,13 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         guard let vehiculo = vehiculoSeleccionado else {
-            // Usamos el segue que va al Garage (configurado en el Storyboard como el botón de auto en el Nav Bar)
+            // Usamos el segue que va al Garage
             performSegue(withIdentifier: "irAGarage", sender: nil)
             return
         }
         
-        presentarOverlayDestino(para: vehiculo)
+        // ENVÍO DIRECTO: Sin confirmación intermedia como solicitó el usuario
+        prepararYEnviarSOS(vehiculo: vehiculo)
     }
     
     private func prepararYEnviarSOS(vehiculo: VehiculoEntity) {
@@ -402,9 +403,23 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             return
         }
         
+        // Obtener datos del usuario desde Core Data para tener el nombre real y celular
+        var nombreReal = usuarioFirebase.displayName ?? usuarioFirebase.email ?? "Usuario"
+        var celularReal = ""
+        
+        let context = ControladorPersistencia.compartido.contextoVista
+        let request: NSFetchRequest<UsuarioEntity> = UsuarioEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", usuarioFirebase.uid)
+        
+        if let usuario = try? context.fetch(request).first {
+            nombreReal = usuario.nombre ?? nombreReal
+            celularReal = usuario.celular ?? ""
+        }
+        
         let requestPayload = SOSRequest(
             uid_usuario: usuarioFirebase.uid,
-            nombre_cliente: usuarioFirebase.displayName ?? usuarioFirebase.email ?? "Usuario",
+            nombre_cliente: nombreReal,
+            celular: celularReal,
             vehiculo_id: VehiculoInfo(
                 modelo: vehiculo.modelo ?? "N/A",
                 placa: vehiculo.placa ?? "N/A",
@@ -435,15 +450,70 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     private func enviarSolicitudSOS(_ payload: SOSRequest, vehiculo: VehiculoEntity) {
+        // Mostrar un pequeño feedback visual de carga si fuera necesario, o proceder directo
+        
+        // 1. Enviar al Backend (API)
         APIService.shared.crearAsistencia(payload: payload) { [weak self] resultado in
             guard let self = self else { return }
             
             switch resultado {
             case .success(let respuesta):
-                self.presentarOverlayExito(para: vehiculo, sosResponse: respuesta)
+                // 2. Guardar también en Firebase (Directo)
+                self.guardarSOSEnFirebase(payload: payload)
+                
+                // 3. Mostrar alerta de éxito directa
+                self.mostrarAlertaExitoDirecta(para: vehiculo, sosResponse: respuesta)
+                
             case .failure(let error):
                 print("Error enviando SOS: \(error.localizedDescription)")
                 self.mostrarAlertaValidacion(mensaje: "No se pudo conectar con el servidor.")
+            }
+        }
+    }
+    
+    private func mostrarAlertaExitoDirecta(para vehiculo: VehiculoEntity, sosResponse: SOSResponse?) {
+        let alerta = UIAlertController(
+            title: "¡Ayuda Enviada! 🚨",
+            message: "Tu solicitud de auxilio mecánico ha sido recibida. Un agente se pondrá en contacto contigo pronto.",
+            preferredStyle: .alert
+        )
+        
+        alerta.addAction(UIAlertAction(title: "Ver Seguimiento", style: .default) { _ in
+            let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
+            self.performSegue(withIdentifier: "irARastreo", sender: contexto)
+        })
+        
+        alerta.addAction(UIAlertAction(title: "OK", style: .cancel))
+        
+        self.present(alerta, animated: true)
+    }
+    
+    private func guardarSOSEnFirebase(payload: SOSRequest) {
+        // Convertir SOSRequest a Diccionario para Firestore
+        let datos: [String: Any] = [
+            "uid_usuario": payload.uid_usuario,
+            "nombre_cliente": payload.nombre_cliente,
+            "celular": payload.celular,
+            "tipo_siniestro": payload.tipo_siniestro,
+            "latitud": payload.latitud,
+            "longitud": payload.longitud,
+            "fecha_creacion": FieldValue.serverTimestamp(),
+            "estado": "pendiente",
+            "vehiculo": [
+                "marca": payload.vehiculo_id.marca,
+                "modelo": payload.vehiculo_id.modelo,
+                "placa": payload.vehiculo_id.placa,
+                "color": payload.vehiculo_id.color,
+                "vin": payload.vehiculo_id.vin,
+                "transmision": payload.vehiculo_id.transmision
+            ]
+        ]
+        
+        FirebaseManager.shared.crearAsistencia(payload: datos) { error in
+            if let error = error {
+                print("Error guardando SOS en Firebase: \(error.localizedDescription)")
+            } else {
+                print("SOS guardado exitosamente en Firebase")
             }
         }
     }
@@ -468,35 +538,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate {
             destino.direccionServicio = direccionActual
         }
     }
-    
-    func presentarOverlayDestino(para vehiculo: VehiculoEntity) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let vc = storyboard.instantiateViewController(withIdentifier: "SOSDestinoVC") as? SOSDestinoViewController else { return }
-        
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.modalTransitionStyle = .crossDissolve
-        
-        vc.onSolicitarTapped = { [weak self] in
-            self?.prepararYEnviarSOS(vehiculo: vehiculo)
-        }
-        
-        present(vc, animated: true)
-    }
-    
-    func presentarOverlayExito(para vehiculo: VehiculoEntity, sosResponse: SOSResponse? = nil) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let vc = storyboard.instantiateViewController(withIdentifier: "SOSExitoVC") as? SOSExitoViewController else { return }
-        
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.modalTransitionStyle = .crossDissolve
-        
-        vc.onSeguimientoTapped = { [weak self] in
-            let contexto: [String: Any?] = ["vehiculo": vehiculo, "sos": sosResponse]
-            self?.performSegue(withIdentifier: "irARastreo", sender: contexto)
-        }
-        
-        present(vc, animated: true)
-    }
 }
 
 extension HomeViewController: SeleccionVehiculoDelegate {
@@ -515,75 +556,6 @@ extension HomeViewController: SeleccionVehiculoDelegate {
             self.lblVehiculoInfo.text = "Vehículo: \(marca) \(modelo) (\(placa))"
             self.lblVehiculoInfo.textColor = WayraTheme.accent
             self.btnSeleccionarVehiculo.setTitle("Cambiar Vehículo", for: .normal)
-        }
-    }
-}
-
-// MARK: - Clases Integradas para evitar errores de Scope en Xcode
-class SOSDestinoViewController: UIViewController {
-    @IBOutlet weak var tarjetaDestino: UIView!
-    @IBOutlet weak var btnSolicitarAyuda: UIButton!
-    @IBOutlet weak var btnCancelar: UIButton!
-    
-    var onSolicitarTapped: (() -> Void)?
-    var onCancelarTapped: (() -> Void)?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-    }
-    
-    private func setupUI() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-        tarjetaDestino?.applyCardStyle(radius: 30, shadow: true)
-        btnSolicitarAyuda?.applyPrimaryStyle(title: "Solicitar Ayuda Ahora")
-        btnCancelar?.setTitle("Cancelar", for: .normal)
-        btnCancelar?.setTitleColor(WayraTheme.textPrimary, for: .normal)
-    }
-    
-    @IBAction func btnSolicitarTapped(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.onSolicitarTapped?()
-        }
-    }
-    
-    @IBAction func btnCancelarTapped(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.onCancelarTapped?()
-        }
-    }
-}
-
-class SOSExitoViewController: UIViewController {
-    @IBOutlet weak var tarjetaExito: UIView!
-    @IBOutlet weak var btnVerSeguimiento: UIButton!
-    @IBOutlet weak var btnCerrar: UIButton!
-    
-    var onSeguimientoTapped: (() -> Void)?
-    var onCerrarTapped: (() -> Void)?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-    }
-    
-    private func setupUI() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-        tarjetaExito?.applyCardStyle(radius: 30, shadow: true)
-        btnVerSeguimiento?.applyPrimaryStyle(title: "Ver Seguimiento")
-        btnCerrar?.setTitle("Cerrar", for: .normal)
-        btnCerrar?.setTitleColor(WayraTheme.textPrimary, for: .normal)
-    }
-    
-    @IBAction func btnSeguimientoTapped(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.onSeguimientoTapped?()
-        }
-    }
-    
-    @IBAction func btnCerrarTapped(_ sender: UIButton) {
-        dismiss(animated: true) {
-            self.onCerrarTapped?()
         }
     }
 }

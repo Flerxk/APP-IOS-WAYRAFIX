@@ -60,6 +60,11 @@ class FirebaseManager {
         db.collection("usuarios").document(uidUsuario).collection("vehiculos").document(idVehiculo).delete(completion: completion)
     }
     
+    /// Crea una solicitud de asistencia en Firestore para consumo en tiempo real
+    func crearAsistencia(payload: [String: Any], completion: @escaping (Error?) -> Void) {
+        db.collection("asistencias").addDocument(data: payload, completion: completion)
+    }
+
     func cerrarSesion() throws {
         try Auth.auth().signOut()
     }
