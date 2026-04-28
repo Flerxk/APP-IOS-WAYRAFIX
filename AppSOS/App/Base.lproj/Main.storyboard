@@ -2433,7 +2433,6 @@
                         <viewLayoutGuide key="safeArea" id="SOS-Dest-Safe"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="SOS-Dest-Card" firstAttribute="centerY" secondItem="SOS-Dest-View" secondAttribute="centerY" id="SOS-D-V-CY"/>
                             <constraint firstItem="SOS-Dest-Card" firstAttribute="leading" secondItem="SOS-Dest-Safe" secondAttribute="leading" constant="24" id="SOS-D-V-L"/>
                             <constraint firstItem="SOS-Dest-Safe" firstAttribute="trailing" secondItem="SOS-Dest-Card" secondAttribute="trailing" constant="24" id="SOS-D-V-R"/>
                         </constraints>
